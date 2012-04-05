@@ -31,7 +31,7 @@ PFont legendfont;
 
 // municipality index to plot (default should be the national one)
 boolean all=true;
-int munIndex=100;
+int munIndex=0;
 int state;
 
 // Years considered
@@ -77,7 +77,7 @@ void draw() {
   int w = (int) (width * 0.9);
   int h = (int) (height * 0.7);
   
-  state = floor(popul.getFloatAt(munIndex,0)/1000);
+  state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
   
   /*
   | Start Drawing here.
@@ -211,7 +211,7 @@ void plotDataPoints (int mun) {
   stateHR = new float[ncols];
   int i,col;
   float x,y,pop;
-  int state = floor(popul.getFloatAt(mun,0)/1000);
+  int state = floor(popul.getFloatAt(mun,0)/1000)-1;
 
   // i is a counter over the columns (years)
   for (i = 0; i < datapoints.length; i++) {
@@ -343,8 +343,8 @@ void drawLegend(){
   textAlign(LEFT);
   stroke(0); fill(0);
   textSize(12);
-  text(popul.getDataAt(munIndex, 1)+ " municipality", width -130, plot_y2+40);
-  text(Spopul.getDataAt(state, 1)+" state", width -130, plot_y2+60);
+  text(popul.getDataAt(munIndex, 1), width -130, plot_y2+40);
+  text(Spopul.getDataAt(state, 1), width -130, plot_y2+60);
   
  //Lenged for size
   for (int i = 0; i < 2; i++)
@@ -391,4 +391,19 @@ float truncate(float x, int dec){
     return float(ceil(x * aux))/aux;
 }
 
+void keyPressed () {
+  if (key == CODED) {
+    switch (keyCode) {
+    case LEFT:
+      // maybe I should make 2486 a golbal variable for nMun
+        munIndex=(munIndex-1)%2486;
+        state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
+        break;
+    case RIGHT: 
+      munIndex=(munIndex+1)%2486;
+      state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
+      break;
+    }
+  } 
+}
 
