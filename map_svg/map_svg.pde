@@ -17,7 +17,7 @@ void setup() {
   shape(mapImage);
 
   //build homicideTable
-  homicideTable = new Table("../data/fake.tsv");
+  homicideTable = new Table("../Data/Homicides.tsv");
   municCount = homicideTable.getRowCount();
   municNames = new String[municCount];
   municHom = new Float[municCount];
