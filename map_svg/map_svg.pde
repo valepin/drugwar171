@@ -3,6 +3,7 @@ import geomerative.*;
 
 RShape mapImage;
 ArrayList munis;
+ArrayList claveIDs;
 Table homicideTable;
 int mapHeight = 500;
 int mapWidth = 800;
@@ -47,14 +48,18 @@ void setup() {
     municHom[c] = homicideTable.getFloat(c+1,1);
   }
 
-  //store all munis in an RShape ArrayList for easy reference
+  //store all munis and claveID in ArrayLists for easy reference
   munis = new ArrayList();
+  claveIDs = new ArrayList();
   for (int row = 0; row < municCount; row++) {
     RShape munic = mapImage.getChild(municClave[row]);
-    if(munic == null)
+    if(munic == null){
       print(row); //it seems that some munis in our tsv are not in the svg
-    else
+      print(" ");
+    }else{
       munis.add(munic);
+      claveIDs.add(municClave[row]);
+    }
   }
 
 }
