@@ -29,6 +29,8 @@ class Collect {
  
  String getDataAt (int row, int column) { return this.data[row][column]; }
  
+ char getCharAt (int row, int column) { return this.data[row][column].charAt(0); }
+ 
  float getFloatAt(int row, int column) { return parseFloat(this.data[row][column]); }
  
  int fieldIndex (String field) {
