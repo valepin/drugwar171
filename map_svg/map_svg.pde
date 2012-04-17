@@ -1,36 +1,40 @@
-PShape mapImage;
+import processing.opengl.*;
+import geomerative.*;
+
+RShape mapImage;
+ArrayList munis;
 Table homicideTable;
-int mapHeight;
-int mapWidth;
-int worldX;
-int worldY;
+int mapHeight = 500;
+int mapWidth = 800;
 int municCount;
-int[] colorScheme;
+int[] colorScheme = {0, 153, 0};
+//int[] colorScheme = { 255, 255, 0};
 String[] municClave;
 Float[] municHom;
 
 
 void setup() {
 
-  //set color scheme
-  int[] colorScheme = { 0, 153, 0};
-  //int[] colorScheme = { 255, 255, 0};
-
   //draw background
   background(colorScheme[0]);
-  mapHeight = 500;
-  mapWidth = 800;
+ 
   size(mapWidth,mapHeight); 
+  g.smooth = true;
+
+  //initialize the geomerative library
+  RG.init(this);
+  RG.ignoreStyles(true);
+  //RG.setPolygonizer(RG.ADAPTATIVE);
 
   //draw map
-  worldX = -100;
-  worldY = 500;
-  mapImage = loadShape("../data/muni_ink.svg");
+  mapImage = RG.loadShape("../data/muni_ink.svg");
   smooth();
-  mapImage.disableStyle();
   fill(colorScheme[1]);
   stroke(colorScheme[2]);
-  shape(mapImage,worldX,worldY);
+  mapImage.centerIn(g, 0, 1, 1);
+  translate(mapWidth/2, mapHeight/2);
+  mapImage.draw();
+  
   
   //build homicideTable
   homicideTable = new Table("../data/MunHomicides.tsv");
@@ -43,18 +47,32 @@ void setup() {
     municHom[c] = homicideTable.getFloat(c+1,1);
   }
 
-  //demonstrating use of getChild
-  for (int row = 0; row < 100; row++) {
-    PShape munic = mapImage.getChild(municClave[row]);;
-    munic.disableStyle();
-    fill(169,216,255);
-    noStroke();
-    shape(munic,worldX,worldY);
+  //store all munis in an RShape ArrayList for easy reference
+  munis = new ArrayList();
+  for (int row = 0; row < municCount; row++) {
+    RShape munic = mapImage.getChild(municClave[row]);
+    if(munic == null)
+      print(row); //it seems that some munis in our tsv are not in the svg
+    else
+      munis.add(munic);
   }
-
 
 }
 
 void draw() {
- 
+
+  translate(mapWidth/2, mapHeight/2);
+  RPoint p = new RPoint(mouseX-width/2, mouseY-height/2);
+  for(int i = 0; i < munis.size(); i++){
+    RShape munic = (RShape) munis.get(i);
+    if(munic.contains(p)){
+       fill(0,100,255,250);
+       munic.draw();
+    }else{
+      fill(colorScheme[1]);
+      munic.draw();
+    }
+    
+  }
+
 }
