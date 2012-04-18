@@ -8,35 +8,36 @@ Table homicideTable;
 int mapHeight = 500;
 int mapWidth = 800;
 int municCount;
-int[] colorScheme = {0, 153, 0};
-//int[] colorScheme = { 255, 255, 0};
+int[] colorScheme = {50, 153, 0, 255};
+//int[] colorScheme = { 255, 255, 0, 50};
 String[] municClave;
 Float[] municHom;
-
+float xx = 0;
+float yy = 0;
+float pan = -40;
+float zoom = 1.5;
+int buttonX = mapWidth - 80;
+int buttonY = 60;
+int buttonS = 40;
+RectButton left, right, up, down, in, out;
+boolean locked = false;
 
 void setup() {
 
   //draw background
   background(colorScheme[0]);
- 
   size(mapWidth,mapHeight); 
   g.smooth = true;
 
   //initialize the geomerative library
   RG.init(this);
   RG.ignoreStyles(true);
-  //RG.setPolygonizer(RG.ADAPTATIVE);
+  RG.setPolygonizer(RG.ADAPTATIVE);
 
-  //draw map
+  //setup map
   mapImage = RG.loadShape("../data/muni_ink.svg");
-  smooth();
-  fill(colorScheme[1]);
-  stroke(colorScheme[2]);
   mapImage.centerIn(g, 0, 1, 1);
-  translate(mapWidth/2, mapHeight/2);
-  mapImage.draw();
-  
-  
+
   //build homicideTable
   homicideTable = new Table("../data/MunHomicides.tsv");
   municCount = homicideTable.getRowCount() - 1;
@@ -62,22 +63,83 @@ void setup() {
     }
   }
 
+  //setup buttons
+  ellipseMode(CENTER);
+  left = new RectButton(buttonX-buttonS,buttonY, 10, color(colorScheme[3]), color(colorScheme[3]));
+  right = new RectButton(buttonX+buttonS,buttonY, 10, color(colorScheme[3]), color(colorScheme[3]));
+  up = new RectButton(buttonX,buttonY-buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
+  down = new RectButton(buttonX,buttonY+buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
+  in = new RectButton(buttonX,buttonY-buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
+  out = new RectButton(buttonX,buttonY+buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
+
 }
 
 void draw() {
+  background(colorScheme[0]);
 
-  translate(mapWidth/2, mapHeight/2);
-  RPoint p = new RPoint(mouseX-width/2, mouseY-height/2);
+  //update graph
+  update();
+
+//draw map
+  smooth();
+  translate(mapWidth/2-xx, mapHeight/2-yy);
+  RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
   for(int i = 0; i < munis.size(); i++){
     RShape munic = (RShape) munis.get(i);
     if(munic.contains(p)){
-       fill(0,100,255,250);
-       munic.draw();
+      fill(0,100,255,250);
     }else{
       fill(colorScheme[1]);
-      munic.draw();
+      stroke(colorScheme[2]);
     }
-    
+    munic.draw();
   }
 
+  //draw buttons
+  translate(-mapWidth/2+xx, -mapHeight/2+yy);
+  left.display();
+  right.display();
+  up.display();
+  down.display();
+  in.display();
+  out.display();
+
+}
+
+
+void zoomit(float zoom) {
+  for(int i = 0; i < munis.size(); i++){
+    RShape munic = (RShape) munis.get(i);
+    munic.scale(zoom);
+    munis.set(i,munic);
+  } 
+}
+
+void update(){
+  if(locked == false) {
+    left.update();
+    right.update();
+    up.update();
+    down.update();
+    in.update();
+    out.update();
+  } 
+  else {
+    locked = false;
+  }
+
+  if(mousePressed) {
+    if(left.pressed())
+      xx = xx + pan;
+    if(right.pressed())
+      xx = xx - pan;
+    if(up.pressed())
+      yy = yy + pan;
+    if(down.pressed())
+      yy = yy - pan;
+    if(in.pressed())
+      zoomit(zoom);
+    if(out.pressed())
+      zoomit(1/zoom);
+  }
 }
