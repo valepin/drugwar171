@@ -5,7 +5,7 @@
 */
 
 
-Collect table, popul,Stable, Spopul, milInt,cartel07,cartel10,ppartycMun;
+Collect table, popul,Stable, Spopul, milInt,cartel07,cartel10,ppartycMun,ppartycS;
 int bg_color = 50;
 int fill_color=250;
 int plot_x1, plot_x2, plot_y1, plot_y2;
@@ -13,15 +13,19 @@ float plot_width, plot_height,xrange, yrange;
 float x_step_size,y_step_size;
 
 
+import controlP5.*;
 
+ControlP5 controlP5;
+
+CheckBox checkbox;
 
 
 float[] point_size;
 float[] or_size;
-float[][] datapoints,statepoints;
+float[][] datapoints,statepoints,cartelpoints,nationalpoints;
 float[] munHR,stateHR,cartelHR,nationalHR;
 char cartS;
-boolean click = false;
+boolean click = false, cart2010 = false;
 int extra=30; // for the axis not to start with the lowest value
   int cartInt,rowCart =0,cartIndl =0, cartIndd=0;
 
@@ -34,9 +38,9 @@ PFont legendfont;
 
 // municipality index to plot (default should be the national one)
 boolean all=true;
-int munIndex=316;
+int munIndex=31;
 int state;
-int cart=7; // this is the cartel
+
 
 // Years considered
 int[] years;
@@ -63,7 +67,7 @@ String[][] cartels = {
 };
 
 /*define the colors to use (this should be linked to the Cartel and the )
-purple, red,blue pink, orange,green,yellow,gray? cyan = {#66CDAA, #AFEEEE,#708090}*/
+purple, red,blue pink, orange,green,yellow,gray? cyan = Acapulco Cartel */
 color[][] seriesCols={
 {#9400D3, #DA70D6,#A9A9A9},
 {#FF4500, #FFA500,#A9A9A9},
@@ -72,9 +76,13 @@ color[][] seriesCols={
 {#B22222, #FA8080,#A9A9A9},
 {#008000, #32CD32,#A9A9A9},
 {#FFD700, #F0E68C,#A9A9A9},
-{#708090,#D3D3D3,#A9A9A9}
+{#708090,#D3D3D3,#A9A9A9},
+{#66CDAA, #AFEEEE,#708090}
 
 };
+
+
+RadioButton r;
 
 void setup() {
   size(1100, 600);
@@ -86,7 +94,7 @@ void setup() {
    cartel07 = new Collect("../Data/cartel2007HR.tsv");
    cartel10 = new Collect("../Data/cartel2010HR.tsv");
    ppartycMun = new Collect("../Data/CartelIncomeExpensesByMunicipality.tsv");
-   ppartycMun = new Collect("../Data/CartelIncomeExpensesByState.tsv")
+   ppartycS = new Collect("../Data/CartelIncomeExpensesState.tsv");
    years = new int[table.numCols];
    // Years considered
    for (int i=0; i < 21 ;i++)
@@ -100,7 +108,42 @@ void setup() {
   legendfont = loadFont("TrebuchetMS-16.vlw");
   font = loadFont("ArialMT-10.vlw");
   textFont(font);
+  
+
+  
+  //set the checkbox
+  controlP5 = new ControlP5(this);
+  r = controlP5.addRadioButton("radioButton",width-150,100);
+  r.setColorForeground(color(200));
+  r.setColorActive(color(255));
+  r.setColorLabel(color(255));
+ r.setItemsPerRow(1);
+  r.setSpacingColumn(2);
+
+  addToRadioButton(r,"2007",0);
+  addToRadioButton(r,"2010",1);
 }
+
+
+void addToRadioButton(RadioButton theRadioButton, String theName, int theValue ) {
+  Toggle t = theRadioButton.addItem(theName,theValue);
+  t.captionLabel().setColorBackground(color(80));
+  t.captionLabel().style().movePadding(2,0,-1,2);
+  t.captionLabel().style().moveMargin(-2,0,0,-3);
+  t.captionLabel().style().backgroundWidth = 46;
+}
+
+
+void controlEvent(ControlEvent theEvent) {
+  print("got an event from "+theEvent.group().name()+"\t");
+  for(int i=0;i<theEvent.group().arrayValue().length;i++) {
+    print(int(theEvent.group().arrayValue()[i]));
+  }
+  println("\t "+theEvent.group().value());
+  if(int(theEvent.group().value())==1){cart2010 = true;}
+   else{cart2010 = false;}   
+}
+
 
 void draw() {
   background(bg_color);
@@ -111,6 +154,8 @@ void draw() {
   */
   int w = (int) (width * 0.9);
   int h = (int) (height * 0.7);
+  
+  strokeWeight(1);
   
   state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
   
@@ -132,33 +177,14 @@ void draw() {
 //  rect(plot_x1, plot_y2, plot_x2, plot_y2+20);
 
   drawLegend();
-  drawIntervention(munIndex,state,0);
+  drawIntervention(munIndex,state,100);
+  drawPartyChange(munIndex,state,#BC8F8F);
   //drawZoomLegend();
-  inspectDataPoints(munHR, datapoints,false);
-  inspectDataPoints(stateHR, statepoints,true);
+  inspectDataPoints(munHR, datapoints,'M');
+  inspectDataPoints(stateHR, statepoints,'S');
+ inspectDataPoints(nationalHR, nationalpoints,'N');
+  inspectDataPoints(cartelHR, cartelpoints,'C');
   
-  // the choice of x and y change ()
-//  int deltas =15;
-//  if(mouseX >= width/2 -deltas && mouseX <= width/2 +deltas&& mouseY > plot_y2 && mouseY< plot_y2+50 && click == true){
-//    cycle_axis('X');
-//    xlims[0] = 0;
-//    xlims[1]= ceil(table.columnMax(table.fieldIndex(axes[axis_choice[0]][1])));
-//    ylims[0] = 0;
-//    ylims[1]= ceil(table.columnMax(table.fieldIndex(axes[axis_choice[1]][1])));
-//    click= false;
-//  }
-//  if( mouseX <=  plot_x1 && mouseY>=plot_y1+150 && mouseY<=plot_y1+300 && click == true){
-//     cycle_axis('Y');
-//     ylims[1]= ceil(table.columnMax(table.fieldIndex(axes[axis_choice[1]][1])));
-//     ylims[0] = 0;
-//     xlims[0] = 0;
-//     xlims[1]= ceil(table.columnMax(table.fieldIndex(axes[axis_choice[0]][1])));
-//     click= false;
-//  } 
-//  if(mouseX>plot_x2 && mouseY>=plot_y2-170&&  mouseY<=plot_y2 && click==true){
-//     cycle_axis('S');
-//     click=false;
-//  }  
   
 }
 
@@ -167,9 +193,9 @@ void draw() {
 | alter this method to change positioning of plot area
 */
 void drawPlotArea(int w, int h) {
-  plot_x1 = (width - w) ;
+  plot_x1 = 4*(width - w)/5 ;
   plot_y1 = (height - h) / 2;
-  plot_x2 = plot_x1 + 18*w/20;
+  plot_x2 = plot_x1 + 16*w/20;
   plot_y2 = plot_y1 + h;
   rectMode(CORNERS);
   stroke(250);
@@ -183,6 +209,7 @@ void drawPlotArea(int w, int h) {
 }
 
 void drawTitle (String t) {
+   textFont(titlefont);
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
@@ -195,9 +222,9 @@ void drawAxesLabels (String x_axis, String y_axis) {
   
   // axis labels are centered between adjacent edge of plot area and window
   text(x_axis, width/2, plot_y2+50);
-  verticalText(y_axis, -height/2, plot_x1/2);
+  verticalText(y_axis, -height/2, plot_x1/3);
   textSize(10);
-  verticalText("per 100000 inhabitants ", -height/2, plot_x1/2+15);
+  verticalText("per 100000 inhabitants ", -height/2, plot_x1/3+15);
 
   
   // record areas where axes lie
@@ -223,8 +250,8 @@ void drawGridlines () {
 
     float x = plot_x1 + n * x_step_size;
     float y = plot_y2 - n * y_step_size;
-
-    stroke(225);
+    
+    stroke(255);
     // draw grid lines
     line(plot_x1, y, plot_x2, y);
     line(x, plot_y1, x, plot_y2);
@@ -232,7 +259,7 @@ void drawGridlines () {
 
     // label grid lines as well
     textSize(10);
-    text(truncate(ylims[0]+(n * yrange)/steps,3), plot_x1-15, y );
+    text(truncate(ylims[0]+(n * yrange)/steps,1), plot_x1-15, y );
     if(n>0 & n<steps)
     text(years[n-1], x, plot_y2+15 );
       
@@ -249,14 +276,18 @@ void plotDataPoints (int mun) {
   int ncols =popul.numCols-2;
   datapoints = new float[ncols][2];
   statepoints = new float[ncols][2];
+  nationalpoints = new float[ncols][2];
+  cartelpoints = new float[ncols][2];
   nationalHR = new float[ncols];
   cartelHR = new float[ncols];
   munHR = new float[ncols];
   stateHR = new float[ncols];
-   cartS = ppartycMun.getCharAt(mun,6);
   int i,col;
   float x,y,pop;
   int state = floor(popul.getFloatAt(mun,0)/1000)-1;
+  if(cart2010){   cartS = ppartycMun.getCharAt(mun,6);}
+  else{   cartS = ppartycMun.getCharAt(mun,5);}
+  
   
   //define the colors
     switch(cartS){
@@ -343,8 +374,22 @@ void plotDataPoints (int mun) {
    statepoints[i][1] =  Spopul.getFloatAt(state,i+2);
    statepoints[i][0] = Stable.getFloatAt(state, col);
    stateHR[i] = statepoints[i][0]/statepoints[i][1]*100000;
-  cartelHR[i] = cartel10.getFloatAt(rowCart,i+1);
-  nationalHR[i] = cartel10.getFloatAt(11,i+1);
+  //national
+   nationalpoints[i][1] =  cartel10.getFloatAt(23,i+1);
+   nationalpoints[i][0] = cartel10.getFloatAt(22,i+1); 
+   nationalHR[i] = nationalpoints[i][0]/nationalpoints[i][1]*100000;
+   //cartel
+   if(cart2010)
+   {
+     cartelpoints[i][1] =  cartel10.getFloatAt(2*rowCart+1,i+1);
+     cartelpoints[i][0] = cartel10.getFloatAt(2*rowCart,i+1); 
+     cartelHR[i] = cartelpoints[i][0]/cartelpoints[i][1]*100000;
+   }else
+  {
+     cartelpoints[i][1] =  cartel07.getFloatAt(2*rowCart+1,i+1);
+     cartelpoints[i][0] = cartel07.getFloatAt(2*rowCart,i+1); 
+     cartelHR[i] = cartelpoints[i][0]/cartelpoints[i][1]*100000;
+  } 
   }
   
   float mm=max(max(munHR),max(stateHR)), ms=max(max(nationalHR),max(cartelHR));
@@ -435,7 +480,7 @@ void drawPoints(float[] vector,color colo){
   
 }
 
-void inspectDataPoints (float[] vector, float[][] matrix, boolean stateInd) {
+void inspectDataPoints (float[] vector, float[][] matrix, char type) {
   float x,y;
   for (int i = 0; i < vector.length; i++) {
     x =  map(years[i], xlims[0], xlims[1], plot_x1, plot_x2);
@@ -449,22 +494,39 @@ void inspectDataPoints (float[] vector, float[][] matrix, boolean stateInd) {
 //      stroke(255); fill(255); textAlign(RIGHT,RIGHT);
 //      //rect(mouseX + 50, mouseY ,textWidth(table.getDataAt(i, table.fieldIndex("name")))+10,60);
 //      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(munIndex, 1)),60);
-      stroke(0); fill(0); textAlign(CENTER);textSize(15);
-      
-      if(stateInd)
-          text(Spopul.getDataAt(state, 1), mouseX + 15, mouseY - 60);
-      else
-           text(popul.getDataAt(munIndex, 1), mouseX + 15, mouseY - 60);
-
-      fill(0); textSize(13);
-      text("estimated population " + years[i]+" : " + matrix[i][1], mouseX + 27, mouseY-35 );
-      text("number of homicides " + years[i]+" : " + floor(matrix[i][0]), mouseX + 10, mouseY-15 );
+     stroke(bg_color);
+     line(plot_x1,y,plot_x2,y);
+      stroke(250); fill(250); textAlign(CENTER);textSize(18);
+      switch(type){
+      case 'S':
+          text(Spopul.getDataAt(state, 1), width- 120,  200);
+          text(" ("+ years[i]+")", width- 120,  220);
+          break;
+      case 'M':    
+           text(popul.getDataAt(munIndex, 1),width-120, 200);
+           text(" ("+ years[i]+")", width- 120,  220);
+           break;
+      case 'N':    
+           text("National",width-120, 200);
+           text(" ("+ years[i]+")", width- 120,  220);
+           break;
+      case 'C':
+           text(cartels[rowCart][0],width-120, 200);
+           text(" ("+ years[i]+")", width- 120,  220);
+           break;
+      }
+      textFont(legendfont);
+      fill(250); textSize(12);
+      textAlign(LEFT);
+      text("estimated population: " + floor(matrix[i][1]), width- 200, 240 );
+      text("number of homicides: " + floor(matrix[i][0]),width- 200, 260 );
 
     }
   }
 }
 
 
+// for the checkbox
 //void mouseClicked() {
 //  click = true;
 //} 
@@ -475,17 +537,19 @@ void drawLegend(){
   
   textAlign(LEFT);
   stroke(250); fill(250);
-  textSize(12);
-   text(cartels[rowCart][0], width -200, plot_y2+40);
-  text(popul.getDataAt(munIndex, 1), width -200, plot_y2+60);
-   text(Spopul.getDataAt(state, 1), width -200, plot_y2+80);
+  textSize(11);
+
+   text(Spopul.getDataAt(state, 1), width -180, plot_y2-80);
+   text(popul.getDataAt(munIndex, 1), width -180, plot_y2-60);
+   text(cartels[rowCart][0], width -180, plot_y2-40);
+
   
  //Lenged for size
   for (int i = 0; i < 3; i++)
   {
     fill(seriesCols[cartIndl][i]);
     stroke(seriesCols[cartIndd][i]);
-    ellipse(width -220,  plot_y2+35+20*i, 6, 6);
+    ellipse(width -190,  plot_y2-45-20*i, 6, 6);
   }
 
 }  
@@ -493,7 +557,7 @@ void drawLegend(){
 void drawIntervention(int mun, int sta, color cInt)
 {
  int ncols = milInt.numRows;
- int i;
+ int i,countInt=0;
  float clave;
  float intYear,x;
 
@@ -509,10 +573,52 @@ void drawIntervention(int mun, int sta, color cInt)
      println(intYear);
      println(x);
      stroke(cInt);
+     strokeWeight(2);
      fill(cInt);
      line(x,plot_y1,x,plot_y2);
-     break;
+     if(countInt==0){text("Military Intervention:",width-200, 370);}     
+     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 200,  390);
+     countInt++;
    }
+ }  
+} 
+
+
+
+void drawPartyChange(int mun, int sta, color cInt)
+{
+ int i;
+ String partya, partyb;
+ float intYear,x;
+   
+
+ for(i = 2; i < 4; i++)
+ { 
+   partyb=ppartycMun.getDataAt(mun,i);
+   partya=ppartycMun.getDataAt(mun,i+1); // only here we have 0's
+   if(partya.equals(0) || partya.equals("NOT YET"))
+   {
+     println("No data");
+   }else
+   if(partya.equals(partyb)) //does this work
+   {
+       println("No party change");
+   }else
+   {
+   
+     intYear= ppartycS.getFloatAt(state,i+1);
+     x= map(intYear, xlims[0], xlims[1], plot_x1, plot_x2); 
+     stroke(cInt);
+     fill(cInt);
+     strokeWeight(2);
+     line(x,plot_y1,x,plot_y2);
+     textSize(10);
+     text("Party change:",width-200, 330);
+     text(partyb + " to " + partya, width- 200,  350);
+     break;
+   
+   }
+   
  }  
 } 
 
@@ -541,23 +647,11 @@ boolean near (float year_num, float hom , float x, float y, int rad) {
 }
 
 
-// determines whether there was a change in party
-boolean chPart (float year_num, float hom , float x, float y, int rad) {
-  boolean isnear = false;
-  if ((y > plot_y1) && (y < plot_y2) && (x > plot_x1) && (x < plot_x2))
-  {
-      float distpoint = sqrt(pow(year_num- x,2)+pow(hom-y,2));  
-      if( distpoint < rad) {
-          isnear = true;
-      }
-    }  
-  return isnear;
-}
 
 
 
 // truncating a number to three decimal places
-float truncate(float x, int dec){
+float truncate(float x, float dec){
   float aux=pow(10,dec);
   if ( x > 0 )
     return float(floor(x * aux))/aux;
@@ -570,11 +664,17 @@ void keyPressed () {
     switch (keyCode) {
     case LEFT:
       // maybe I should make 2486 a golbal variable for nMun
-        munIndex=(munIndex-1)%2486;
+        if(munIndex>0){
+          munIndex=(munIndex-1)%2456;
+        }
+        else {munIndex=2455;}  
         state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
         break; 
     case RIGHT: 
-      munIndex=(munIndex+1)%2486;
+      if(munIndex<2456){
+        munIndex=(munIndex+1)%2456;
+       }
+        else {munIndex=0;}
       state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
       break;
     }
