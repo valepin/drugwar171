@@ -11,7 +11,8 @@ int municCount;
 int[] colorScheme = {50, 153, 0, 255};
 //int[] colorScheme = { 255, 255, 0, 50};
 String[] municClave;
-Float[] municHom;
+float[] municHom;
+float[] municGrey;
 float xx = 0;
 float yy = 0;
 float pan = -40;
@@ -42,22 +43,24 @@ void setup() {
   homicideTable = new Table("../data/MunHomicides.tsv");
   municCount = homicideTable.getRowCount() - 1;
   municClave = new String[municCount];
-  municHom = new Float[municCount];
+  municHom = new float[municCount];
+  municGrey = new float[municCount];
 
   for(int c = 0; c < municCount; c++){
     municClave[c] = "muni_" + homicideTable.getString(c+1,0);
-    municHom[c] = homicideTable.getFloat(c+1,1);
+    municHom[c] = homicideTable.getFloat(c+1,66)/homicideTable.getFloat(c+1,65);
   }
 
+  //create greyscale vector for heatmap
+  for(int c = 0; c < municCount; c++)
+    municGrey[c] = map(municHom[c], min(municHom), max(municHom),colorScheme[0], colorScheme[3]);
+  
   //store all munis and claveID in ArrayLists for easy reference
   munis = new ArrayList();
   claveIDs = new ArrayList();
   for (int row = 0; row < municCount; row++) {
     RShape munic = mapImage.getChild(municClave[row]);
-    if(munic == null){
-      print(row); //it seems that some munis in our tsv are not in the svg
-      print(" ");
-    }else{
+    if(munic != null){
       munis.add(munic);
       claveIDs.add(municClave[row]);
     }
@@ -89,7 +92,7 @@ void draw() {
     if(munic.contains(p)){
       fill(0,100,255,250);
     }else{
-      fill(colorScheme[1]);
+      fill(municGrey[i]);
       stroke(colorScheme[2]);
     }
     munic.draw();
