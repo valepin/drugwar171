@@ -73,28 +73,16 @@ void setup() {
 
   //create greyscale vector for heatmap
   for(int c = 0; c < municCount; c++)
-    municGrey[c] = map(municHom[c], min(municHom), max(municHom),colorScheme[0], colorScheme[3]);
+    municGrey[c] = map(municHom[c], min(municHom), max(municHom),0,255);
   
-  //store all munis and claveID in ArrayLists for easy reference
-  // munis = new ArrayList();
-  // claveIDs = new ArrayList();
-  // for (int row = 0; row < municCount; row++) {
-  //   RShape munic = mapImage.getChild(municClave[row]);
-  //   if(munic != null){
-  //     munis.add(munic);
-  //     claveIDs.add(municClave[row]);
-  //   }
-  // }
-
   //setup buttons
   ellipseMode(CENTER);
-  left = new RectButton(buttonX-buttonS,buttonY, 10, color(colorScheme[3]), color(colorScheme[3]));
+  left = new RectButton(buttonX-buttonS,buttonY, 10, color(colorScheme[3],0), color(colorScheme[3],0));
   right = new RectButton(buttonX+buttonS,buttonY, 10, color(colorScheme[3]), color(colorScheme[3]));
   up = new RectButton(buttonX,buttonY-buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
   down = new RectButton(buttonX,buttonY+buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
   in = new RectButton(buttonX,buttonY-buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
   out = new RectButton(buttonX,buttonY+buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
-
 }
 
 void draw() {
@@ -105,6 +93,7 @@ void draw() {
 
 //draw map
   smooth();
+  strokeWeight(0.1);
   translate(mapWidth/2-xx, mapHeight/2-yy);
   RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
   for(int i = 0; i < municCount; i++){
@@ -113,11 +102,11 @@ void draw() {
       if(munic.contains(p)){
 	fill(0,100,255,250);
       }else{
-	fill(municGrey[i]);
+	fill(255);
 	munic.draw();
 	int[] cartcol  = cartelColor(municCartel[i]);
 	//TODO not sure about mix thing
-	fill(seriesCols[cartcol[0]][0],30);
+	fill(seriesCols[cartcol[0]][0],municGrey[i]);
 	stroke(colorScheme[2]);
       }
    
@@ -133,6 +122,16 @@ void draw() {
   down.display();
   in.display();
   out.display();
+
+  //text in buttons
+  textAlign(LEFT,TOP);
+  text("<",buttonX-buttonS,buttonY);
+  text(">",buttonX+buttonS,buttonY);
+  text("^",buttonX,buttonY-buttonS);
+  text("v",buttonX,buttonY+buttonS);
+  text("+",buttonX,buttonY-buttonS/4);
+  text("-",buttonX,buttonY+buttonS/4);
+
 
 }
 
