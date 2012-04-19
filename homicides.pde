@@ -103,15 +103,7 @@ void setupV() {
      years[i]=1990+i;
    } 
    
-     rectMode(CORNERS);
-  stroke(250);
-  fill(250);
-  rect(0, 0, joeyWidth, joeyHeight);
-  
-       rectMode(CORNERS);
-  stroke(250);
-  fill(250);
-  rect(joeyWidth, valeriaHeight,joeyWidth+ anuvWidth, valeriaHeight+anuvHeight);
+
    
   // define the fonts to be used
    titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
@@ -125,7 +117,7 @@ void setupV() {
 
   
   controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",width/2-50, 65);
+  r = controlP5.addRadioButton("radioButton",width/2-50, 58);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -163,9 +155,19 @@ void controlEvent(ControlEvent theEvent) {
 
 void drawV() {
   
+       rectMode(CORNERS);
+  stroke(250);
+  fill(250);
+  rect(0,  barHeight, joeyWidth, barHeight+ joeyHeight);
+  
+       rectMode(CORNERS);
+  stroke(250);
+  fill(250);
+  rect(joeyWidth, barHeight+valeriaHeight,joeyWidth+ anuvWidth,  barHeight+valeriaHeight+anuvHeight);
+  
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
-  text("Stratfor Cartel Sketch Year",width/2-10,60);
+  text("Stratfor Cartel Sketch Year",width/2-10,50);
   
   /*
   | IMPORTANT:
@@ -211,10 +213,10 @@ void drawV() {
 | alter this method to change positioning of plot area
 */
 void drawPlotArea(int w, int h) {
-  plot_x1 = joeyWidth+50 ;
-  plot_y1 = (height - h) / 6;
-  plot_x2 = width-30;
-  plot_y2 = plot_y1 + h;
+  plot_x1 = joeyWidth+80 ;
+  plot_y1 =barHeight;
+  plot_x2 = width-10;
+  plot_y2 = plot_y1 + 8*h/10;
   rectMode(CORNERS);
   stroke(250);
   fill(250);
@@ -231,7 +233,7 @@ void drawTitle (String t) {
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
-  text(t, width/2, 40);
+  text(t, width/2, 30);
 
 }
 
@@ -239,10 +241,10 @@ void drawAxesLabels (String x_axis, String y_axis) {
   textSize(14);
   
   // axis labels are centered between adjacent edge of plot area and window
-  text(x_axis, joeyWidth+valeriaWidth/2, plot_y2+30);
-  verticalText(y_axis, -height/4, joeyWidth+2);
+  text(x_axis, joeyWidth+valeriaWidth/2+20, plot_y2+40);
+  verticalText(y_axis, -height/4, joeyWidth+15);
   textSize(10);
-  verticalText("per 100000 inhabitants ", -height/4,joeyWidth+12);
+  verticalText("per 100000 inhabitants ", -height/4,joeyWidth+30);
 
   
   // record areas where axes lie
@@ -280,7 +282,7 @@ void drawGridlines () {
     // label grid lines as well
     
     if(n>0 & n<steps)
-    verticalText(nf(years[n-1],0), plot_y2+15,x);
+    verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
   }
   // y grid lines
    for (int n =1; n <= 10; n++) {
@@ -601,27 +603,27 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
       stroke(250); fill(250); strokeWeight(1.1); textAlign(CENTER);textSize(11);
       switch(type){
       case 'S':
-          text(Spopul.getDataAt(state, 1), width- 350,  15);
-          text(" ("+ years[i]+")", width- 350,  30);
+          text(Spopul.getDataAt(state, 1)+" ("+years[i]+")", width- 350,  35);
+         // text(" ("+ years[i]+")", width- 350,  30);
           break;
       case 'M':    
-           text(popul.getDataAt(munIndex, 1),width-350, 15);
-           text(" ("+ years[i]+")", width- 350,  30);
+           text(popul.getDataAt(munIndex, 1)+" ("+years[i]+")",width-350, 35);
+           //text(" ("+ years[i]+")", width- 350,  30);
            break;
       case 'N':    
-           text("National",width-350, 15);
-           text(" ("+ years[i]+")", width- 350, 30);
+           text("National ("+ years[i]+")",width-350, 35);
+           //text(" ", width- 350, 30);
            break;
       case 'C':
-           text(cartels[rowCart][0],width-350, 15);
-           text(" ("+ years[i]+")", width- 350,  30);
+           text(cartels[rowCart][0]+" ("+years[i]+")",width-350, 35);
+ 
            break;
       }
       textFont(legendfont);
       fill(250); textSize(11);
       textAlign(LEFT);
-      text("estimated population: " + floor(matrix[i][1]), width- 420, 45 );
-      text("number of homicides: " + floor(matrix[i][0]),width- 420, 60 );
+      text("estimated population: " + floor(matrix[i][1]), width- 420, 50 );
+      text("number of homicides: " + floor(matrix[i][0]),width- 420, 65 );
 
     }
   }
@@ -641,18 +643,21 @@ void drawLegend(){
   stroke(250); fill(250);
   textSize(12);
 
-   text(Spopul.getDataAt(state, 1), width -180, plot_y2-60);
-   text(popul.getDataAt(munIndex, 1), width -180, plot_y2-40);
-   text(cartels[rowCart][0], width -180, plot_y2-20);
-
   
+   text(cartels[rowCart][0], joeyWidth +valeriaWidth/5, barHeight+valeriaHeight-10);
+   text(popul.getDataAt(munIndex, 1), joeyWidth +2*valeriaWidth/5, barHeight+valeriaHeight-10);
+   text(Spopul.getDataAt(state, 1), joeyWidth +3*valeriaWidth/5, barHeight+valeriaHeight-10);
+   text("National", joeyWidth +4*valeriaWidth/5, barHeight+valeriaHeight-10);
  //Lenged for size
   for (int i = 0; i < 3; i++)
   {
     fill(seriesCols[cartIndl][i]);
     stroke(seriesCols[cartIndd][i]);
-    ellipse(width -190,  plot_y2-25-20*i, 6, 6);
+    ellipse(joeyWidth +(i+1)*valeriaWidth/5-10,  barHeight+valeriaHeight-15, 6, 6);
   }
+  
+  stroke(250);fill(0);
+  ellipse(joeyWidth +4*valeriaWidth/5-10,  barHeight+valeriaHeight-15, 7, 7);
 
 }  
 
@@ -678,8 +683,8 @@ void drawIntervention(int mun, int sta, color cInt)
      strokeWeight(2);
      fill(cInt);
      line(x,plot_y1,x,plot_y2);
-     if(countInt==0){text("Military Intervention:",width-200, 370);}     
-     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 180,  390);
+     if(countInt==0){text("Military Intervention:",width-120, 35);}     
+     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 100,  55);
      countInt++;
    }
  }  
@@ -714,9 +719,11 @@ void drawPartyChange(int mun, int sta, color cInt)
      fill(cInt);
      strokeWeight(2);
      line(x,plot_y1,x,plot_y2);
-     text("Party change:",width-200, 300);
-     text("(PAN, PAN-PRD, PRD, PRI, Other)",width-200, 320);
-     text(partyb + " to " + partya, width- 180,  340);
+
+     text("Party change:",width-250, 35);
+     text(partyb + " to " + partya, width- 260,  55);
+      textSize(8);    
+      text("(PAN, PAN-PRD, PRD, PRI, Other)",width-270, 70);
      break;
    
    }
