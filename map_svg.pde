@@ -164,7 +164,7 @@ void drawJ() {
 
   
 //draw rectangles
-  fill(255);
+  fill(colorScheme[0]);
   rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
   rect(0,0,width,barHeight);
 
