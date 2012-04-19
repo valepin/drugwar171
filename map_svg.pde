@@ -26,6 +26,7 @@ int buttonY = barHeight + 60;
 int buttonS = 40;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
+color highlightJ = color(0,100,255);
 color[][] seriesColsJ={
   {#9400D3, #DA70D6,#A9A9A9},
   {#FF4500, #FFA500,#A9A9A9},
@@ -41,9 +42,7 @@ color[][] seriesColsJ={
 
 void setupJ() {
 
-  //draw background
-  //background(200);
-  //size(mapWidth,mapHeight); 
+  //setup
   g.smooth = true;
 
   //initialize the geomerative library
@@ -78,12 +77,12 @@ void setupJ() {
   
   //setup buttons
   ellipseMode(CENTER);
-  left = new RectButton(buttonX-buttonS,buttonY, 10, color(colorScheme[3],0), color(colorScheme[3],0));
-  right = new RectButton(buttonX+buttonS,buttonY, 10, color(colorScheme[3]), color(colorScheme[3]));
-  up = new RectButton(buttonX,buttonY-buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
-  down = new RectButton(buttonX,buttonY+buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
-  in = new RectButton(buttonX,buttonY-buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
-  out = new RectButton(buttonX,buttonY+buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
+  left = new RectButton(buttonX-buttonS,buttonY, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+  right = new RectButton(buttonX+buttonS,buttonY, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+  up = new RectButton(buttonX,buttonY-buttonS, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+  down = new RectButton(buttonX,buttonY+buttonS, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+  in = new RectButton(buttonX,buttonY-buttonS/4, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+  out = new RectButton(buttonX,buttonY+buttonS/4, 12, color(colorScheme[3],0), color(colorScheme[3],0));
 
   //zoomout once
   zoomit(1/zoom);
@@ -100,23 +99,24 @@ void drawJ() {
   smooth();
   strokeWeight(0.1);
   
-  //translate(-xx, joeyHeight/1.3-yy);
 
   RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
   translate(mapWidth/2-xx, mapHeight/2-yy);
   for(int i = 0; i < municCount; i++){
     RShape munic = munis[i];
     if(munic != null){
-      if(munic.contains(p)){
-	fill(0,100,255,250);
+      if(munic.contains(p) & mouseX< joeyWidth & mouseY > barHeight){
+        fill(highlightJ);
+        selectedMuni = i;
+        hoverMuni = true;
       }else{
-	fill(255);
-	munic.draw();
-	int[] cartcol  = cartelColor(municCartel[i]);
-	//TODO not sure about mix thing
-	fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
-
-	stroke(colorScheme[2]);
+        fill(255);
+        munic.draw();
+        int[] cartcol  = cartelColor(municCartel[i]);
+        //TODO not sure about mix thing
+        fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+        
+        stroke(colorScheme[2]);
       }
    
       munic.draw();
@@ -135,12 +135,15 @@ void drawJ() {
 
   //text in buttons
   textAlign(LEFT,TOP);
+  //textSize(14);
+  //stroke(1);
+  fill(255);
   text("<",buttonX-buttonS,buttonY);
   text(">",buttonX+buttonS,buttonY);
-  text("^",buttonX,buttonY-buttonS);
-  text("v",buttonX,buttonY+buttonS);
+  text("^",buttonX+1,buttonY-buttonS);
+  text("v",buttonX+1,buttonY+buttonS);
   text("+",buttonX,buttonY-buttonS/4);
-  text("-",buttonX,buttonY+buttonS/4);
+  text("-",buttonX+1,buttonY+buttonS/4);
 
   
   //draw rectangles
