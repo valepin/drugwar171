@@ -24,6 +24,7 @@ float zoom = 1.5;
 int buttonX = joeyWidth - 80;
 int buttonY = barHeight + 60;
 int buttonS = 40;
+int legendS = 80;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
 color highlightJ = color(0,100,255);
@@ -37,6 +38,20 @@ color[][] seriesColsJ={
   {#FFB700, #FFEA00 ,#A9A9A9},
   {#708090, #D3D3D3,#A9A9A9},
   {#66CDAA, #AFEEEE,#708090}
+};
+
+String[][] cartelsJ = {
+  {"Gulf Cartel", "G"},
+  {"Los Zetas Cartel", "Z"},
+  {"Pacifico Sur Cartel", "P"},
+  {"La Familia Michoacana", "F"},
+  {"Cartel de Juárez", "J"},
+  {"Sinaloa Cartel","S"},
+  {"Not Specified", "N"},
+  {"In Dispute", "D"},
+  {"Pacifico Sur and Sinaloa Cartels","s"},
+  {"Acapulco and Pacifico Sur Cartels","a"},
+  {"Gulf and Los Zetas Cartels","z"},
 };
 
 
@@ -148,10 +163,21 @@ void drawJ() {
   text("-",buttonX+1,buttonY+buttonS/4);
 
   
-  //draw rectangles
+//draw rectangles
   fill(255);
   rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
   rect(0,0,width,barHeight);
+
+  //draw legend
+  textSize(10);
+  for(int i = 0; i < cartelsJ.length-3; i++){
+    int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
+    fill(seriesColsJ[cartcol[0]][0]);
+    rect(legendS*(i+1), barHeight/4,20,20);
+    text(cartelsJ[i][0],legendS*(i+1), barHeight/4 + 25, 60,40);
+
+  }
+  
 }
 
 
