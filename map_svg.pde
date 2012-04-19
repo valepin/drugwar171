@@ -1,9 +1,8 @@
 import processing.opengl.*;
 import geomerative.*;
-
-//TODO: Cartel legend + highlighting 
+ 
 //TODO: cart2010 functionality
-//
+//TODO: use population data!
 RShape mapImage;
 RShape[] munis;
 Table homicideTable;
@@ -155,16 +154,21 @@ void drawJ() {
   //textSize(14);
   //stroke(1);
   fill(255);
+  textSize(14);
   text("<",buttonX-buttonS,buttonY);
-  text(">",buttonX+buttonS,buttonY);
-  text("^",buttonX+1,buttonY-buttonS);
-  text("v",buttonX+1,buttonY+buttonS);
   text("+",buttonX,buttonY-buttonS/4);
   text("-",buttonX+1,buttonY+buttonS/4);
+  text(">",buttonX+buttonS,buttonY);
+textSize(18);
+  text("^",buttonX+1,buttonY-buttonS);
+textSize(12);
+  text("v",buttonX+1,buttonY+buttonS);
+
 
   
 //draw rectangles
   fill(colorScheme[0]);
+  rectMode(CORNER);
   rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
   rect(0,0,width,barHeight);
 
