@@ -86,7 +86,7 @@ class CircleButton extends Button
 
   void display() 
   {
-    stroke(255);
+    noStroke();
     fill(currentcolor);
     ellipse(x, y, size, size);
   }
@@ -118,7 +118,7 @@ class RectButton extends Button
 
   void display() 
   {
-    stroke(255);
+    noStroke();
     fill(currentcolor);
     rect(x, y, size, size);
   }
