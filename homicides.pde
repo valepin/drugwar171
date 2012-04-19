@@ -105,10 +105,10 @@ void setupV() {
    
    
   // define the fonts to be used
-//   titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
-//  legendfont = loadFont("TrebuchetMS-16.vlw");
-//  font = loadFont("ArialMT-10.vlw");
-//  textFont(font);
+   titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
+  legendfont = loadFont("TrebuchetMS-16.vlw");
+  font = loadFont("ArialMT-10.vlw");
+  textFont(font);
   
 
   
@@ -116,7 +116,7 @@ void setupV() {
 
   
   controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",width-150,130);
+  r = controlP5.addRadioButton("radioButton",width/2-50, 65);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -155,15 +155,15 @@ void controlEvent(ControlEvent theEvent) {
 void drawV() {
   
     //label button
- stroke(250); fill(250); textAlign(CENTER);textSize(15);
-  text("Stratfor Cartel Sketch Year",width-110,110);
+ stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
+  text("Stratfor Cartel Sketch Year",width/2-10,60);
   
   /*
   | IMPORTANT:
   | the next two lines determine the dimensions of the plot area
   */
-  int w = int (valeriaWidth * 0.9);
-  int h = (int) (valeriaHeight * 0.7);
+  int w = int (valeriaWidth);
+  int h = int (valeriaHeight);
   
   strokeWeight(1);
   
@@ -202,13 +202,13 @@ void drawV() {
 | alter this method to change positioning of plot area
 */
 void drawPlotArea(int w, int h) {
-  plot_x1 = 4*(width - w)/5 ;
-  plot_y1 = (height - h) / 2;
-  plot_x2 = plot_x1 + 16*w/20;
+  plot_x1 = joeyWidth+50 ;
+  plot_y1 = (height - h) / 6;
+  plot_x2 = width-30;
   plot_y2 = plot_y1 + h;
   rectMode(CORNERS);
-  stroke(248);
-  fill(248);
+  stroke(250);
+  fill(250);
   rect(plot_x1, plot_y1, plot_x2, plot_y2);
 
   // set dimensions for later use
@@ -222,7 +222,7 @@ void drawTitle (String t) {
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
-  text(t, width/2, 3*plot_y1/5);
+  text(t, width/2, 40);
 
 }
 
@@ -230,10 +230,10 @@ void drawAxesLabels (String x_axis, String y_axis) {
   textSize(16);
   
   // axis labels are centered between adjacent edge of plot area and window
-  text(x_axis, valeriaWidth/2, plot_y2+50);
-  verticalText(y_axis, -height/2, plot_x1/3);
+  text(x_axis, joeyWidth+valeriaWidth/2, plot_y2+50);
+  verticalText(y_axis, -height/4, joeyWidth+5);
   textSize(10);
-  verticalText("per 100000 inhabitants ", -height/2, plot_x1/3+15);
+  verticalText("per 100000 inhabitants ", -height/4,joeyWidth+15);
 
   
   // record areas where axes lie
@@ -250,27 +250,43 @@ void drawGridlines () {
   // these should be in the original scale
   xrange =  xlims[1]-xlims[0];
   yrange = ylims[1]-ylims[0];
+  
+ int stepsy =10;
 
   // steps defined at top of document, default 10
   float x_step_size = plot_width / steps;
-  float y_step_size = plot_height /steps;
+  float y_step_size = plot_height / stepsy;
 
+      stroke(255);
+      textSize(10);
+  // x gridlines
   for (int n =1; n <= steps; n++) {
 
     float x = plot_x1 + n * x_step_size;
-    float y = plot_y2 - n * y_step_size;
-    
-    stroke(255);
+  
     // draw grid lines
-    line(plot_x1, y, plot_x2, y);
     line(x, plot_y1, x, plot_y2);
     //text(,x, plot_y2);
 
     // label grid lines as well
-    textSize(10);
-    text(String.format("%.2f",ylims[0]+(n * yrange)/steps), plot_x1-20, y );
+    
     if(n>0 & n<steps)
-    text(years[n-1], x, plot_y2+15 );
+    verticalText(nf(years[n-1],0), plot_y2+15,x);
+  }
+  // y grid lines
+   for (int n =1; n <= 10; n++) {
+
+    float y = plot_y2 - n * y_step_size;
+    
+
+    // draw grid lines
+    line(plot_x1, y, plot_x2, y);
+    //text(,x, plot_y2);
+
+    // label grid lines as well
+    textSize(10);
+    text(String.format("%.2f",ylims[0]+(n * yrange)/stepsy), plot_x1-20,y);
+     
       
   }
   
@@ -573,30 +589,30 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
 //      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(munIndex, 1)),60);
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
-      stroke(250); fill(250); textAlign(CENTER);textSize(18);
+      stroke(250); fill(250); strokeWeight(1.1); textAlign(CENTER);textSize(11);
       switch(type){
       case 'S':
-          text(Spopul.getDataAt(state, 1), valeriaWidth- 120,  200);
-          text(" ("+ years[i]+")", valeriaWidth- 120,  220);
+          text(Spopul.getDataAt(state, 1), width- 350,  15);
+          text(" ("+ years[i]+")", width- 350,  30);
           break;
       case 'M':    
-           text(popul.getDataAt(munIndex, 1),width-120, 200);
-           text(" ("+ years[i]+")", width- 120,  220);
+           text(popul.getDataAt(munIndex, 1),width-350, 15);
+           text(" ("+ years[i]+")", width- 350,  30);
            break;
       case 'N':    
-           text("National",width-120, 200);
-           text(" ("+ years[i]+")", width- 120,  220);
+           text("National",width-350, 15);
+           text(" ("+ years[i]+")", width- 350, 30);
            break;
       case 'C':
-           text(cartels[rowCart][0],width-120, 200);
-           text(" ("+ years[i]+")", width- 120,  220);
+           text(cartels[rowCart][0],width-350, 15);
+           text(" ("+ years[i]+")", width- 350,  30);
            break;
       }
       textFont(legendfont);
-      fill(250); textSize(12);
+      fill(250); textSize(11);
       textAlign(LEFT);
-      text("estimated population: " + floor(matrix[i][1]), width- 200, 240 );
-      text("number of homicides: " + floor(matrix[i][0]),width- 200, 260 );
+      text("estimated population: " + floor(matrix[i][1]), width- 420, 45 );
+      text("number of homicides: " + floor(matrix[i][0]),width- 420, 60 );
 
     }
   }
@@ -699,7 +715,7 @@ void drawPartyChange(int mun, int sta, color cInt)
  }  
 } 
 
-void verticalText (String t, int x, int y) {
+void verticalText (String t, float x, float y) {
   pushMatrix(); // contain text transformation
   rotate(radians(270));
   // because we rotate 270, x becomes -y, y becomes x. think cartesian coordinates

@@ -14,15 +14,15 @@ int anuvWidth=300;
 
 void setup(){
   size(width,height);
-  setupJ();
-  // setupV();
-  // setupA();
+  //setupJ();
+  setupV();
+  //setupA();
 }
 
 
 void draw(){
   background(bg_color);
-  drawJ();
-  // drawV();
-  // drawA();
+  //drawJ();
+  drawV();
+  //drawA();
 }
