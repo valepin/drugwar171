@@ -90,7 +90,7 @@ void calculate() {
 
 
 void drawA() {
-  background(background_color);
+  //background(200);
 
   draw_scatter();
   drawTitle(var_year+1990);

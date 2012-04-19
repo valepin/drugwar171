@@ -45,7 +45,7 @@ color[][] seriesColsJ={
 void setupJ() {
 
   //draw background
-  background(colorScheme[0]);
+  //background(200);
   //size(mapWidth,mapHeight); 
   g.smooth = true;
 
@@ -110,7 +110,7 @@ void drawJ() {
 	munic.draw();
 	int[] cartcol  = cartelColor(municCartel[i]);
 	//TODO not sure about mix thing
-	fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+	//fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
 	stroke(colorScheme[2]);
       }
    
