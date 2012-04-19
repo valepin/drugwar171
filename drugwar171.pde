@@ -15,7 +15,7 @@ int anuvWidth=512;
 void setup(){
   size(width,height);
   setupJ();
-  //setupV();
+  setupV();
   //setupA();
 }
 
@@ -24,6 +24,6 @@ void draw(){
   background(bg_color);
   hoverMuni=false;
   drawJ();
-  //drawV();
+  drawV();
   //drawA();
 }

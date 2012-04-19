@@ -38,7 +38,6 @@ PFont legendfont;
 
 // municipality index to plot (default should be the national one)
 boolean all=true;
-int munIndex=216;
 int state;
 
 
@@ -155,10 +154,10 @@ void controlEvent(ControlEvent theEvent) {
 
 void drawV() {
   
-       rectMode(CORNERS);
-  stroke(250);
-  fill(250);
-  rect(0,  barHeight, joeyWidth, barHeight+ joeyHeight);
+//       rectMode(CORNERS);
+//  stroke(250);
+//  fill(250);
+//  rect(0,  barHeight, joeyWidth, barHeight+ joeyHeight);
   
        rectMode(CORNERS);
   stroke(250);
@@ -167,7 +166,7 @@ void drawV() {
   
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
-  text("Stratfor Cartel Sketch Year",width/2-10,50);
+  text("Year of Stratfor Cartel Sketch ",width/2,50);
   
   /*
   | IMPORTANT:
@@ -178,7 +177,7 @@ void drawV() {
   
   strokeWeight(1);
   
-  state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
+  state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
   
   /*
   | Start Drawing here.
@@ -187,7 +186,7 @@ void drawV() {
   */
   drawPlotArea(w, h);
  
-  drawTitle(popul.getDataAt(munIndex, 1)+", "+ Spopul.getDataAt(state, 1) );
+  drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1) );
     drawAxesLabels("year", "homicide rate");
     drawGridlines();
    if(plotAllC)
@@ -195,10 +194,10 @@ void drawV() {
      drawAllCartels();
    }else
    {
-      plotDataPoints(munIndex);
+      plotDataPoints(selectedMuni);
       drawLegend();
-      drawIntervention(munIndex,state,#808000);
-      drawPartyChange(munIndex,state,#BC8F8F);
+      drawIntervention(selectedMuni,state,#808000);
+      drawPartyChange(selectedMuni,state,#BC8F8F);
       //drawZoomLegend();
       inspectDataPoints(munHR, datapoints,'M');
       inspectDataPoints(stateHR, statepoints,'S');
@@ -246,11 +245,7 @@ void drawAxesLabels (String x_axis, String y_axis) {
   textSize(10);
   verticalText("per 100000 inhabitants ", -height/4,joeyWidth+30);
 
-  
-  // record areas where axes lie
-//    textSize(10);
-//  x_axis_area = new float[] { (height+plot_y2)/2-7, (height+plot_y2)/2+7 };
-//  y_axis_area = new float[] { plot_x1/2-7, plot_x1/2+7 };
+ 
 }
 
 
@@ -597,7 +592,7 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
 //      rectMode(CENTER);
 //      stroke(255); fill(255); textAlign(RIGHT,RIGHT);
 //      //rect(mouseX + 50, mouseY ,textWidth(mtable.getDataAt(i, mtable.fieldIndex("name")))+10,60);
-//      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(munIndex, 1)),60);
+//      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(selectedMuni, 1)),60);
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
       stroke(250); fill(250); strokeWeight(1.1); textAlign(CENTER);textSize(11);
@@ -607,7 +602,7 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
          // text(" ("+ years[i]+")", width- 350,  30);
           break;
       case 'M':    
-           text(popul.getDataAt(munIndex, 1)+" ("+years[i]+")",width-350, 35);
+           text(popul.getDataAt(selectedMuni, 1)+" ("+years[i]+")",width-350, 35);
            //text(" ("+ years[i]+")", width- 350,  30);
            break;
       case 'N':    
@@ -645,7 +640,7 @@ void drawLegend(){
 
   
    text(cartels[rowCart][0], joeyWidth +valeriaWidth/5, barHeight+valeriaHeight-10);
-   text(popul.getDataAt(munIndex, 1), joeyWidth +2*valeriaWidth/5, barHeight+valeriaHeight-10);
+   text(popul.getDataAt(selectedMuni, 1), joeyWidth +2*valeriaWidth/5, barHeight+valeriaHeight-10);
    text(Spopul.getDataAt(state, 1), joeyWidth +3*valeriaWidth/5, barHeight+valeriaHeight-10);
    text("National", joeyWidth +4*valeriaWidth/5, barHeight+valeriaHeight-10);
  //Lenged for size
@@ -721,7 +716,7 @@ void drawPartyChange(int mun, int sta, color cInt)
      line(x,plot_y1,x,plot_y2);
 
      text("Party change:",width-250, 35);
-     text(partyb + " to " + partya, width- 260,  55);
+     text(partyb + " to " + partya, width- 240,  55);
       textSize(8);    
       text("(PAN, PAN-PRD, PRD, PRI, Other)",width-270, 70);
      break;
@@ -774,24 +769,24 @@ float truncate(float x, float dec){
 //     switch (keyCode) {
 //     case LEFT:
 //       // maybe I should make 2486 a golbal variable for nMun
-//         if(munIndex>0){
-//           munIndex=(munIndex-1)%2456;
+//         if(selectedMuni>0){
+//           selectedMuni=(selectedMuni-1)%2456;
 //         }
-//         else {munIndex=2455;}  
-//         state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
+//         else {selectedMuni=2455;}  
+//         state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
 //         plotAllC=false;
 //         break; 
 //     case RIGHT: 
-//       if(munIndex<2455){
-//         munIndex=(munIndex+1)%2456;
+//       if(selectedMuni<2455){
+//         selectedMuni=(selectedMuni+1)%2456;
 //        }
-//         else {munIndex=0;}
-//       state = floor(popul.getFloatAt(munIndex,0)/1000)-1;
+//         else {selectedMuni=0;}
+//       state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
 //       plotAllC=false;
 //       break;
 //       case 's': 
 //       // Go to ciudad Juárez (which has received a special atention)
-//         munIndex=234;
+//         selectedMuni=234;
 //        plotAllC=true;
 //       break;        
 //     }
