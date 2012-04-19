@@ -90,8 +90,6 @@ void setupJ() {
 
 void drawJ() {
 
-  //background(colorScheme[0]);
-
   //update graph
   update();
 
@@ -106,7 +104,6 @@ void drawJ() {
     RShape munic = munis[i];
     if(munic != null){
       if(munic.contains(p) & mouseX< joeyWidth & mouseY > barHeight){
-        fill(highlightJ);
         selectedMuni = i;
         hoverMuni = true;
       }else{
@@ -117,9 +114,14 @@ void drawJ() {
         fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
         
         stroke(colorScheme[2]);
+        munic.draw();
       }
    
-      munic.draw();
+      if(hoverMuni & i==selectedMuni){
+        fill(highlightJ);
+        munic.draw();
+      }
+
     }
   }
 
