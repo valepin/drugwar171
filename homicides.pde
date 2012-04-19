@@ -25,7 +25,7 @@ float[] or_size;
 float[][] datapoints,statepoints,cartelpoints,nationalpoints, allCHompoints,allCPoppoints;
 float[] munHR,stateHR,cartelHR,nationalHR;
 char cartS;
-boolean click = false, cart2010 = false,plotAllC=false;
+boolean click = false,plotAllC=false;
 int extra=30; // for the axis not to start with the lowest value
   int cartInt,rowCart =0,cartIndl =0, cartIndd=0;
 
@@ -105,10 +105,10 @@ void setupV() {
    
    
   // define the fonts to be used
-   titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
-  legendfont = loadFont("TrebuchetMS-16.vlw");
-  font = loadFont("ArialMT-10.vlw");
-  textFont(font);
+//   titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
+//  legendfont = loadFont("TrebuchetMS-16.vlw");
+//  font = loadFont("ArialMT-10.vlw");
+//  textFont(font);
   
 
   
@@ -153,7 +153,7 @@ void controlEvent(ControlEvent theEvent) {
 
 
 void drawV() {
-  background(bg_color);
+  
     //label button
  stroke(250); fill(250); textAlign(CENTER);textSize(15);
   text("Stratfor Cartel Sketch Year",width-110,110);
@@ -162,8 +162,8 @@ void drawV() {
   | IMPORTANT:
   | the next two lines determine the dimensions of the plot area
   */
-  int w = (int) (width * 0.9);
-  int h = (int) (height * 0.7);
+  int w = int (valeriaWidth * 0.9);
+  int h = (int) (valeriaHeight * 0.7);
   
   strokeWeight(1);
   
@@ -230,7 +230,7 @@ void drawAxesLabels (String x_axis, String y_axis) {
   textSize(16);
   
   // axis labels are centered between adjacent edge of plot area and window
-  text(x_axis, width/2, plot_y2+50);
+  text(x_axis, valeriaWidth/2, plot_y2+50);
   verticalText(y_axis, -height/2, plot_x1/3);
   textSize(10);
   verticalText("per 100000 inhabitants ", -height/2, plot_x1/3+15);
@@ -576,8 +576,8 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
       stroke(250); fill(250); textAlign(CENTER);textSize(18);
       switch(type){
       case 'S':
-          text(Spopul.getDataAt(state, 1), width- 120,  200);
-          text(" ("+ years[i]+")", width- 120,  220);
+          text(Spopul.getDataAt(state, 1), valeriaWidth- 120,  200);
+          text(" ("+ years[i]+")", valeriaWidth- 120,  220);
           break;
       case 'M':    
            text(popul.getDataAt(munIndex, 1),width-120, 200);
