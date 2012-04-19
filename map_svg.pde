@@ -4,15 +4,12 @@ import geomerative.*;
 //TODO: Cartel legend + highlighting 
 //TODO: cart2010 functionality
 //
-
 RShape mapImage;
 RShape[] munis;
-//ArrayList munis;
-//ArrayList claveIDs;
 Table homicideTable;
 Table cartelTable;
-int mapHeight = 500;
-int mapWidth = 800;
+int mapHeight = height;
+int mapWidth = width;
 int municCount;
 int[] colorScheme = {50, 153, 0, 255};
 //int[] colorScheme = { 255, 255, 0, 50};
@@ -20,12 +17,12 @@ String[] municClave;
 char[] municCartel;
 float[] municHom;
 float[] municGrey;
-float xx = 0;
+float xx = 280;
 float yy = 0;
 float pan = -40;
 float zoom = 1.5;
-int buttonX = mapWidth - 80;
-int buttonY = 60;
+int buttonX = joeyWidth - 80;
+int buttonY = barHeight + 60;
 int buttonS = 40;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
@@ -87,10 +84,14 @@ void setupJ() {
   down = new RectButton(buttonX,buttonY+buttonS, 10, color(colorScheme[3]), color(colorScheme[3]));
   in = new RectButton(buttonX,buttonY-buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
   out = new RectButton(buttonX,buttonY+buttonS/4, 10, color(colorScheme[3]), color(colorScheme[3]));
+
+  //zoomout once
+  zoomit(1/zoom);
 }
 
 void drawJ() {
-  background(colorScheme[0]);
+
+  //background(colorScheme[0]);
 
   //update graph
   update();
@@ -98,8 +99,11 @@ void drawJ() {
 //draw map
   smooth();
   strokeWeight(0.1);
-  translate(mapWidth/2-xx, mapHeight/2-yy);
+  
+  //translate(-xx, joeyHeight/1.3-yy);
+
   RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
+  translate(mapWidth/2-xx, mapHeight/2-yy);
   for(int i = 0; i < municCount; i++){
     RShape munic = munis[i];
     if(munic != null){
@@ -120,6 +124,7 @@ void drawJ() {
   }
 
   //draw buttons
+  //translate(xx, -joeyHeight/1.3+yy);
   translate(-mapWidth/2+xx, -mapHeight/2+yy);
   left.display();
   right.display();
@@ -137,7 +142,11 @@ void drawJ() {
   text("+",buttonX,buttonY-buttonS/4);
   text("-",buttonX,buttonY+buttonS/4);
 
-
+  
+  //draw rectangles
+  fill(255);
+  rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
+  rect(0,0,width,barHeight);
 }
 
 
