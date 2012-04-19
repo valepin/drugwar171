@@ -7,9 +7,9 @@ int barHeight=75;
 int joeyWidth=768;
 int joeyHeight=675;
 int valeriaHeight=338;
-int valeriaWidth=300;
+int valeriaWidth=512;
 int anuvHeight=337;
-int anuvWidth=300;
+int anuvWidth=512;
 
 
 void setup(){

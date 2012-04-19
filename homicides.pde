@@ -103,6 +103,15 @@ void setupV() {
      years[i]=1990+i;
    } 
    
+     rectMode(CORNERS);
+  stroke(250);
+  fill(250);
+  rect(0, 0, joeyWidth, joeyHeight);
+  
+       rectMode(CORNERS);
+  stroke(250);
+  fill(250);
+  rect(joeyWidth, valeriaHeight,joeyWidth+ anuvWidth, valeriaHeight+anuvHeight);
    
   // define the fonts to be used
    titlefont = loadFont("TrebuchetMS-Bold-24.vlw");
@@ -227,13 +236,13 @@ void drawTitle (String t) {
 }
 
 void drawAxesLabels (String x_axis, String y_axis) {
-  textSize(16);
+  textSize(14);
   
   // axis labels are centered between adjacent edge of plot area and window
-  text(x_axis, joeyWidth+valeriaWidth/2, plot_y2+50);
-  verticalText(y_axis, -height/4, joeyWidth+5);
+  text(x_axis, joeyWidth+valeriaWidth/2, plot_y2+30);
+  verticalText(y_axis, -height/4, joeyWidth+2);
   textSize(10);
-  verticalText("per 100000 inhabitants ", -height/4,joeyWidth+15);
+  verticalText("per 100000 inhabitants ", -height/4,joeyWidth+12);
 
   
   // record areas where axes lie
