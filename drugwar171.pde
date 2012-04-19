@@ -9,20 +9,20 @@ int joeyHeight=675;
 int valeriaHeight=338;
 int valeriaWidth=300;
 int anuvHeight=337;
-int aWnuvidth=300;
+int anuvWidth=300;
 
 
 void setup(){
   size(width,height);
   setupJ();
-  setupV();
-  setupA();
+  // setupV();
+  // setupA();
 }
 
 
 void draw(){
   background(bg_color);
   drawJ();
-  drawV();
-  drawA();
+  // drawV();
+  // drawA();
 }
