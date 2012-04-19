@@ -30,15 +30,15 @@ int buttonS = 40;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
 color[][] seriesColsJ={
-{#9400D3, #DA70D6,#A9A9A9},
-{#FF4500, #FFA500,#A9A9A9},
-{#4169E1, #87CEFA,#A9A9A9},
-{#C71585, #FF69B4,#A9A9A9},
-{#B22222, #FA8080,#A9A9A9},
-{#008000, #32CD32,#A9A9A9},
-{#FFD700, #F0E68C,#A9A9A9},
-{#708090,#D3D3D3,#A9A9A9}
-
+  {#9400D3, #DA70D6,#A9A9A9},
+  {#FF4500, #FFA500,#A9A9A9},
+  {#4169E1, #87CEFA,#A9A9A9},
+  {#C71585, #FF69B4,#A9A9A9},
+  {#B22222, #FA8080,#A9A9A9},
+  {#008000, #32CD32,#A9A9A9},
+  {#FFB700, #FFEA00 ,#A9A9A9},
+  {#708090, #D3D3D3,#A9A9A9},
+  {#66CDAA, #AFEEEE,#708090}
 };
 
 
@@ -110,7 +110,8 @@ void drawJ() {
 	munic.draw();
 	int[] cartcol  = cartelColor(municCartel[i]);
 	//TODO not sure about mix thing
-	//fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+	fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+
 	stroke(colorScheme[2]);
       }
    
