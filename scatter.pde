@@ -279,4 +279,6 @@ void keyPressed() {
 void resetFont() {
  textSize(10);
  textAlign(CENTER); 
+
 }
+

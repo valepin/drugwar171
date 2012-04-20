@@ -131,8 +131,8 @@ void setupV() {
   r.setSpacingColumn(40);
 
 
-  addToRadioButton(r,"2007",7);
-  addToRadioButton(r,"2010",10);
+  addToRadioButton(r,"2007",0);
+  addToRadioButton(r,"2010",1);
   
 }
 
@@ -153,9 +153,8 @@ void controlEvent(ControlEvent theEvent) {
   for(int i=0;i<theEvent.group().arrayValue().length;i++) {
     print(int(theEvent.group().arrayValue()[i]));
   }
-  if(int(theEvent.group().value())==10){cart2010 = true;}
-  if(int(theEvent.group().value())==1){plotAllC = true;}
-   else{cart2010 = false; plotAllC=false;}   
+  if(int(theEvent.group().value())==1){cart2010 = true;} 
+   else{cart2010 = false;}   
 }
 
 
@@ -229,7 +228,7 @@ void drawTitle (String t) {
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
-  text(t, joeyWidth+3*valeriaWidth/7, 30);
+  text(t, joeyWidth, 30);
 
 }
 
