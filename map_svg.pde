@@ -54,8 +54,8 @@ String[][] cartelsJ = {
   {"Sinaloa Cartel","S"},
   {"Not Specified", "N"},
   {"In Dispute", "D"},
-  {"Pacifico Sur and Sinaloa Cartels","s"},
   {"Acapulco and Pacifico Sur Cartels","a"},
+  {"Pacifico Sur and Sinaloa Cartels","s"},
   {"Gulf and Los Zetas Cartels","z"},
 };
 
@@ -197,10 +197,11 @@ textSize(12);
 
   //draw legend
   textSize(10);
-  for(int i = 0; i < cartelsJ.length-3; i++){
+  for(int i = 0; i < cartelsJ.length-2; i++){
     int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
     fill(seriesColsJ[cartcol[0]][0]);
     rect(legendS*(i+1), barHeight/4,20,20);
+    fill(255);
     text(cartelsJ[i][0],legendS*(i+1), barHeight/4 + 25, 60,40);
 
   }
