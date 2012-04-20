@@ -614,7 +614,7 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
       fill(250); textSize(12);
       textAlign(LEFT);
       text("population: " + floor(matrix[i][1]), width- 420, barHeight+valeriaHeight-25);
-      text("homicides :       " + floor(matrix[i][0]),width- 420,barHeight+valeriaHeight-10  );
+      text("homicides :" + floor(matrix[i][0]),width- 420,barHeight+valeriaHeight-10  );
 
     }
   }
