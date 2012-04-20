@@ -507,8 +507,8 @@ void defineColors(char cartS){
     rowCart =9;
     break;
    case 'z':
-    cartIndl = 1;
-    cartIndd = 0;
+    cartIndl = 0;
+    cartIndd = 1;
     rowCart =10;
     break;  
    default:
