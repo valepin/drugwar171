@@ -96,8 +96,9 @@ void drawA() {
 
   draw_scatter();
   drawTitle(var_year+1990);
+  title();
   //hoverOverDot();
-
+  
 }
 
 void draw_scatter(){
@@ -201,7 +202,7 @@ void draw_scatter(){
     
     stroke(0);
   }
- fill(250,0,0); 
+ fill(anuvcolor); 
    ellipse(screen_width*.1+(log10(table.getFloatAt(selectedMuni+1,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(selectedMuni,3+3*var_year))*y_screen_interval+shifted,10,10);
     
 }
@@ -227,7 +228,13 @@ void drawTitle (int t) {
   resetFill();
 }
 
-
+void title() {
+  textAlign(CENTER);
+  textSize(10);
+  fill(100);
+  text("(use arrows keys)", screen_width/2+shifted_x+65, screen_height*.03+shifted+25);
+  resetFill();
+}
 //void hoverOverDot() {
 //hover = false;
 //for(int i = 0; i<table.numRows-1; i++){

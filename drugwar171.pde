@@ -12,18 +12,19 @@ int anuvHeight=270;
 int anuvWidth=512;
 
 
-void setup(){
-  size(width,height);
+void setup() {
+  size(width, height);
   setupJ();
   setupV();
   setupA();
 }
 
 
-void draw(){
+void draw() {
   background(bg_color);
   hoverMuni=true;
   drawJ();
   drawV();
   drawA();
 }
+

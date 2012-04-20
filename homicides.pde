@@ -19,10 +19,7 @@ ControlP5 controlP5;
 
 CheckBox checkbox;
 
-int buttonValue = 0;
-
-int myColor = color(0,255,180);
-
+color anuvcolor;
 
 
 float[] point_size;
@@ -669,6 +666,7 @@ void drawLegend(){
   for (int i = 1; i >=0; i--)
   {
     fill(seriesCols[cartIndl][i]);
+    anuvcolor = seriesCols[cartIndl][1];
     stroke(seriesCols[cartIndd][i]);
     ellipse(joeyWidth +7*valeriaWidth/10-10,  valeriaHeight-15-20*i, 6, 6);
   }
