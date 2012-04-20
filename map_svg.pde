@@ -366,6 +366,7 @@ int[] cartelColor(char cartS){
 
 void keyReleased(){
   if(key == 'r'){
+    allCartTS =true;
     cart2010 = true;
     selectedMuni = 0;
     xx = 280;

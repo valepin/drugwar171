@@ -27,7 +27,7 @@ float[] or_size;
 float[][] datapoints,statepoints,cartelpoints,nationalpoints, allCHompoints,allCPoppoints;
 float[] munHR,stateHR,cartelHR,nationalHR;
 char cartS;
-boolean click = false,plotAllC=true;
+boolean click = false;
 int extra=30; // for the axis not to start with the lowest value
   int cartInt,rowCart =0,cartIndl =0, cartIndd=0;
 
@@ -183,8 +183,11 @@ void drawV() {
   drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1) );
     drawAxesLabels("year", "homicide rate");
     drawGridlines();
-   if(hoverMuni)
+   if(allCartTS)
    {
+     drawAllCartels();
+   }else
+  { 
       plotDataPoints(selectedMuni);
       drawLegend();
       drawIntervention(selectedMuni,state,#8F8F23); //#808000
@@ -194,10 +197,9 @@ void drawV() {
       inspectDataPoints(stateHR, statepoints,'S');
       inspectDataPoints(nationalHR, nationalpoints,'N');
       inspectDataPoints(cartelHR, cartelpoints,'C');
-   }else
-        drawAllCartels();
-   
+  }      
   
+  if()
 }
 
 /*

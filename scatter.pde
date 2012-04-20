@@ -12,7 +12,7 @@ float screen_height = anuvHeight;
 
 int background_color = 50;
 
-float shifted = valeriaHeight+70;
+float shifted = valeriaHeight+37;
 float shifted_x = joeyWidth+25;
 
 int dot_size = 5;
@@ -106,7 +106,7 @@ void draw_scatter(){
   //white background
   fill(250);
   noStroke();
-  rect(screen_width*.1+shifted_x,screen_height*.05+shifted,screen_width*.9+shifted_x-10, screen_height*.9+shifted);
+  rect(screen_width*.1+shifted_x,screen_height*.05+shifted,screen_width*.9+shifted_x+17, screen_height*.9+shifted);
   resetFill();
 
   //data maximums
@@ -126,12 +126,12 @@ void draw_scatter(){
   resetFont();
 
   //label
-  text("Cartel Expenditures (Pesos)", screen_width*.5+shifted_x, screen_height*.93+shifted+19);
+  text("Municipality Income (Pesos)", screen_width*.5+shifted_x, screen_height*.93+shifted+19);
   
   //x-axis tick marks and labels
  
   x_screen_interval = (screen_width*.85)/10;
-  for(int i=3; i<11;i++) {
+  for(int i=3; i<12;i++) {
     stroke(230);
     line(screen_width*.1+x_screen_interval*(i-2)+shifted_x, screen_height*.9+shifted, screen_width*.1+x_screen_interval*(i-2)+shifted_x, screen_height*.05+shifted+2); 
     stroke(0);
@@ -143,7 +143,7 @@ void draw_scatter(){
 
 }
 
-   text("10E9",screen_width*.1+x_screen_interval*(11-3)+shifted_x, screen_height*.9+12+shifted);   
+   //text("10E9",screen_width*.1+x_screen_interval*(11-3)+shifted_x, screen_height*.9+12+shifted);   
    text("10E10",screen_width*.1+x_screen_interval*(12-3)+shifted_x, screen_height*.9+12+shifted);   
 
   //y-axis
@@ -163,7 +163,7 @@ void draw_scatter(){
   //y-axis grid lines
   y_screen_interval = (screen_height*.85)/4;
   for(int i=1; i<5;i++) {  
-    line(screen_width*.1+shifted_x, screen_height*.05+y_screen_interval*i+shifted, screen_width*.9+shifted_x-10, screen_height*.05+y_screen_interval*i+shifted); 
+    line(screen_width*.1+shifted_x, screen_height*.05+y_screen_interval*i+shifted, screen_width*.9+shifted_x+17, screen_height*.05+y_screen_interval*i+shifted); 
     text("10E"+(i-1), screen_width*.1-25+shifted_x+5, screen_height*.9-y_screen_interval*i+2+shifted);
 
   }
@@ -197,13 +197,13 @@ void draw_scatter(){
     //  fill(200,100,0);
 
     //draw dot
-    fill(0,200); 
+    fill(0,100); 
     ellipse(screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(i,3+3*var_year))*y_screen_interval+shifted,dot_size,dot_size);
     
     stroke(0);
   }
  fill(anuvcolor); 
-   ellipse(screen_width*.1+(log10(table.getFloatAt(selectedMuni+1,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(selectedMuni,3+3*var_year))*y_screen_interval+shifted,10,10);
+   ellipse(screen_width*.1+(log10(table.getFloatAt(selectedMuni+1,1+4*var_year)+1)-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(selectedMuni,3+3*var_year)+1)*y_screen_interval+shifted,10,10);
     
 }
 

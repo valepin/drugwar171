@@ -1,7 +1,7 @@
 int width = 1280;
 int height = 750;
 int selectedMuni;
-boolean cart2010=true;
+boolean cart2010=true, allCartTS=true;
 boolean hoverMuni;
 int barHeight=75;
 int joeyWidth=768;
