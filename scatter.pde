@@ -7,14 +7,15 @@ int height3 = 900;
 int width2 = 700;
 int height2 = 400;
 
-float screen_width = width3*.5;
-float screen_height = height3 *.5;
+float screen_width = anuvWidth;
+float screen_height = anuvHeight;
 
 int background_color = 50;
 
-float shifted = screen_height*.9;
+float shifted = valeriaHeight+70;
+float shifted_x = joeyWidth+25;
 
-int dot_size = 7;
+int dot_size = 5;
 
 //intialize
 int var_year = 0;
@@ -94,13 +95,8 @@ void drawA() {
 
   draw_scatter();
   drawTitle(var_year+1990);
-  hoverOverDot();
-  /*
-  | IMPORTANT:
-  | the next two lines determine the dimensions of the plot area
-  */
-  int w = (int) (width2 * 0.9);
-  int h = (int) (height2 * 0.7);
+  //hoverOverDot();
+
 }
 
 void draw_scatter(){
@@ -108,7 +104,7 @@ void draw_scatter(){
   //white background
   fill(250);
   noStroke();
-  rect(screen_width*.1,screen_height*.05+shifted,screen_width*.9-90, screen_height*.85);
+  rect(screen_width*.1+shifted_x,screen_height*.05+shifted,screen_width*.9+shifted_x-10, screen_height*.9+shifted);
   resetFill();
 
   //data maximums
@@ -123,45 +119,53 @@ void draw_scatter(){
   
   resetStroke();
   //x-axis
-  line(screen_width*.1,screen_height*.9+shifted,screen_width*.9-10,screen_height*.9+shifted);
+  line(screen_width*.1+shifted_x,screen_height*.9+shifted,screen_width*.9-10+shifted_x,screen_height*.9+shifted);
 
   resetFont();
 
   //label
-  text("Cartel Expenditures (Pesos)", screen_width*.9, screen_height*.93+shifted);
+  text("Cartel Expenditures (Pesos)", screen_width*.5+shifted_x, screen_height*.93+shifted+19);
   
   //x-axis tick marks and labels
  
   x_screen_interval = (screen_width*.85)/10;
   for(int i=3; i<11;i++) {
-    line(screen_width*.1+x_screen_interval*(i-2), screen_height*.9-2+shifted, screen_width*.1+x_screen_interval*(i-2), screen_height*.9+2+shifted); 
-    
+    stroke(230);
+    line(screen_width*.1+x_screen_interval*(i-2)+shifted_x, screen_height*.9+shifted, screen_width*.1+x_screen_interval*(i-2)+shifted_x, screen_height*.05+shifted+2); 
+    stroke(0);
     //vertical labels
     pushMatrix();
-    translate(screen_width*.1+x_screen_interval*(i-2), screen_height*.9+12+shifted);
-      text("10E"+(i-1),0,2);
+    translate(screen_width*.1+x_screen_interval*(i-3)+shifted_x, screen_height*.9+12+shifted);
+      text("10E"+(i-2),0,2);
     popMatrix();
 
 }
+
+   text("10E9",screen_width*.1+x_screen_interval*(11-3)+shifted_x, screen_height*.9+12+shifted);   
+   text("10E10",screen_width*.1+x_screen_interval*(12-3)+shifted_x, screen_height*.9+12+shifted);   
+
   //y-axis
-  line(screen_width*.1, screen_height*.05+shifted, screen_width*.1, screen_height*.9+shifted);
+  line(screen_width*.1+shifted_x, screen_height*.05+shifted, screen_width*.1+shifted_x, screen_height*.9+shifted);
 
   //label
   pushMatrix();
-  translate(screen_width*.03, screen_height*.5+shifted);
+  translate(screen_width*.03+shifted_x-5, screen_height*.5+shifted);
   rotate(3*PI/2);
-  text("Homocides",0,0);
+  textSize(14);
+  text("Total Homocides",0,0);
+  resetFont();
   popMatrix();
   
   
-  //y-axis tick marks
+  stroke(230);
+  //y-axis grid lines
   y_screen_interval = (screen_height*.85)/4;
   for(int i=1; i<5;i++) {  
-    line(screen_width*.1-2, screen_height*.05+y_screen_interval*i+shifted, screen_width*.1+2, screen_height*.05+y_screen_interval*i+shifted); 
-    text("10E"+(i-1), screen_width*.1-25, screen_height*.9-y_screen_interval*i+2+shifted);
+    line(screen_width*.1+shifted_x, screen_height*.05+y_screen_interval*i+shifted, screen_width*.9+shifted_x-10, screen_height*.05+y_screen_interval*i+shifted); 
+    text("10E"+(i-1), screen_width*.1-25+shifted_x+5, screen_height*.9-y_screen_interval*i+2+shifted);
 
   }
- 
+  stroke(0);
  
  
  
@@ -191,21 +195,13 @@ void draw_scatter(){
     //  fill(200,100,0);
 
     //draw dot
-    fill(100,50); 
-    ellipse(screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval, screen_height*.9-log10(table.getFloatAt(i,4+4*var_year))*y_screen_interval+shifted,dot_size,dot_size);
+    fill(0,200); 
+    ellipse(screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(table.getFloatAt(i,4+4*var_year))*y_screen_interval+shifted,dot_size,dot_size);
    
    
     stroke(0);
   }
   
-//TEST
-fill(0,0,250);
-ellipse(screen_width*.1+(log10(table.getFloatAt(457,1+4*var_year))-3)*x_screen_interval, screen_height*.9-log10(table.getFloatAt(457,4+4*var_year))*y_screen_interval+shifted,dot_size,dot_size);
-   
-
-
-
-
 }
 
 void resetStroke() {
@@ -225,29 +221,25 @@ void drawTitle (int t) {
   textAlign(CENTER);
   textSize(15);
   fill(0);
-  text(t, screen_width/2, screen_height*.03+shifted+25);
+  text(t, screen_width/2+shifted_x, screen_height*.03+shifted+25);
   resetFill();
 }
 
 
-void hoverOverDot() {
-hover = false;
-for(int i = 0; i<table.numRows-1; i++){
-  if(distance(mouseX,mouseY,screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval,screen_height*.9-log10(table.getFloatAt(i,4+4*var_year))*y_screen_interval+shifted)<5 && i != 0 && hover==false){
-    hover = true;
-    textSize(20);
-    fill(100,100,250);
-    text(names[i], 500, 60);
-    resetFill();
-    }
+//void hoverOverDot() {
+//hover = false;
+//for(int i = 0; i<table.numRows-1; i++){
+//  if(distance(mouseX,mouseY,screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval,screen_height*.9-log10(table.getFloatAt(i,4+4*var_year))*y_screen_interval+shifted)<5 && i != 0 && hover==false){
+//    hover = true;
+//    textSize(20);
+//    fill(100,100,250);
+//    text(names[i], 500, 60);
+//    resetFill();
+//    }
   
 
-}
-}
-
-
-
-
+//}
+//}
 
 
 
@@ -288,10 +280,3 @@ void resetFont() {
  textSize(10);
  textAlign(CENTER); 
 }
-
-
-
-
-
-
-
