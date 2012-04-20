@@ -215,7 +215,7 @@ textSize(12);
     int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
     fill(255);
     rect(legendS*(i+1), height-barHeight*1.25,40,40);
-    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 50,60);
+    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 60,70);
     
     for(int j = 0; j < heatJ.length; j++){
       fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
