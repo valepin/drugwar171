@@ -1,3 +1,10 @@
+/* Author: Joseph Kelly, Valeria Espinosa, Anuv Ratan
+   Date: April 20, 2012
+   CS 171 
+   Homicide Rate in Mexico (1990-2010)
+*/
+
+
 int width = 1280;
 int height = 750;
 int selectedMuni;

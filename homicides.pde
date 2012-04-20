@@ -199,7 +199,7 @@ void drawV() {
       inspectDataPoints(cartelHR, cartelpoints,'C');
   }      
   
-  if()
+   // if()
 }
 
 /*

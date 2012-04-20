@@ -1,7 +1,14 @@
+/* Author: Joseph Kelly
+   Date: April 20, 2012
+   CS 171 
+   Homicide Rate in Mexico (1990-2010)
+*/
+
+
 import processing.opengl.*;
 import geomerative.*;
  
-//TODO: LEGEND FIX
+
 RShape mapImage;
 RShape[] munis;
 Table homicideTable;
