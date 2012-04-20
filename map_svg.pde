@@ -1,12 +1,12 @@
 import processing.opengl.*;
 import geomerative.*;
  
-//TODO: cart2010 functionality
-//TODO: use population data!
+//TODO: LEGEND FIX
 RShape mapImage;
 RShape[] munis;
 Table homicideTable;
 Table cartelTable;
+Table popTableJ;
 int mapHeight = height;
 int mapWidth = width;
 int municCount;
@@ -14,8 +14,14 @@ int[] colorScheme = {50, 153, 0, 255};
 //int[] colorScheme = { 255, 255, 0, 50};
 String[] municClave;
 char[] municCartel;
+char[] municCartel2007J;
+char[] municCartel2010J;
 float[] municHom;
+float[] municHom2007J;
+float[] municHom2010J;
 float[] municGrey;
+float[] municGrey2007J;
+float[] municGrey2010J;
 float xx = 280;
 float yy = 0;
 float pan = -40;
@@ -70,25 +76,32 @@ void setupJ() {
 
   //build homicideTable and cartelTable
   cartelTable = new Table("CartelIncomeExpensesByMunicipality.tsv");
-  homicideTable = new Table("data/MunHomicides.tsv");
+  homicideTable = new Table("MunHomicides.tsv");
+  popTableJ = new Table("MunPopulationEst.tsv");
   municCount = homicideTable.getRowCount() - 1;
   municCartel = new char[municCount];
+  municCartel2007J = new char[municCount];
+  municCartel2010J = new char[municCount];
   municClave = new String[municCount];
   municHom = new float[municCount];
+  municHom2007J = new float[municCount];
+  municHom2010J = new float[municCount];
   municGrey = new float[municCount];
+  municGrey2007J = new float[municCount];
+  municGrey2010J = new float[municCount];
   munis = new RShape[municCount];
 
   for(int c = 0; c < municCount; c++){
     municClave[c] = "muni_" + homicideTable.getString(c+1,0);
-    municHom[c] = homicideTable.getFloat(c+1,66)/homicideTable.getFloat(c+1,65);
-    municCartel[c] = cartelTable.getString(c+1,6).charAt(0);
+    municHom2010J[c] = homicideTable.getFloat(c+1,66)/popTableJ.getFloat(c+1,22)*100000;
+    municHom2007J[c] = homicideTable.getFloat(c+1,54)/popTableJ.getFloat(c+1,19)*100000;
+    municCartel2010J[c] = cartelTable.getString(c+1,6).charAt(0);
+    municCartel2007J[c] = cartelTable.getString(c+1,5).charAt(0);
     munis[c] = mapImage.getChild(municClave[c]);
+    municGrey2010J[c] = mapitJ(municHom2010J[c]);
+    municGrey2007J[c] = mapitJ(municHom2007J[c]);
   }
 
-  //create greyscale vector for heatmap
-  for(int c = 0; c < municCount; c++)
-    municGrey[c] = map(municHom[c], min(municHom), max(municHom),0,255);
-  
   //setup buttons
   ellipseMode(CENTER);
   left = new RectButton(buttonX-buttonS,buttonY, 12, color(colorScheme[3],0), color(colorScheme[3],0));
@@ -103,6 +116,17 @@ void setupJ() {
 }
 
 void drawJ() {
+
+  //change from 2010 to 2007 according to boolean
+  if(cart2010){
+    arrayCopy(municGrey2010J,municGrey);
+    arrayCopy(municCartel2010J,municCartel);
+    arrayCopy(municHom2010J, municHom);
+  }else{
+    arrayCopy(municGrey2007J,municGrey);
+    arrayCopy(municCartel2007J,municCartel);
+    arrayCopy(municHom2007J, municHom);
+  }
 
   //update graph
   update();
@@ -124,7 +148,6 @@ void drawJ() {
         fill(255);
         munic.draw();
         int[] cartcol  = cartelColor(municCartel[i]);
-        //TODO not sure about mix thing
         fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
         
         stroke(colorScheme[2]);
@@ -222,6 +245,23 @@ void update(){
     if(out.pressed())
       zoomit(1/zoom);
   }
+}
+
+float mapitJ(float val){
+  float retval = 0;
+  if(val > 50)
+    retval = 255.0;
+
+  if(val < 50 & val > 10)
+    retval = 200.0;
+  
+  if(val < 10 & val > 5)
+    retval = 100.0;
+
+  if(val < 5)
+    retval = 30.0;
+
+  return retval;
 }
 
 int[] cartelColor(char cartS){
