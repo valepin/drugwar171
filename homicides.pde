@@ -118,7 +118,7 @@ void setupV() {
   //set the checkbox for cartel year to use 
 
     controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",joeyWidth/2-40, 58);
+  r = controlP5.addRadioButton("radioButton",joeyWidth-40, 30);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -160,7 +160,8 @@ void drawV() {
 
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);
-  text("Year of Stratfor Cartel Sketch ",joeyWidth/2,57);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth,20);
+    text("Press r to restart ",joeyWidth/2,58);
   
   /*
   | IMPORTANT:
@@ -186,6 +187,8 @@ void drawV() {
    if(allCartTS)
    {
      drawAllCartels();
+     //allCartTS=false;
+     
    }else
   { 
       plotDataPoints(selectedMuni);
@@ -199,7 +202,10 @@ void drawV() {
       inspectDataPoints(cartelHR, cartelpoints,'C');
   }      
   
-  if()
+  if(mouseX<joeyWidth && mouseY< barHeight)
+  {
+     allCartTS=false; 
+  }
 }
 
 /*
@@ -420,8 +426,7 @@ void drawAllCartels(){
         allCHompoints[j][i] = cartel10.getFloatAt(2*j,i+1); 
        cartelHR[i] = allCHompoints[j][i]/max(allCPoppoints[j][i],1)*100000;
         cartS = cartel10.getCharAt(2*j,0);
-                  println(cartS);
-                            println(cartelHR[i]);
+
      }else
     {
       ylims[1]=80;
@@ -580,34 +585,10 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
     y =  map(vector[i], ylims[0], ylims[1], plot_y2, plot_y1);
     // if mouse is within hover radius of a point. note: 1 is VERY accurate
     if (near(x,y, mouseX, mouseY, 5)) {
-      // show tooltip with player name
-      // have a bos show up wiith the label so it can be read more clearly
-//      println("yes");
-//      rectMode(CENTER);
-//      stroke(255); fill(255); textAlign(RIGHT,RIGHT);
-//      //rect(mouseX + 50, mouseY ,textWidth(mtable.getDataAt(i, mtable.fieldIndex("name")))+10,60);
-//      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(selectedMuni, 1)),60);
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
       stroke(250); fill(250); textAlign(CENTER);textSize(12); 
-//      switch(type){
-//      case 'S':
-//          text(Spopul.getDataAt(state, 1), width- 350, barHeight+valeriaHeight-35);  //
-//          text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
-//          break;
-//      case 'M':    
-//           text(popul.getDataAt(selectedMuni, 1)+" ("+years[i]+")",width-350, barHeight+valeriaHeight-35);
-//            text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
-//           break;
-//      case 'N':    
-//           text("National ("+ years[i]+")",width-350, plot_y2+10);
-//           text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
-//           break;
-//      case 'C':
-//           text(cartels[rowCart][0]+" ("+years[i]+")",width-350, barHeight+valeriaHeight-35);
-            text(" ("+ years[i]+")", width-400,  valeriaHeight-40);
-//           break;
-//      }
+      text(" ("+ years[i]+")", width-400,  valeriaHeight-40);
       textFont(legendfont);
       fill(250); textSize(12);
       textAlign(LEFT);
@@ -697,7 +678,6 @@ void drawIntervention(int mun, int sta, color cInt)
      intYear= milInt.getFloatAt(i,5);
      x= map(intYear, xlims[0], xlims[1], plot_x1, plot_x2); 
        
-     println(x);
      stroke(cInt);
      strokeWeight(2);
      fill(cInt);
@@ -780,7 +760,7 @@ boolean near (float year_num, float hom , float x, float y, int rad) {
 // truncating a number to three decimal places
 float truncate(float x, float dec){
   float aux=pow(10,dec);
-  println(aux);
+
   if ( x > 0 )
     return round(floor(x * aux))/aux;
   else
