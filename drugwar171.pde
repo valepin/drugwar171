@@ -22,7 +22,7 @@ void setup(){
 
 void draw(){
   background(bg_color);
-  hoverMuni=false;
+  hoverMuni=true;
   drawJ();
   drawV();
   //drawA();
