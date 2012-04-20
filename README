@@ -1,4 +1,31 @@
-this is test - joey
-this is test :P - val 
-this is test :D - joey
-this is test :o - joey
+TO RUN:
+Open drugwar171.pde in processing and press play! To make sure processing can locate the libraries set the sketchbook folder to drugwar171.
+
+Folder /
+Files:
+button.pde	Allows buttons to be added src: 
+		http://processing.org/learning/topics/buttons.html
+
+collect.pde
+
+
+data/		This is a folder containing all of our data files.
+
+
+drugwar171.pde	This is the main pde containing setup() and draw() this pde			really just calls upon functions located in the other pdes.
+
+homicides.pde
+
+libraries/	This folder contains all of the libraries we use
+
+libraries/controlP5
+
+libraries/geomerative	This library provides functionality to the map.
+
+map_svg.pde	This pde contains functions which reads in data, draws the map			and allows linking to the other visualizations.
+
+README		This is a README file. You are reading this right now. 				Inception.
+
+scatter.pde	
+
+Table.pde	This pde was provided to us in a homework and allows the			easy import of .tsv files.
