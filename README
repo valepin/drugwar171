@@ -9,12 +9,12 @@ button.pde	Allows buttons to be added src:
 collect.pde
 
 
-data/		This is a folder containing all of our data files.
+data/		This is a folder containing all of our data files, and popView. R which was used to create separate files for municipalities, state averages and cartel 		averages, and to interpolate the population between the years for which we found INEGI to had data (in most cases: 1990, 1995,  2000, 2005, 2010).
 
 
-drugwar171.pde	This is the main pde containing setup() and draw() this pde			really just calls upon functions located in the other pdes.
+drugwar171.pde	This is the main pde containing setup() and draw() this pde really just calls upon functions located in the other pdes.
 
-homicides.pde	This pde contains functions to create the time series plot. It reads in data, 		plots time series and links to other visualizations. 
+homicides.pde	This pde contains functions to create the time series plot. It reads in data, plots time series and links to other visualizations. 
 
 libraries/	This folder contains all of the libraries we use
 
@@ -22,10 +22,10 @@ libraries/controlP5
 
 libraries/geomerative	This library provides functionality to the map.
 
-map_svg.pde	This pde contains functions which reads in data, draws the map			and allows linking to the other visualizations.
+map_svg.pde	This pde contains functions which reads in data, draws the map and allows linking to the other visualizations.
 
-README		This is a README file. You are reading this right now. 				Inception. :)
+README		This is a README file. You are reading this right now. 	Inception. :)
 
-scatter.pde	This pde contains functions to create the scatter plot. It reads in data 		and links to other visualizations. 
+scatter.pde	This pde contains functions to create the scatter plot. It reads in data and links to other visualizations. 
 
-Table.pde	This pde was provided to us in a homework and allows the			easy import of .tsv files.
+Table.pde	This pde was provided to us in a homework and allows the easy import of .tsv files.
