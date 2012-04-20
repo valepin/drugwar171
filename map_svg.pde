@@ -32,6 +32,7 @@ int buttonX = joeyWidth - 80;
 int buttonY = barHeight + 60;
 int buttonS = 40;
 int legendS = 80;
+int zoomcount = 0;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
 color highlightJ = color(0,100,255);
@@ -265,10 +266,14 @@ void update(){
       yy = yy + pan;
     if(down.pressed())
       yy = yy - pan;
-    if(in.pressed())
+    if(in.pressed()){
       zoomit(zoom);
-    if(out.pressed())
+      zoomcount = zoomcount + 1;
+    }
+    if(out.pressed()){
       zoomit(1/zoom);
+      zoomcount = zoomcount - 1;
+    }
   }
 }
 
@@ -356,4 +361,24 @@ int[] cartelColor(char cartS){
   }
   int[] vals = {cartIndl, cartIndd, rowCart};
   return vals;
+}
+
+
+void keyReleased(){
+  if(key == 'r'){
+    cart2010 = true;
+    selectedMuni = 0;
+    xx = 280;
+    yy = 0;
+    
+    if(zoomcount < 0){
+      zoomcount = zoomcount*-1;
+      for(int i = 0; i < zoomcount; i++)
+        zoomit(zoom);
+    }
+    if(zoomcount > 0){
+      for(int i = 0; i < zoomcount; i++)
+        zoomit(1/zoom);
+    }
+  }
 }

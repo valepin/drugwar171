@@ -1,5 +1,5 @@
 Collect table;
-
+Collect munitable;
 
 //screen resolution
 int width3 = 1440;
@@ -49,7 +49,8 @@ int quadrant;
 void setupA() {
   //size(int(screen_width)*2,int(screen_height)*2);
     background(background_color);
-    table = new Collect("Anuv_Data.tsv");
+    table = new Collect("Anuv_Data2.tsv");
+    munitable = new Collect("MunHomicidesA.tsv");
     calculate();
     names = new String[table.numRows];
  
@@ -181,7 +182,7 @@ void draw_scatter(){
   
 
   
-  for(int i=1; i<table.numRows; i++){
+  for(int i=1; i<munitable.numRows; i++){
     noStroke();
 
     //save municipality names in array
@@ -196,12 +197,13 @@ void draw_scatter(){
 
     //draw dot
     fill(0,200); 
-    ellipse(screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(table.getFloatAt(i,4+4*var_year))*y_screen_interval+shifted,dot_size,dot_size);
-   
-   
+    ellipse(screen_width*.1+(log10(table.getFloatAt(i,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(i,3+3*var_year))*y_screen_interval+shifted,dot_size,dot_size);
+    
     stroke(0);
   }
-  
+ fill(250,0,0); 
+   ellipse(screen_width*.1+(log10(table.getFloatAt(selectedMuni+1,1+4*var_year))-3)*x_screen_interval+shifted_x, screen_height*.9-log10(munitable.getFloatAt(selectedMuni,3+3*var_year))*y_screen_interval+shifted,10,10);
+    
 }
 
 void resetStroke() {
@@ -271,7 +273,6 @@ void keyPressed() {
          var_year = var_year -1;  
           calculate();}
     }
-
 }
 
 
@@ -279,6 +280,4 @@ void keyPressed() {
 void resetFont() {
  textSize(10);
  textAlign(CENTER); 
-
 }
-
