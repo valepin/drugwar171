@@ -19,13 +19,18 @@ ControlP5 controlP5;
 
 CheckBox checkbox;
 
+int buttonValue = 0;
+
+int myColor = color(0,255,180);
+
+
 
 float[] point_size;
 float[] or_size;
 float[][] datapoints,statepoints,cartelpoints,nationalpoints, allCHompoints,allCPoppoints;
 float[] munHR,stateHR,cartelHR,nationalHR;
 char cartS;
-boolean click = false,plotAllC=false;
+boolean click = false,plotAllC=true;
 int extra=30; // for the axis not to start with the lowest value
   int cartInt,rowCart =0,cartIndl =0, cartIndd=0;
 
@@ -82,7 +87,7 @@ color[][] seriesCols={
 //#F0E68C(khaki), #FFFF00  (bright yellow)
 
 
-RadioButton r;
+RadioButton r, cts;
 
 void setupV() {
   // size(1100, 600);
@@ -112,11 +117,11 @@ void setupV() {
   
 
   
-  //set the checkbox
-
   
-  controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",joeyWidth-20, 58);
+  //set the checkbox for cartel year to use 
+
+    controlP5 = new ControlP5(this);
+  r = controlP5.addRadioButton("radioButton",joeyWidth+valeriaWidth/2-40, 58);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -126,10 +131,12 @@ void setupV() {
   r.setSpacingColumn(40);
 
 
-  addToRadioButton(r,"2007",0);
-  addToRadioButton(r,"2010",1);
+  addToRadioButton(r,"2007",7);
+  addToRadioButton(r,"2010",10);
   
 }
+
+
 
 
 void addToRadioButton(RadioButton theRadioButton, String theName, int theValue ) {
@@ -146,26 +153,18 @@ void controlEvent(ControlEvent theEvent) {
   for(int i=0;i<theEvent.group().arrayValue().length;i++) {
     print(int(theEvent.group().arrayValue()[i]));
   }
-  if(int(theEvent.group().value())==1){cart2010 = true;}
-   else{cart2010 = false;}   
+  if(int(theEvent.group().value())==10){cart2010 = true;}
+  if(int(theEvent.group().value())==1){plotAllC = true;}
+   else{cart2010 = false; plotAllC=false;}   
 }
 
 
 void drawV() {
   
-//       rectMode(CORNERS);
-//  stroke(250);
-//  fill(250);
-//  rect(0,  barHeight, joeyWidth, barHeight+ joeyHeight);
-  
-//       rectMode(CORNERS);
-//  stroke(250);
-//  fill(250);
-//  rect(joeyWidth, barHeight+valeriaHeight,joeyWidth+ anuvWidth,  barHeight+valeriaHeight+anuvHeight);
-//  
+
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
-  text("Year of Stratfor Cartel Sketch ",joeyWidth+30,50);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth+valeriaWidth/2,50);
   
   /*
   | IMPORTANT:
@@ -211,9 +210,9 @@ void drawV() {
 */
 void drawPlotArea(int w, int h) {
   plot_x1 = joeyWidth+80 ;
-  plot_y1 =3*barHeight/2;
+  plot_y1 =3*barHeight/2+20;
   plot_x2 = width-10;
-  plot_y2 = plot_y1 + 7*h/10;
+  plot_y2 = plot_y1 + 65*h/100;
   rectMode(CORNERS);
   stroke(250);
   fill(250);
@@ -226,11 +225,11 @@ void drawPlotArea(int w, int h) {
 }
 
 void drawTitle (String t) {
-   //textFont(titlefont);
+  textFont(font);
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
-  text(t, joeyWidth+*valeriaWidth/7, 30);
+  text(t, joeyWidth+3*valeriaWidth/7, 30);
 
 }
 
@@ -620,6 +619,31 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
     }
   }
 }
+
+// inspect Cartel points allCHompoints,allCPoppoints
+//void inspectCartelPoints (float[][] homInf, float[][] PopInf, char type) {
+//  float x,y;
+//  for (int i = 0; i < years.length; i++) {
+//    x =  map(years[i], xlims[0], xlims[1], plot_x1, plot_x2);
+//    y =  map(vector[i], ylims[0], ylims[1], plot_y2, plot_y1);
+//    // if mouse is within hover radius of a point. note: 1 is VERY accurate
+//    if (near(x,y, mouseX, mouseY, 5)) {
+// 
+//     stroke(bg_color);
+//     line(plot_x1,y,plot_x2+10,y);
+//      stroke(250); fill(250); textAlign(CENTER);textSize(12); 
+//            text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-40);
+//
+//      textFont(legendfont);
+//      fill(250); textSize(12);
+//      textAlign(LEFT);
+//      text("population: " + floor(matrix[i][1]), width- 420, barHeight+valeriaHeight-25);
+//      text("homicides :       " + floor(matrix[i][0]),width- 420,barHeight+valeriaHeight-10  );
+//
+//    }
+//  }
+//}
+
 
 
 // for the checkbox

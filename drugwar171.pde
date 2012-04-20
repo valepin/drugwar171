@@ -6,9 +6,9 @@ boolean hoverMuni;
 int barHeight=75;
 int joeyWidth=768;
 int joeyHeight=675;
-int valeriaHeight=338;
+int valeriaHeight=405;
 int valeriaWidth=512;
-int anuvHeight=337;
+int anuvHeight=270;
 int anuvWidth=512;
 
 
