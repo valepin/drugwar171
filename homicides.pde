@@ -121,7 +121,7 @@ void setupV() {
   //set the checkbox for cartel year to use 
 
     controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",joeyWidth+valeriaWidth/2-40, 58);
+  r = controlP5.addRadioButton("radioButton",joeyWidth/2-40, 58);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -162,8 +162,8 @@ void drawV() {
   
 
     //label button
- stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
-  text("Year of Stratfor Cartel Sketch ",joeyWidth+valeriaWidth/2,50);
+ stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth/2,57);
   
   /*
   | IMPORTANT:
@@ -190,7 +190,7 @@ void drawV() {
    {
       plotDataPoints(selectedMuni);
       drawLegend();
-      drawIntervention(selectedMuni,state,#6B8E23); //#808000
+      drawIntervention(selectedMuni,state,#8F8F23); //#808000
       drawPartyChange(selectedMuni,state,#BC8F8F);
       //drawZoomLegend();
       inspectDataPoints(munHR, datapoints,'M');
@@ -209,7 +209,7 @@ void drawV() {
 */
 void drawPlotArea(int w, int h) {
   plot_x1 = joeyWidth+80 ;
-  plot_y1 =3*barHeight/2+20;
+  plot_y1 =barHeight/2+20;
   plot_x2 = width-10;
   plot_y2 = plot_y1 + 65*h/100;
   rectMode(CORNERS);
@@ -227,8 +227,8 @@ void drawTitle (String t) {
   textFont(font);
   fill(fill_color);
   textAlign(CENTER);
-  textSize(32);
-  text(t, joeyWidth, 30);
+  textSize(40);
+  text(t, joeyWidth/2, 40);
 
 }
 
@@ -606,14 +606,14 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
 //           break;
 //      case 'C':
 //           text(cartels[rowCart][0]+" ("+years[i]+")",width-350, barHeight+valeriaHeight-35);
-            text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-40);
+            text(" ("+ years[i]+")", width-400,  valeriaHeight-40);
 //           break;
 //      }
       textFont(legendfont);
       fill(250); textSize(12);
       textAlign(LEFT);
-      text("population: " + floor(matrix[i][1]), width- 420, barHeight+valeriaHeight-25);
-      text("homicides :" + floor(matrix[i][0]),width- 420,barHeight+valeriaHeight-10  );
+      text("population: " + floor(matrix[i][1]), width- 420,valeriaHeight-25);
+      text("homicides :" + floor(matrix[i][0]),width- 420,valeriaHeight-10  );
 
     }
   }
@@ -658,10 +658,10 @@ void drawLegend(){
   stroke(250); fill(250);
   textSize(12);
 
-   text("National", joeyWidth +45*valeriaWidth/100, barHeight+valeriaHeight-30);
-    text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, barHeight+valeriaHeight-10); 
-      text(popul.getDataAt(selectedMuni, 1), joeyWidth +7*valeriaWidth/10, barHeight+valeriaHeight-30); 
-   text(cartels[rowCart][0], joeyWidth +7*valeriaWidth/10, barHeight+valeriaHeight-10);
+   text("National", joeyWidth +45*valeriaWidth/100, valeriaHeight-30);
+    text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, valeriaHeight-10); 
+      text(popul.getDataAt(selectedMuni, 1), joeyWidth +7*valeriaWidth/10, valeriaHeight-30); 
+   text(cartels[rowCart][0], joeyWidth +7*valeriaWidth/10, valeriaHeight-10);
 
 
 
@@ -670,15 +670,15 @@ void drawLegend(){
   {
     fill(seriesCols[cartIndl][i]);
     stroke(seriesCols[cartIndd][i]);
-    ellipse(joeyWidth +7*valeriaWidth/10-10,  barHeight+valeriaHeight-15-20*i, 6, 6);
+    ellipse(joeyWidth +7*valeriaWidth/10-10,  valeriaHeight-15-20*i, 6, 6);
   }
   
      fill(seriesCols[cartIndl][2]);
     stroke(seriesCols[cartIndd][2]);
-   ellipse(joeyWidth +45*valeriaWidth/100-10,  barHeight+valeriaHeight-35, 6, 6); 
+   ellipse(joeyWidth +45*valeriaWidth/100-10,  valeriaHeight-35, 6, 6); 
   stroke(0);
   fill(0);
-  ellipse(joeyWidth +45*valeriaWidth/100-10,  barHeight+valeriaHeight-15, 6, 6);
+  ellipse(joeyWidth +45*valeriaWidth/100-10,  valeriaHeight-15, 6, 6);
 
 }  
 
