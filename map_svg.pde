@@ -106,12 +106,13 @@ void setupJ() {
 
   //setup buttons
   ellipseMode(CENTER);
-  left = new RectButton(buttonX-buttonS,buttonY, 12, color(colorScheme[3],0), color(colorScheme[3],0));
-  right = new RectButton(buttonX+buttonS,buttonY, 12, color(colorScheme[3],0), color(colorScheme[3],0));
-  up = new RectButton(buttonX,buttonY-buttonS, 12, color(colorScheme[3],0), color(colorScheme[3],0));
-  down = new RectButton(buttonX,buttonY+buttonS, 12, color(colorScheme[3],0), color(colorScheme[3],0));
-  in = new RectButton(buttonX,buttonY-buttonS/4, 12, color(colorScheme[3],0), color(colorScheme[3],0));
-  out = new RectButton(buttonX,buttonY+buttonS/4, 12, color(colorScheme[3],0), color(colorScheme[3],0));
+
+  left = new RectButton(buttonX-buttonS,buttonY, 14, color(colorScheme[3],0), color(colorScheme[3],0));
+  right = new RectButton(buttonX+buttonS,buttonY, 14, color(colorScheme[3],0), color(colorScheme[3],0));
+  up = new RectButton(buttonX,buttonY-buttonS, 14, color(colorScheme[3],0), color(colorScheme[3],0));
+  down = new RectButton(buttonX,buttonY+buttonS, 14, color(colorScheme[3],0), color(colorScheme[3],0));
+  in = new RectButton(buttonX,buttonY-buttonS/4, 14, color(colorScheme[3],0), color(colorScheme[3],0));
+  out = new RectButton(buttonX,buttonY+buttonS/4+10, 14, color(colorScheme[3],0), color(colorScheme[3],0));
 
   //zoomout once
   zoomit(1/zoom);
@@ -167,26 +168,32 @@ void drawJ() {
   //draw buttons
   //translate(xx, -joeyHeight/1.3+yy);
   translate(-mapWidth/2+xx, -mapHeight/2+yy);
-  left.display();
-  right.display();
-  up.display();
-  down.display();
-  in.display();
-  out.display();
+  
+  //draw background for widget
+  fill(colorScheme[0]);
+  noStroke();
+  ellipse(buttonX+3, buttonY+7, 110, 110);
+
+  // left.display();
+  // right.display();
+  // up.display();
+  // down.display();
+  // in.display();
+  // out.display();
 
   //text in buttons
   textAlign(LEFT,TOP);
   //textSize(14);
   //stroke(1);
   fill(255);
-  textSize(14);
+  textSize(18);
   text("<",buttonX-buttonS,buttonY);
   text("+",buttonX,buttonY-buttonS/4);
-  text("-",buttonX+1,buttonY+buttonS/4);
   text(">",buttonX+buttonS,buttonY);
-textSize(18);
+textSize(22);
+  text("-",buttonX+1,buttonY+buttonS/4);
   text("^",buttonX+1,buttonY-buttonS);
-textSize(12);
+textSize(16);
   text("v",buttonX+1,buttonY+buttonS);
 
 

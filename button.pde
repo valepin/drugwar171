@@ -11,7 +11,7 @@ class Button
   void update() 
   {
     if(over()) {
-      currentcolor = highlightcolor;
+      //currentcolor = highlightcolor;
     } 
     else {
       currentcolor = basecolor;
