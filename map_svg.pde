@@ -54,9 +54,9 @@ String[][] cartelsJ = {
   {"La Familia Michoacana", "F"},
   {"Cartel de Juárez", "J"},
   {"Sinaloa Cartel","S"},
-  {"Not Specified", "N"},
+  {"Acapulco and Pacifico Sur","a"},
   {"In Dispute", "D"},
-  {"Acapulco and Pacifico Sur Cartels","a"},
+  {"Not Specified", "N"},
   {"Pacifico Sur and Sinaloa Cartels","s"},
   {"Gulf and Los Zetas Cartels","z"},
 };
@@ -196,16 +196,31 @@ textSize(12);
   rectMode(CORNER);
   rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
   rect(0,0,width,barHeight);
+  rect(0,height-barHeight*1.35,joeyWidth,barHeight*1.35);
 
   //draw legend
+  //text label
+  textAlign(RIGHT,TOP);
   textSize(10);
+  fill(255);
+  text("> " + (int) bJ[2], legendS-10, height-barHeight*1.25);
+  text((int) bJ[1] + " - " + (int) bJ[2], legendS-10, height-barHeight*1.25 + 10);
+  text((int) bJ[0] + " - " + (int) bJ[1], legendS-10, height-barHeight*1.25 + 20);
+  text("0 - " + (int) bJ[0], legendS-10, height-barHeight*1.25 + 30);
+  
+  textSize(10);
+  textAlign(LEFT,TOP);
   for(int i = 0; i < cartelsJ.length-2; i++){
+    
     int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
-    fill(seriesColsJ[cartcol[0]][0]);
-    rect(legendS*(i+1), barHeight/4,20,20);
     fill(255);
-    text(cartelsJ[i][0],legendS*(i+1), barHeight/4 + 25, 60,40);
-
+    rect(legendS*(i+1), height-barHeight*1.25,40,40);
+    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 50,60);
+    
+    for(int j = 0; j < heatJ.length; j++){
+      fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
+      rect(legendS*(i+1), height-barHeight*1.25 + 30 - 10*j ,40,10);
+    }
   }
   
 }
