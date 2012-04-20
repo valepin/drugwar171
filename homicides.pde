@@ -60,9 +60,9 @@ String[][] cartels = {
   {"Sinaloa Cartel","S"},
   {"Not Specified", "N"},
   {"In Dispute", "D"},
-  {"Pacifico Sur and Sinaloa Cartels","s"},
-  {"Acapulco and Pacifico Sur Cartels","a"},
-  {"Gulf and Los Zetas Cartels","z"},
+  {"Pacifico Sur and Sinaloa ","s"},
+  {"Acapulco and Pacifico Sur ","a"},
+  {"Gulf and Los Zetas","z"},
 };
 
 /*define the colors to use (this should be linked to the Cartel and the )
@@ -116,7 +116,7 @@ void setupV() {
 
   
   controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",width/2-50, 58);
+  r = controlP5.addRadioButton("radioButton",joeyWidth-20, 58);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -146,7 +146,6 @@ void controlEvent(ControlEvent theEvent) {
   for(int i=0;i<theEvent.group().arrayValue().length;i++) {
     print(int(theEvent.group().arrayValue()[i]));
   }
-  println("\t "+theEvent.group().value());
   if(int(theEvent.group().value())==1){cart2010 = true;}
    else{cart2010 = false;}   
 }
@@ -159,14 +158,14 @@ void drawV() {
 //  fill(250);
 //  rect(0,  barHeight, joeyWidth, barHeight+ joeyHeight);
   
-       rectMode(CORNERS);
-  stroke(250);
-  fill(250);
-  rect(joeyWidth, barHeight+valeriaHeight,joeyWidth+ anuvWidth,  barHeight+valeriaHeight+anuvHeight);
-  
+//       rectMode(CORNERS);
+//  stroke(250);
+//  fill(250);
+//  rect(joeyWidth, barHeight+valeriaHeight,joeyWidth+ anuvWidth,  barHeight+valeriaHeight+anuvHeight);
+//  
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(11);
-  text("Year of Stratfor Cartel Sketch ",width/2,50);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth+30,50);
   
   /*
   | IMPORTANT:
@@ -189,21 +188,20 @@ void drawV() {
   drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1) );
     drawAxesLabels("year", "homicide rate");
     drawGridlines();
-   if(plotAllC)
-   {
-     drawAllCartels();
-   }else
+   if(hoverMuni)
    {
       plotDataPoints(selectedMuni);
       drawLegend();
-      drawIntervention(selectedMuni,state,#808000);
+      drawIntervention(selectedMuni,state,#6B8E23); //#808000
       drawPartyChange(selectedMuni,state,#BC8F8F);
       //drawZoomLegend();
       inspectDataPoints(munHR, datapoints,'M');
       inspectDataPoints(stateHR, statepoints,'S');
       inspectDataPoints(nationalHR, nationalpoints,'N');
       inspectDataPoints(cartelHR, cartelpoints,'C');
-   }
+   }else
+        drawAllCartels();
+   
   
 }
 
@@ -213,9 +211,9 @@ void drawV() {
 */
 void drawPlotArea(int w, int h) {
   plot_x1 = joeyWidth+80 ;
-  plot_y1 =barHeight;
+  plot_y1 =3*barHeight/2;
   plot_x2 = width-10;
-  plot_y2 = plot_y1 + 8*h/10;
+  plot_y2 = plot_y1 + 7*h/10;
   rectMode(CORNERS);
   stroke(250);
   fill(250);
@@ -232,7 +230,7 @@ void drawTitle (String t) {
   fill(fill_color);
   textAlign(CENTER);
   textSize(32);
-  text(t, width/2, 30);
+  text(t, joeyWidth+*valeriaWidth/7, 30);
 
 }
 
@@ -240,7 +238,7 @@ void drawAxesLabels (String x_axis, String y_axis) {
   textSize(14);
   
   // axis labels are centered between adjacent edge of plot area and window
-  text(x_axis, joeyWidth+valeriaWidth/2+20, plot_y2+40);
+  text(x_axis, joeyWidth+valeriaWidth-30, plot_y2+40);
   verticalText(y_axis, -height/4, joeyWidth+15);
   textSize(10);
   verticalText("per 100000 inhabitants ", -height/4,joeyWidth+30);
@@ -433,20 +431,19 @@ void drawAllCartels(){
        allCPoppoints[j][i] =  cartel07.getFloatAt(2*j+1,i+1);
        allCHompoints[j][i] = cartel07.getFloatAt(2*j,i+1); 
        cartelHR[i] = allCHompoints[j][i]/max(allCPoppoints[j][i],1)*100000;
-        cartS = cartel07.getCharAt(2*j,0);
-          println(cartS);
-           println(cartelHR[i]);
     }
        drawSpline(nationalHR,0);
     drawPoints(nationalHR,0);
       //define the colors
-  defineColors(cartS);
+
       //plot
+    } 
+    cartS = cartel07.getCharAt(2*j,0);
+    defineColors(cartS);  
       drawSpline(cartelHR,seriesCols[cartIndl][0] );  
-     drawPoints(cartelHR,seriesCols[cartIndd][0] );  
-  } 
+     drawPoints(cartelHR,seriesCols[cartIndd][0] );   
   }
-  println(mm);
+
 
 
 }
@@ -526,7 +523,7 @@ void drawSpline(float[] vector,color colo){
    boolean prev0 = false, cont_point=true;
   noFill();
   stroke(colo);
-  beginShape();   
+ // beginShape();   
   for (i = 1; i < vector.length; i++) {
  
     x =  map(years[i], xlims[0], xlims[1], plot_x1, plot_x2);
@@ -558,7 +555,7 @@ void drawSpline(float[] vector,color colo){
 //    if(vector[i]==0)
 //      prev0=true;    
   }
-  endShape(); 
+ // endShape(); 
 }
 
 
@@ -595,30 +592,30 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
 //      rect(mouseX + 50, mouseY, 1.5*textWidth(popul.getDataAt(selectedMuni, 1)),60);
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
-      stroke(250); fill(250); strokeWeight(1.1); textAlign(CENTER);textSize(11);
-      switch(type){
-      case 'S':
-          text(Spopul.getDataAt(state, 1)+" ("+years[i]+")", width- 350,  35);
-         // text(" ("+ years[i]+")", width- 350,  30);
-          break;
-      case 'M':    
-           text(popul.getDataAt(selectedMuni, 1)+" ("+years[i]+")",width-350, 35);
-           //text(" ("+ years[i]+")", width- 350,  30);
-           break;
-      case 'N':    
-           text("National ("+ years[i]+")",width-350, 35);
-           //text(" ", width- 350, 30);
-           break;
-      case 'C':
-           text(cartels[rowCart][0]+" ("+years[i]+")",width-350, 35);
- 
-           break;
-      }
+      stroke(250); fill(250); textAlign(CENTER);textSize(12); 
+//      switch(type){
+//      case 'S':
+//          text(Spopul.getDataAt(state, 1), width- 350, barHeight+valeriaHeight-35);  //
+//          text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
+//          break;
+//      case 'M':    
+//           text(popul.getDataAt(selectedMuni, 1)+" ("+years[i]+")",width-350, barHeight+valeriaHeight-35);
+//            text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
+//           break;
+//      case 'N':    
+//           text("National ("+ years[i]+")",width-350, plot_y2+10);
+//           text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-35);
+//           break;
+//      case 'C':
+//           text(cartels[rowCart][0]+" ("+years[i]+")",width-350, barHeight+valeriaHeight-35);
+            text(" ("+ years[i]+")", width- 350,  barHeight+valeriaHeight-40);
+//           break;
+//      }
       textFont(legendfont);
-      fill(250); textSize(11);
+      fill(250); textSize(12);
       textAlign(LEFT);
-      text("estimated population: " + floor(matrix[i][1]), width- 420, 50 );
-      text("number of homicides: " + floor(matrix[i][0]),width- 420, 65 );
+      text("population: " + floor(matrix[i][1]), width- 420, barHeight+valeriaHeight-25);
+      text("homicides :       " + floor(matrix[i][0]),width- 420,barHeight+valeriaHeight-10  );
 
     }
   }
@@ -638,21 +635,27 @@ void drawLegend(){
   stroke(250); fill(250);
   textSize(12);
 
-  
-   text(cartels[rowCart][0], joeyWidth +valeriaWidth/5, barHeight+valeriaHeight-10);
-   text(popul.getDataAt(selectedMuni, 1), joeyWidth +2*valeriaWidth/5, barHeight+valeriaHeight-10);
-   text(Spopul.getDataAt(state, 1), joeyWidth +3*valeriaWidth/5, barHeight+valeriaHeight-10);
-   text("National", joeyWidth +4*valeriaWidth/5, barHeight+valeriaHeight-10);
+   text("National", joeyWidth +45*valeriaWidth/100, barHeight+valeriaHeight-30);
+    text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, barHeight+valeriaHeight-10); 
+      text(popul.getDataAt(selectedMuni, 1), joeyWidth +7*valeriaWidth/10, barHeight+valeriaHeight-30); 
+   text(cartels[rowCart][0], joeyWidth +7*valeriaWidth/10, barHeight+valeriaHeight-10);
+
+
+
  //Lenged for size
-  for (int i = 0; i < 3; i++)
+  for (int i = 1; i >=0; i--)
   {
     fill(seriesCols[cartIndl][i]);
     stroke(seriesCols[cartIndd][i]);
-    ellipse(joeyWidth +(i+1)*valeriaWidth/5-10,  barHeight+valeriaHeight-15, 6, 6);
+    ellipse(joeyWidth +7*valeriaWidth/10-10,  barHeight+valeriaHeight-15-20*i, 6, 6);
   }
   
-  stroke(250);fill(0);
-  ellipse(joeyWidth +4*valeriaWidth/5-10,  barHeight+valeriaHeight-15, 7, 7);
+     fill(seriesCols[cartIndl][2]);
+    stroke(seriesCols[cartIndd][2]);
+   ellipse(joeyWidth +45*valeriaWidth/100-10,  barHeight+valeriaHeight-35, 6, 6); 
+  stroke(0);
+  fill(0);
+  ellipse(joeyWidth +45*valeriaWidth/100-10,  barHeight+valeriaHeight-15, 6, 6);
 
 }  
 
@@ -666,20 +669,18 @@ void drawIntervention(int mun, int sta, color cInt)
  for(i = 0; i < ncols; i++)
  { 
    clave=milInt.getFloatAt(i,0);
-   println(clave==popul.getFloatAt(mun,0));
    if(clave==popul.getFloatAt(mun,0))
    {
      intYear= milInt.getFloatAt(i,5);
      x= map(intYear, xlims[0], xlims[1], plot_x1, plot_x2); 
        
-     println(intYear);
      println(x);
      stroke(cInt);
      strokeWeight(2);
      fill(cInt);
      line(x,plot_y1,x,plot_y2);
-     if(countInt==0){text("Military Intervention:",width-120, 35);}     
-     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 100,  55);
+     if(countInt==0){text("Military Intervention:",width-200, plot_y1-25);}     
+     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 190,  plot_y1- 10);
      countInt++;
    }
  }  
@@ -714,11 +715,10 @@ void drawPartyChange(int mun, int sta, color cInt)
      fill(cInt);
      strokeWeight(2);
      line(x,plot_y1,x,plot_y2);
-
-     text("Party change:",width-250, 35);
-     text(partyb + " to " + partya, width- 240,  55);
-      textSize(8);    
-      text("(PAN, PAN-PRD, PRD, PRI, Other)",width-270, 70);
+     //text(,width-250, 35);
+     text("Party change: "+ partyb + " to " + partya, width- 400, plot_y1-25);
+      textSize(8); 
+      text("(PAN, PAN-PRD, PRD, PRI, Other)",width-390, plot_y1-10);
      break;
    
    }
