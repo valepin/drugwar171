@@ -22,17 +22,12 @@ float[] municHom2010J;
 float[] municGrey;
 float[] municGrey2007J;
 float[] municGrey2010J;
+float[] bJ = {5,10,50};
+float[] heatJ = {30, 100, 200, 255};
 float xx = 280;
 float yy = 0;
 float pan = -40;
 float zoom = 1.5;
-float b1J = 5.0;
-float b2J = 10.0;
-float b3J = 50.0;
-float heat1J = 30.0;
-float heat2J = 100.0;
-float heat3J = 200.0;
-float heat4J = 255.0;
 int buttonX = joeyWidth - 80;
 int buttonY = barHeight + 60;
 int buttonS = 40;
@@ -257,17 +252,17 @@ void update(){
 
 float mapitJ(float val){
   float retval = 0;
-  if(val > b3J)
-    retval = heat4J;
+  if(val > bJ[2])
+    retval = heatJ[3];
 
-  if(val < b3J & val > b2J)
-    retval = heat3J;
+  if(val < bJ[2] & val > bJ[1])
+    retval = heatJ[2];
   
-  if(val < b2J & val > b1J)
-    retval = heat2J;
+  if(val < bJ[1] & val > bJ[0])
+    retval = heatJ[1];
 
-  if(val < b1J)
-    retval = heat1J;
+  if(val < bJ[0])
+    retval = heatJ[0];
 
   return retval;
 }
