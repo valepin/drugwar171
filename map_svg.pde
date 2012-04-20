@@ -218,12 +218,12 @@ textSize(16);
   textAlign(RIGHT,TOP);
   textSize(10);
   fill(255);
-  text("> " + (int) bJ[2], legendS-10, height-barHeight*1.25);
-  text((int) bJ[1] + " - " + (int) bJ[2], legendS-10, height-barHeight*1.25 + 10);
-  text((int) bJ[0] + " - " + (int) bJ[1], legendS-10, height-barHeight*1.25 + 20);
-  text("0 - " + (int) bJ[0], legendS-10, height-barHeight*1.25 + 30);
+  text("> " + (int) bJ[2], legendS-20, height-barHeight*1.25);
+  text((int) bJ[1] + " - " + (int) bJ[2], legendS-20, height-barHeight*1.25 + 10);
+  text((int) bJ[0] + " - " + (int) bJ[1], legendS-20, height-barHeight*1.25 + 20);
+  text("0 - " + (int) bJ[0], legendS-20, height-barHeight*1.25 + 30);
   textAlign(LEFT,TOP);
-  text("Homicide Rate", 3, height-barHeight*1.25 + 45, 80,80);  
+  text("Homicide Rate", 20, height-barHeight*1.25 + 45, 60,70);  
 
 
   textSize(10);
