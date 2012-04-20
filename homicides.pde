@@ -203,7 +203,7 @@ void drawV() {
   }      
   
 
-  if((mouseX<joeyWidth && mouseY< barHeight))
+  if((mouseX<joeyWidth && mouseY> barHeight))
   {
      allCartTS=false; 
   }
