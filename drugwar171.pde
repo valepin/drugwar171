@@ -16,7 +16,7 @@ void setup(){
   size(width,height);
   setupJ();
   setupV();
-  //setupA();
+  setupA();
 }
 
 
@@ -25,5 +25,5 @@ void draw(){
   hoverMuni=true;
   drawJ();
   drawV();
-  //drawA();
+  drawA();
 }
