@@ -38,7 +38,7 @@ PFont font;
 PFont legendfont;
 
 
-// municipality index to plot (default should be the national one)
+// municipality index to plot: selected muni (default should be the national one)
 boolean all=true;
 int state;
 
@@ -181,7 +181,7 @@ void drawV() {
   */
   drawPlotArea(w, h);
  
-  drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1) );
+  drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1)+","+ selectedMuni );
     drawAxesLabels("year", "homicide rate");
     drawGridlines();
    if(allCartTS)
@@ -640,8 +640,8 @@ void drawLegend(){
   stroke(250); fill(250);
   textSize(12);
 
-   text("National", joeyWidth +45*valeriaWidth/100, valeriaHeight-30);
-    text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, valeriaHeight-10); 
+   text("National", joeyWidth +45*valeriaWidth/100, valeriaHeight-10);
+    text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, valeriaHeight-30); 
       text(popul.getDataAt(selectedMuni, 1), joeyWidth +7*valeriaWidth/10, valeriaHeight-30); 
    text(cartels[rowCart][0], joeyWidth +7*valeriaWidth/10, valeriaHeight-10);
 
