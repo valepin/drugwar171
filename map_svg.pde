@@ -7,7 +7,6 @@
 
 import processing.opengl.*;
 import geomerative.*;
- 
 
 RShape mapImage;
 RShape[] munis;
@@ -81,6 +80,7 @@ void setupJ() {
   RG.setPolygonizer(RG.ADAPTATIVE);
 
   //setup map
+  /* @pjs preload="muni_ink.svg"; */
   mapImage = RG.loadShape("muni_ink.svg");
   mapImage.centerIn(g, 0, 1, 1);
 
@@ -384,12 +384,16 @@ void keyReleased(){
     
     if(zoomcount < 0){
       zoomcount = zoomcount*-1;
-      for(int i = 0; i < zoomcount; i++)
+      for(int i = 0; i < zoomcount; i++){
         zoomit(zoom);
+	zoomcount = 0;
+      }
     }
     if(zoomcount > 0){
-      for(int i = 0; i < zoomcount; i++)
+      for(int i = 0; i < zoomcount; i++){
         zoomit(1/zoom);
+	zoomcount = 0;
+      } 
     }
   }
 }
