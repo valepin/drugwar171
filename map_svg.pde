@@ -386,14 +386,13 @@ void keyReleased(){
       zoomcount = zoomcount*-1;
       for(int i = 0; i < zoomcount; i++){
         zoomit(zoom);
-	zoomcount = 0;
       }
     }
     if(zoomcount > 0){
       for(int i = 0; i < zoomcount; i++){
         zoomit(1/zoom);
-	zoomcount = 0;
       } 
     }
+    zoomcount = 0;    
   }
 }
