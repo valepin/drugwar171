@@ -37,21 +37,22 @@ float zoom = 1.5;
 int buttonX = joeyWidth - 80;
 int buttonY = barHeight + 60;
 int buttonS = 40;
-int legendS = 80;
+int legendS = 70;
 int zoomcount = 0;
 RectButton left, right, up, down, in, out;
 boolean locked = false;
 color highlightJ = color(0,100,255);
 color[][] seriesColsJ={
-  {#9400D3, #DA70D6,#A9A9A9},
-  {#FF4500, #FFA500,#A9A9A9},
-  {#4169E1, #87CEFA,#A9A9A9},
-  {#C71585, #FF69B4,#A9A9A9},
-  {#B22222, #FA8080,#A9A9A9},
-  {#008000, #32CD32,#A9A9A9},
-  {#FFB700, #FFEA00 ,#A9A9A9},
-  {#708090, #D3D3D3,#A9A9A9},
-  {#66CDAA, #AFEEEE,#708090}
+{#8B4513,#Cd853F ,#A9A9A9}, //brown
+{#FF4500, #FFA500,#A9A9A9}, //orange
+{#4169E1, #87CEFA,#A9A9A9}, //blue
+{#C71585, #FF69B4,#A9A9A9}, //pink
+{#B22222, #FA8080,#A9A9A9}, //red
+{#008000, #32CD32,#A9A9A9}, //green
+{#9400D3, #DA70D6,#A9A9A9}, //purple
+{#FFB700,#FFEA00 ,#A9A9A9}, //yellow
+{#708090,#D3D3D3,#A9A9A9}, //gray
+{#66CDAA, #AFEEEE,#A9A9A9} //cyan
 };
 
 String[][] cartelsJ = {
@@ -62,6 +63,7 @@ String[][] cartelsJ = {
   {"Cartel de Juárez", "J"},
   {"Sinaloa Cartel","S"},
   {"Acapulco and Pacifico Sur","a"},
+    {"Tijuana Cartel","T"},
   {"In Dispute", "D"},
   {"Not Specified", "N"},
   {"Pacifico Sur and Sinaloa Cartels","s"},
@@ -341,32 +343,37 @@ int[] cartelColor(char cartS){
     cartIndd = 5;
     rowCart = 5;
     break;
-  case 'N':
+  case 'T':
     cartIndl = 6;
     cartIndd = 6;
     rowCart =6;
     break;
-  case 'D':
+  case 'N':
     cartIndl = 7;
     cartIndd = 7;
     rowCart =7;
     break;
-   case 's':
-    cartIndl = 5;
-    cartIndd = 2;
+  case 'D':
+    cartIndl = 8;
+    cartIndd = 8;
     rowCart =8;
     break;
-   case 'a':
-    cartIndl = 8;
-    cartIndd = 2;
+   case 's':
+    cartIndl = 2;
+    cartIndd = 5;
     rowCart =9;
     break;
-   case 'z':
-    cartIndl = 1;
-    cartIndd = 0;
+   case 'a':
+    cartIndl = 9;
+    cartIndd = 9;
     rowCart =10;
-    break;  
-   default:
+    break;
+   case 'z':
+    cartIndl = 0;
+    cartIndd = 1;
+    rowCart =11;
+    break;   
+   //default:
      //println("failed"); 
   }
   int[] vals = {cartIndl, cartIndd, rowCart};
