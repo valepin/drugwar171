@@ -85,7 +85,8 @@ color[][] seriesCols={
 
 };
 //#F0E68C(khaki), #FFFF00  (bright yellow)
-
+String MSinf,theState;
+Textfield userMS;
 
 RadioButton r, cts;
 
@@ -127,9 +128,20 @@ void setupV() {
   r.setColorActive(color(255));
   r.setColorLabel(color(255));
    r.setSize(15,15);
+   r.setId(1);
  r.setItemsPerRow(2);
   r.setSpacingColumn(40);
 
+ 
+ userMS = controlP5.addTextfield("Municipality, State",joeyWidth+valeriaWidth/3,valeriaHeight+barHeight,200,20);
+ //userMun.setFocus(true);
+ MSinf = userMS.getText();
+ userMS.setId(2);
+ 
+ 
+   controlP5.addButton("clear",0,joeyWidth+valeriaWidth/3,valeriaHeight+barHeight/2,50,20);
+  controlP5.addButton("find",0,joeyWidth+valeriaWidth/2,valeriaHeight+barHeight/2,50,20).setId(1);
+ 
 
   addToRadioButton(r,"2007",0);
   addToRadioButton(r,"2010",1);
@@ -149,12 +161,81 @@ void addToRadioButton(RadioButton theRadioButton, String theName, int theValue )
 
 
 void controlEvent(ControlEvent theEvent) {
-  print("got an event from "+theEvent.group().name()+"\t");
-  for(int i=0;i<theEvent.group().arrayValue().length;i++) {
-    print(int(theEvent.group().arrayValue()[i]));
-  }
+  //print("got an event from "+theEvent.group().name()+"\t");
+//    println("got a control event from controller with id "+theEvent.controller().id());
+//  switch(theEvent.controller().id()) {
+//    case(1):
+//      if(int(theEvent.group().value())==1){cart2010 = true;} 
+//   else{cart2010 = false;} 
+//    break;  
+//   case(2):
+//    if(((Textfield)theEvent.controller()).isAutoClear()==false) {
+//      println(" success!");
+//    } 
+//    else {
+//      println(" but Textfield.isAutoClear() is false, could not setText here.");
+//    }
+//    break;
+//  }
+  
+//   if(theEvent.controller() instanceof Textfield) {
+//    println("controlEvent: accessing a string from controller '"+theEvent.controller().name()+"': "+theEvent.controller().stringValue());
+//    // Textfield.isAutoClear() must be true
+//    print("controlEvent: trying to setText, ");
+//    ((Textfield)theEvent.controller()).setText("controlEvent: changing text.");
+
+//   }
+//  else{ 
+//  for(int i=0;i<theEvent.group().arrayValue().length;i++) {
+//    print(int(theEvent.group().arrayValue()[i]));
+//  }
   if(int(theEvent.group().value())==1){cart2010 = true;} 
-   else{cart2010 = false;}   
+   else{cart2010 = false;} 
+////  }  
+}
+
+
+
+void find() {
+  // receiving text from controller texting
+  
+  int nMun =mtable.numRows;
+  String munName,sName, theMun,theState="";
+  Boolean noStateflag = false;
+  int comaPos = MSinf.indexOf(',');
+  if(comaPos > 0)
+  {
+    theMun = MSinf.substring(0,comaPos-1);
+    println(theMun);
+    theState = MSinf.substring(comaPos+2);  
+    println(theState);
+  }else
+ {
+   theMun = MSinf;
+   println("All input taken as municipality name. The last match found will be selected. Include ',' between Municipality and State if that's notthe case.");
+   noStateflag = true;
+ } 
+  //println("a textfield event for controller 'Municipality': "+theMun);
+  //println("a textfield event for controller 'State': "+userS.getText());
+  for(int i=0 ; i < nMun;i++)
+  {
+     munName = mtable.getDataAt(i, 1);
+     sName = Stable.getDataAt(i, 1);
+     //println("munName = " +munName);
+     if (munName.indexOf(theMun) !=-1)
+     {
+       if(noStateflag==false & sName.indexOf(theState) !=-1)
+         selectedMuni = i;
+         //break;
+     }else
+     {
+       println("No match found.");
+     }
+  }
+}
+
+void clear(int theValue) {
+  userMS.clear();
 }
 
 
@@ -773,33 +854,49 @@ float truncate(float x, float dec){
     return round(ceil(x * aux))/aux;
 }
 
-// void keyPressed () {
-//   if (key == CODED) {
-//     switch (keyCode) {
-//     case LEFT:
-//       // maybe I should make 2486 a golbal variable for nMun
-//         if(selectedMuni>0){
-//           selectedMuni=(selectedMuni-1)%2456;
-//         }
-//         else {selectedMuni=2455;}  
-//         state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
-//         plotAllC=false;
-//         break; 
-//     case RIGHT: 
-//       if(selectedMuni<2455){
-//         selectedMuni=(selectedMuni+1)%2456;
-//        }
-//         else {selectedMuni=0;}
-//       state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
-//       plotAllC=false;
-//       break;
-//       case 's': 
-//       // Go to ciudad Juárez (which has received a special atention)
-//         selectedMuni=234;
-//        plotAllC=true;
-//       break;        
-//     }
-//   } 
-// }
+ void keyPressed () {
+   if (key == CODED) {
+     switch (keyCode) {
+     case LEFT:
+       // maybe I should make 2486 a golbal variable for nMun
+         if(selectedMuni>0){
+           selectedMuni=(selectedMuni-1)%2456;
+         }
+         else {selectedMuni=2455;}  
+         state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
+         //plotAllC=false;
+         break; 
+     case RIGHT: 
+       if(selectedMuni<2455){
+         selectedMuni=(selectedMuni+1)%2456;
+        }
+         else {selectedMuni=0;}
+       state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
+       //plotAllC=false;
+       break;
+       case 's': 
+       // Go to ciudad Juárez (which has received a special atention)
+         selectedMuni=234;
+        //plotAllC=true;
+       break;        
+     }
+   } 
+ }
+
+
+
+//// suggested by http://Phi.Lho.free.fr/index.en.h
+//// at http://forum.processing.org/topic/an-if-statement-that-searches-for-a-string
+//boolean contains(String haystack, String needles)
+//{
+//  for (String needle : needles)
+//  {
+//    if (haystack.contains(needle))
+//    {
+//      return true;
+//    }
+//  }
+//  return false;
+//}
 
 

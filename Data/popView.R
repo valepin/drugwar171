@@ -55,7 +55,7 @@ hom = read.csv("MunHomicides.csv",header=TRUE)
 homInd=c(seq(4,55,by=3),59,63,67)
 cart = read.csv("CartelIncomeExpensesByMunicipality.csv",header=TRUE)
 
-cartels=c("G","Z","P","F","J","S","N","D","s","a","z")
+cartels=c("G","Z","P","F","J","S","T","N","D","s","a","z")
 numCar=length(cartels)
 
 car2007 = matrix(NA,nrow=2*numCar,ncol=21)
