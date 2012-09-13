@@ -22,7 +22,7 @@ int anuvWidth=512;
 void setup() {
   size(1280, 750);
   setupJ();
-  setupV();
+ setupV();
 }
 
 
