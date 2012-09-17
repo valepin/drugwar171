@@ -145,6 +145,7 @@ void setupV() {
 
   addToRadioButton(r,"2007",0);
   addToRadioButton(r,"2010",1);
+  addToRadioButton(r,"Intervened",2);
   
 }
 
@@ -189,8 +190,19 @@ void controlEvent(ControlEvent theEvent) {
 //  for(int i=0;i<theEvent.group().arrayValue().length;i++) {
 //    print(int(theEvent.group().arrayValue()[i]));
 //  }
-  if(int(theEvent.group().value())==1){cart2010 = true;} 
-   else{cart2010 = false;} 
+  switch(int(theEvent.group().value())){
+  case 0:
+    cart2010 = false;
+    dispInt=false;
+    break;
+  case 1 :
+    cart2010 = true;
+    dispInt=false;
+    break;
+  case 2 :
+    dispInt=true;
+    break;
+  }
 ////  }  
 }
 
@@ -789,16 +801,16 @@ void drawPartyChange(int mun, int sta, color cInt)
  { 
    partyb=ppartycMun.getDataAt(mun,i);
    partya=ppartycMun.getDataAt(mun,i+1); // only here we have 0's
-   if(partya.equals(0) || partya.equals("NOT YET"))
-   {
-     println("No data");
-   }else
-   if(partya.equals(partyb)) //does this work
-   {
-       println("No party change");
-   }else
-   {
-   
+//   if(partya.equals(0) || partya.equals("NOT YET"))
+//   {
+//     println("No data");
+//   }else
+//   if(partya.equals(partyb)) //does this work
+//   {
+//       println("No party change");
+//   }else
+//   {
+//   
      intYear= ppartycS.getFloatAt(state,i+1);
      x= map(intYear, xlims[0], xlims[1], plot_x1, plot_x2); 
      stroke(cInt);
@@ -811,7 +823,7 @@ void drawPartyChange(int mun, int sta, color cInt)
       text("(PAN, PAN-PRD, PRD, PRI, Other)",width-390, plot_y1-10);
      break;
    
-   }
+//   }
    
  }  
 } 

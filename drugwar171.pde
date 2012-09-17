@@ -8,7 +8,7 @@
 int width = 1280;
 int height = 750;
 int selectedMuni;
-boolean cart2010=true, allCartTS=true;
+boolean cart2010=true, allCartTS=true, dispInt=false;
 boolean hoverMuni;
 int barHeight=75;
 int joeyWidth=768;
@@ -22,7 +22,7 @@ int anuvWidth=512;
 void setup() {
   size(1280, 750);
   setupJ();
-  setupV();
+ setupV();
 }
 
 
