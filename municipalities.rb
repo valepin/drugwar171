@@ -34,6 +34,7 @@ CSV.open("data/latlon.csv", "wb") do |csv|
       long = location['lng'].to_s
     end
     csv << [state,municipality,lat,long]
+    sleep 0.25
   end
 end
 
