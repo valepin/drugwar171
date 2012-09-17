@@ -8,7 +8,6 @@ require 'uri'
 #global
 country = "Mexico"
 
-
 CSV.open("data/latlon.csv", "wb") do |csv|
   CSV.foreach("data/stateandmuni.csv") do |row|
     parsed = row[0].split(/\t/)
@@ -22,13 +21,18 @@ CSV.open("data/latlon.csv", "wb") do |csv|
     response = JSON.parse(Net::HTTP.get(url).force_encoding('UTF-8'))
     results = response['results']  
     foo = results[0]
-    geometry = foo['geometry']
-    location = geometry['location']  
+    
+    if foo.nil?
+      lat = 'NA'
+      lon = 'NA'
+    else
+      geometry = foo['geometry']
+      location = geometry['location']  
   
-    #Finally LAT and LONG as strings
-    lat = location['lat'].to_s
-    long = location['lng'].to_s
-
+      #Finally LAT and LONG as strings
+      lat = location['lat'].to_s
+      long = location['lng'].to_s
+    end
     csv << [state,municipality,lat,long]
   end
 end
