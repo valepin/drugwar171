@@ -163,20 +163,18 @@ void drawJ() {
         int[] cartcol  = cartelColor(municCartel[i]);
         //println(cartelTable.getInt(7,7));
         // modified to display the intervened municipalities
-        if(dispInt)
-        {
-          
-          if(cartelTable.getInt(i+1,7)==1)
-          {
-            fill(#FF0000,municGrey[i]);
-          }else
-         {
-            fill(#FFFFFF,municGrey[i]);
-         } 
-        }else
-        {
-          fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
-        }
+        if(dispInt){
+	    if(cartelTable.getInt(i+1,8)!=0){
+		if(cartelTable.getInt(i+1,7)==1)
+		    fill(#FF0000,municGrey[i]);
+		else 
+		    fill(cartelTable.getInt(i+1,8)*14,255-cartelTable.getInt(i+1,8)*14,cartelTable.getInt(i+1,8)*14,municGrey[i]);
+	    }else{
+		fill(#FFFFFF,municGrey[i]);
+	    }
+        }else{
+	    fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+	}
         stroke(colorScheme[2]);
         munic.draw();
       }
