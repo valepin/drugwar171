@@ -3,11 +3,11 @@
 
 
 # read in the tsv's
-Educ<- read.delim("MunEducation.tsv", header = TRUE, sep = "\t")
-cartInt<- read.delim("CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
-Hom<- read.delim("MunHomicides.tsv", header = TRUE, sep = "\t")
-Pop<- read.delim("MunPopulationEst.tsv", header = TRUE, sep = "\t")
-Int<-read.delim("InterventionDataNexos2011.tsv", header = TRUE, sep = "\t")
+Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
+cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
+Hom<- read.delim("data/MunHomicides.tsv", header = TRUE, sep = "\t")
+Pop<- read.delim("data/MunPopulationEst.tsv", header = TRUE, sep = "\t")
+Int<-read.delim("data/InterventionDataNexos2011.tsv", header = TRUE, sep = "\t")
 
 
 # get the references of which municipalities are in treated regions(units) and how many
