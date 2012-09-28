@@ -70,8 +70,6 @@ X$Hom06<-Hom[,52]
 #Population 
 X$PopMun06 <- Pop[,19] 
 
-#last Party before Calderon period (?) is this the one we want?
-X$PartyMunBC <- cartInt[,3]
 
 #Income (Ingresos) and Expenses (Egresos)
 X$Inc06   <- cartInt[,43]
@@ -82,8 +80,50 @@ X$StatePop06   <- SPop[X$Clave%/%1000,grep(2006,names(SPop))]
 X$StateHom06 <- SHom[X$Clave%/%1000,52]
 X$StateGDP06 <- SGDP[X$Clave%/%1000,grep(2006,names(SGDP))]
 
+#last Party before Calderon period (?) is this the one we want?
+X$PartyMunBC <- cartInt[,3]
 
-write.table(as.matrix(X),"dataToPSMatch.csv",header=T)
+
+write.csv(X,"data/dataToPSMatch.csv")
+############################
+#
+# Lets get prior balance checks
+#
+###########################
+
+par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
+
+#for(i in 6:13)
+for(i in 14:21)
+{
+    if(i<21)
+    {
+        hist(X[intervened,i],col="lightgrey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+        xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=T),max(X[intervened,i],X[-intervened,i],na.rm=T)))
+    }else
+    {
+        barplot(table(X[intervened,i]),col="lightgrey",border="white",xlab="intervened")
+    }    
+}
+
+#for(i in 6:13)
+for(i in 14:21)
+{
+    if(i<21)
+    {
+        hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,
+           xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=T),max(X[intervened,i],X[-intervened,i],na.rm=T)))
+    }else
+    {
+        barplot(table(X[-intervened,i]),col="lightblue",border="white",xlab="control")
+    }
+
+    
+    
+}
+
+
+
 
 ############################
 #
