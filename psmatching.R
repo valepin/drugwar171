@@ -1,22 +1,23 @@
 # author: Valeria Espinosa
 # date: Sept 24/2012 (cumple Bertha)
-
-
+library(xtable)
+library(MatchIt)
+library(mice)
 # read in the tsv's at the municipality level
-Educ<- read.delim("MunEducation.tsv", header = TRUE, sep = "\t")
-cartInt<- read.delim("CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
-Hom<- read.delim("MunHomicides.tsv", header = TRUE, sep = "\t")
-Pop<- read.delim("MunPopulationEst.tsv", header = TRUE, sep = "\t")
-Int<-read.delim("InterventionDataNexos2011.tsv", header = TRUE, sep = "\t")
-Med <-read.delim("MunMedical.tsv", header = TRUE, sep = "\t")
-LatLon<-read.delim("MunMedical.tsv", header = TRUE, sep = "\t")
+Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
+cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
+Hom<- read.delim("data/MunHomicides.tsv", header = TRUE, sep = "\t")
+Pop<- read.delim("data/MunPopulationEst.tsv", header = TRUE, sep = "\t")
+Int<-read.delim("data/InterventionDataNexos2011.tsv", header = TRUE, sep = "\t")
+Med <-read.delim("data/MunMedical.tsv", header = TRUE, sep = "\t")
+LatLon<-read.delim("data/latlon.tsv", header = FALSE, sep = "\t")
 
 
 # read in the tsv's at the state level
-ScartInt<- read.delim("CartelIncomeExpensesByState.tsv", header = TRUE, sep = "\t")
-SHom<- read.delim("StateHomicides.tsv", header = TRUE, sep = "\t")
-SPop<- read.delim("StatePop.tsv", header = TRUE, sep = "\t")
-SGDP<- read.csv("StateGDPcurrentvalue.csv", header = TRUE)
+ScartInt<- read.delim("data/CartelIncomeExpensesByState.tsv", header = TRUE, sep = "\t")
+SHom<- read.delim("data/StateHomicides.tsv", header = TRUE, sep = "\t")
+SPop<- read.delim("data/StatePop.tsv", header = TRUE, sep = "\t")
+SGDP<- read.csv("data/stateGDPcurrentValue.csv", header = TRUE)
 
 
 # get the references of which municipalities are in treated regions(units) and how many
@@ -62,7 +63,8 @@ X$ReadWrite05<-Educ[,46]/Educ[,45]
 X$MissReadWrite05<-Educ[,48]/Educ[,45]
 X$IndLang05<-Educ[,63]/Educ[,62]
 X$MissIndLang05<-Educ[,65]/Educ[,63]
-
+# put NAs when Educ[,63] == 0?
+X$MissIndLang05[Educ[,63]==0] <- NA
 
 # Homicide Information up to 2006
 X$Hom06<-Hom[,52]
@@ -71,6 +73,9 @@ X$Hom06<-Hom[,52]
 X$PopMun06 <- Pop[,19] 
 
 #last Party before Calderon period (?) is this the one we want?
+# I thought we mgiht want cartInt[,1]? That's the party before 2006.
+# In Dec 2006 calderon came in so if we get a party in his period it may be a
+# response.
 X$PartyMunBC <- cartInt[,3]
 
 #Income (Ingresos) and Expenses (Egresos)
@@ -83,10 +88,22 @@ X$StateHom06 <- SHom[X$Clave%/%1000,52]
 X$StateGDP06 <- SGDP[X$Clave%/%1000,grep(2006,names(SGDP))]
 
 
-write.table(as.matrix(X),"dataToPSMatch.csv",header=T)
+write.csv(X,"dataToPSMatch.csv")
 
 ############################
 #
 # Now do the matching
 #
 ###########################
+treated <- rep(0,dim(X)[1])+(cartInt$Intervened.Units>0)
+full <- cbind(X[,!(names(X) %in% c("State", "Municipality", "Clave"))])
+# we have NAs impute? Match on missing?
+missind <- as.data.frame(is.na(full)[,apply(is.na(full),2,sum)>0])
+names(missind) <- paste(names(as.data.frame(missind)),"miss",sep="")
+
+## this is just me messing around. Not sure how you want to deal with the missing data. I.e. impute using some logistic regression models and just do regular propensity score with the imputed data set? Exact match on missing might be ok but I think we will have to discard 1 treated unit. 
+
+## comp <- complete(mice(full,m=1,maxit=1))
+## compfull <- cbind(comp,missind)
+## fmla <- as.formula(paste("treated ~ ", paste(names(full), collapse= "+")))
+## m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC",names(missind)),ratio=1)
