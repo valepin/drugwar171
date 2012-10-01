@@ -134,6 +134,33 @@ for(i in 6:13)
 
 #write.csv(X,"dataToPSMatch.csv")
 
+############################
+#
+# Now, what about the missingness?
+#
+###########################
+palette <- colorRampPalette(c('#0033BB','#ffffff'))(256)
+
+# the intervened units
+data<-matrix(as.numeric(!is.na(X[intervened,])),nrow=dim(X[intervened,])[1],ncol=dim(X[intervened,])[2])
+rownames(data)= X$Clave[intervened]
+colnames(data)= colnames(X)
+
+
+missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+####
+n<-300
+contPool<-setdiff(1:dim(X)[1], intervened)
+samp<-sample(contPool,n)
+data<-matrix(as.numeric(!is.na(X[samp,])),nrow=dim(X[samp,])[1],ncol=dim(X[samp,])[2])
+rownames(data)= X$Clave[samp]
+colnames(data)= colnames(X)
+
+
+missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+
+
+
 
 ############################
 #
@@ -152,3 +179,11 @@ names(missind) <- paste(names(as.data.frame(missind)),"miss",sep="")
 ## compfull <- cbind(comp,missind)
 ## fmla <- as.formula(paste("treated ~ ", paste(names(full), collapse= "+")))
 ## m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC",names(missind)),ratio=1)
+
+# trying to understand the missing 
+data<-X[,9:21]
+psScore<-glm(treated~.*.,data=data,family=binomial(link = "logit"))
+
+par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
+hist(psScore$fitted.values[intervened],col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
+hist(psScore$fitted.values[-intervened],col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1))
