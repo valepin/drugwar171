@@ -77,7 +77,7 @@ There are 2213 municipalities in the initial control pool, and the numbers per t
 \end{center}
 \end{table}
 
-Note that for the data that we're working with, all the regions with $*$ are eliminated from the data set since we have no post intervention information. The data collected spans 1990-2010.
+Note that for the data that we're working with, all the regions with $*$ are eliminated from the data set since we have no post intervention information. The data collected spans 1990-2010. That leaves us with 205 treated municipalities.
 
 \section{Estimand}
 We want to measure the effect of the military interventions in terms of the increase in homicide rates. Following the Rubin Causal Model, let $Y_j(1)$ and $Y_j(0)$ denote the homicide rate of region $j$ one year after it received a military intervention\footnote{We can also estimate the effect two and three years post intervention. However, the uncertainty will increase because there are only three regions with 2007 interventions and an additional six with 2008 interventions.}, and what it would have been at that same point in time if it hadn't received the military intervention. The estimand of interest is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_j Y_j(1)-Y_j(0)}{J}.$$ % do we want to weigh these?
@@ -95,8 +95,15 @@ $$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$ where $v_{ijk}=\frac{
 Therefore,
 $$\hat{Y}_{j}(0) =\sum_{i=1}^{N_j}w_{ij}\hat{Y}_{ij}(0)=\sum_{i=1}^{N_j}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$
 and
-$\hat{\tau}=$
+$$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
 
+Now, the fact that we are using weighted averages is relevant for the estimate of $var(\hat{\tau}).$ % One thing to check is where the variance comes from in this setting (it is not from random assignment, it has to be from the estimation of the missing potential outcomes, but how does the variance in the treatment group play a role here... for this group all the outcomes were observed so what does it mean to have the variance then?)
+Now,
+$$var(\hat{\tau}) = S^2(1)/J +S^2(0)/J $$
+where $S(x)$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
+$$\hat{var}(\hat{\tau}) = s^2(1)/J +s^2(0),$$
+ where $s^2(1) $ is the sample variance of the potential outcomes under treatment and 
+$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, but taking the weighing in to account. That is $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0).$$
 
 \section{Comments}
 Perhaps a more comprehensive way of approaching this problem is to analyze the homicide rate time series using Synthetic Matching.
