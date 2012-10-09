@@ -14,7 +14,7 @@ LatLon<-read.delim("data/latlon.tsv", header = FALSE, sep = "\t")
 
 
 # read in the tsv's at the state level
-ScartInt<- read.delim("data/CartelIncomeExpensesByState.tsv", header = TRUE, sep = "\t")
+ScartInt<- read.delim("data/CartelIncomeExpensesState.tsv", header = TRUE, sep = "\t")
 SHom<- read.delim("data/StateHomicides.tsv", header = TRUE, sep = "\t")
 SPop<- read.delim("data/StatePop.tsv", header = TRUE, sep = "\t")
 SGDP<- read.csv("data/stateGDPcurrentValue.csv", header = TRUE)
@@ -64,7 +64,7 @@ X$MissReadWrite05<-Educ[,48]/Educ[,45]
 X$IndLang05<-Educ[,63]/Educ[,62]
 X$MissIndLang05<-ifelse(Educ[,63]>0,Educ[,65]/Educ[,63],0) #note that this is well defined as zero if the denominator is zero
 # put NAs when Educ[,63] == 0?
-X$MissIndLang05[Educ[,63]==0] <- NA
+# X$MissIndLang05[Educ[,63]==0] <- 0
 
 # Homicide Information up to 2006
 X$Hom06<-Hom[,52]
