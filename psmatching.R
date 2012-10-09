@@ -104,22 +104,23 @@ write.csv(X,"data/dataToPSMatch.csv")
 ###########################
 
 par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
+#par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
 
-#for(i in 6:13)
-for(i in 14:21)
+for(i in 6:13)
+#for(i in 14:21)
 {
     if(names(X)[i]!="PartyMunBC")
     {
-        hist(X[intervened,i],col="lightgrey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+        hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
         xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
     }else
     {
-        barplot(table(X[intervened,i]),col="lightgrey",border="white",xlab="intervened")
+        barplot(table(X[intervened,i]),col="grey",border="white",xlab="intervened")
     }    
 }
 
-#for(i in 6:13)
-for(i in 14:21)
+for(i in 6:13)
+#for(i in 14:21)
 {
     if(names(X)[i]!="PartyMunBC")
     {
@@ -131,9 +132,26 @@ for(i in 14:21)
     }    
 }
 
+#just plot the homicides
+par(mfrow=c(2,2), mai=c(0.8,0.5,0.2,0.1))
 
+i=which(colnames(X) %in% "Hom06")
+#homicides 
+hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+#homicide rate
+hist(X[intervened,i]/X$PopMun06[intervened]*100000,col="grey",border="white",main="Homicide Rate",breaks=20, xlab="intervened",
+xlim=c(min(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE),
+max(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE)))
+#homicides 
+hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,200),
+   xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+   
 
-
+#homicide rate
+hist(X[-intervened,i]/X$PopMun06[-intervened]*100000,col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,140),
+xlim=c(min(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE),
+max(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE)))
 
 #write.csv(X,"dataToPSMatch.csv")
 
