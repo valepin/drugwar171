@@ -3,6 +3,7 @@
 library(xtable)
 library(MatchIt)
 library(mice)
+load("balanceFunctions.R")
 # read in the tsv's at the municipality level
 Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
 cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
@@ -23,6 +24,7 @@ SGDP<- read.csv("data/stateGDPcurrentValue.csv", header = TRUE)
 # get the references of which municipalities are in treated regions(units) and how many
 intervened<-which(cartInt$Intervened.Units>0)
 Nt<-length(unique(cartInt$Intervened.Units[intervened]))
+Ws<-rep(0,dim(Educ)[1])
 
 # get the information relevant for each treated unit
 intUnitInfo=list()
@@ -32,6 +34,7 @@ for(i in 1:Nt)
     claves<-Pop$Clave[munIs]
     dates<-Int$Date.3[is.element(Int$Clave,claves)]
     intUnitInfo[[i]]=list("Date" = min(dates),"Munis"= munIs,"Claves"=claves)
+    Ws[munIs]<-Pop[munIs,19]/sum(Pop[munIs,19]) 
 }
 
 #to get the info table in latex 
@@ -87,7 +90,7 @@ X$PartyMunBC <- cartInt[,3]
 
 #Income (Ingresos) and Expenses (Egresos)
 X$Inc06   <- cartInt[,43]
-X$Exp06 <- cartInt[,42]
+#X$Exp06 <- cartInt[,42] # I must have made a mistake when cleaning the data set 
 
 # State Info
 X$StatePop06   <- SPop[X$Clave%/%1000,grep(2006,names(SPop))]
@@ -187,6 +190,7 @@ full <- cbind(X[,!(names(X) %in% c("State", "Municipality", "Clave"))])
 
 full<-full[-gotT2010,]
 treated<-treated[-gotT2010]
+Ws<-Ws[-gotT2010]
 
 # we have NAs impute? Match on missing?
 missind <- as.data.frame(is.na(full)[,apply(is.na(full),2,sum)>0])
@@ -207,17 +211,18 @@ comp<-cbind(comp[,!(names(comp) %in% c("ConsultsPerDoc","ConsultsPerMedUnit"))])
 comp<-comp[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
 compfull <- cbind(comp,missind[(missind[,4]!=TRUE & missind[,5]!=TRUE),3])
 compfull<-na.omit(compfull)
+compfull<-compfull[,!(names(compfull) %in% c("Exp06"))]
 treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
+Ws<-Ws[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
-m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=5)
-#m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC"),ratio=5)
+m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=1)
+#m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC"),ratio=5)summ
 
 
-matches<-as.numeric(c(t(m1$match.matrix)))
-matches<-matches[!is.na(matches)]
+
 
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 pst<-match.data(m1)[treated==1,"distance"]
@@ -228,18 +233,11 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 
 # check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
-names(compfull)[17] = "missIndDocsPerUnit"
+names(compfull)[16] = "missIndDocsPerUnit"
 TreatCov<-compfull[treated==1,]
 ContMatchesCov<-compfull[matches,]
 difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
-Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs)
-#InitInt<-calcMeansAndVars(compfull[treated==1,]*compfull$Hom06[treated==1,],compfull[treated==0,]*compfull$Hom06[treated==0,],difmeanCovs,difmeanCovs)
-postMatch<-calcMeansAndVars(TreatCov,ContMatchesCov,difmeanCovs,difmeanCovs)
-
-lpMat<-list(Init,postMatch)
-
-loveplot(lpMat,labels=c("Initial","Matched ME 5"))
 
 # trying to understand the missing 
 data<-compfull
@@ -263,12 +261,27 @@ par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
 hist(pst,col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
 hist(psc,col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,100))
 
-postMatchHomSq<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs)
 
 
-lpMat<-list(Init,postMatch,postMatchHomSq)
 
-loveplot(lpMat,labels=c("Initial","Matched ME 5","Matched HomSq 5"))
+Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
+    ,rep(1,sum(treated==0)))
+#
+InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
+    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
+#
+WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
+matches<-as.numeric(c(t(m1$match.matrix)))
+matches<-matches[!is.na(matches)]
+postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
+
+postMatchHomSq<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
+
+
+lpMat<-list(Init,InitW,postMatch,postMatchHomSq)
+lpMat<-list(InitW,Init,postMatch)
+
+loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomSq 5"),xlim=c(-0.5,0.5))
 
 ### hist test
 
@@ -276,4 +289,8 @@ TreatMat <-compfull[treated==1,]
 ContMat<-compfull[treated==0,]
 
 histCheck(compfull[treated==1,],compfull[treated==0,],1:6)
+x11()
+histCheck(compfull[treated==1,],compfull[matches,],1:6)
+x11()
+histCheck(compfull[treated==1,],compfull[matches2,],1:6)
 histCheck(compfull[treated==1,],compfull[treated==0,],7:13)

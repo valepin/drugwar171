@@ -102,8 +102,9 @@ Now,
 $$var(\hat{\tau}) = S^2(1)/J +S^2(0)/J $$
 where $S(x)$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
 $$\hat{var}(\hat{\tau}) = s^2(1)/J +s^2(0),$$
- where $s^2(1) $ is the sample variance of the potential outcomes under treatment and 
-$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, but taking the weighing in to account. That is $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0).$$
+ where $s^2(1) =  \sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}(Y_{ij}(1)-\overline{Y}(1))^2 $ is the sample variance of the potential outcomes under treatment, and 
+$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, where $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0),$$ and
+$$\hat{\overline{Y}}(1)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}Y_{ij}(1).$$
 
 \section{Comments}
 Perhaps a more comprehensive way of approaching this problem is to analyze the homicide rate time series using Synthetic Matching.
