@@ -22,13 +22,18 @@ calcWeights<-function(MatchMat,N)
 calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
 {
     means<- matrix(NA,length(Covs),4)
+    # make the weights add up to 1
+    Ws=Ws/sum(Ws)
+    WsTilde=WsTilde/sum(WsTilde)
     i=1
     j=1
     #browser()
     for (co in Covs) {
-        means[i,1:2]=c(sum(Ws*TreatMat[,co],na.rm=TRUE)/sum(Ws),sum(WsTilde*ContMat[,co],na.rm=TRUE)/sum(WsTilde))
-        means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws*(TreatMat[,co]-means[i,1])^2/sum(Ws),na.rm=TRUE),NA),
-        ifelse(is.element(co,cont),sum(WsTilde*(ContMat[,co]-means[i,2])^2/sum(WsTilde),na.rm=TRUE),NA))
+        means[i,1:2]=c(sum(Ws*TreatMat[,co],na.rm=TRUE),sum(WsTilde*ContMat[,co],na.rm=TRUE))
+        # means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws*(TreatMat[,co]-means[i,1])^2/sum(Ws),na.rm=TRUE)/dim(TreatMat)[1],1/2),
+        # ifelse(is.element(co,cont),sum(WsTilde*(ContMat[,co]-means[i,2])^2/sum(WsTilde),na.rm=TRUE)/dim(ContMat)[1],1/2))
+        means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws^2)*var(TreatMat[,co]),1/2),
+         ifelse(is.element(co,cont),sum(WsTilde)^2*var(ContMat[,co]),1/2))
         i=i+1
     }
     colnames(means)=c("meanT","meanC","varT","varC")
@@ -37,18 +42,18 @@ calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
 
 }
 
-loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlim=c(-0.1,0.1))
+loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
 {
     #Let MatPlot only have the covariates to plot
     # The first one should be the original sample 
     colors=c("aquamarine4","orchid","gray","royalblue","coral2","darkorchid")
     types=25:21
-    par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1))
-    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(sum(MatPlot[[1]][,3:4])), 1:dim(MatPlot[[1]])[1], col="white", bg="aquamarine4", xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
-    main=ifelse(cont,"t statistics for differences in ordinal variables","mean differences in binary variables"),xlim=xlim)
+    par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1)) 
+    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg="aquamarine4", xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
+    main=ifelse(cont,"t statistics for differences in continuous variables","mean differences in binary variables"),xlim=xlims)
     for(i in 2:length(MatPlot))
     {
-        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(sum(MatPlot[[1]][,3:4])), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.2)
+        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.2)
     }
  
     axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1)

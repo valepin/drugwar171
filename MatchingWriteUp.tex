@@ -1,16 +1,17 @@
 \documentclass{article}[11 pt]
 \usepackage{graphics}
-\usepackage{epsfig}
 \usepackage{color}
-\usepackage{graphicx,psfrag,pst-node,subfigure,verbatim}
-\usepackage{amsmath,bbm,amssymb,mathrsfs}
+\usepackage{graphicx,subfigure}
+\usepackage{amsmath,bbm,amssymb,mathrsfs,bm}
 \usepackage{amsthm}
 \usepackage{comment}
 \usepackage{rotating}
 \usepackage{lscape}
 \usepackage{enumerate}
 \usepackage{fullpage}
-\usepackage{url}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\setcounter{secnumdepth}{3}
 \begin{document}
 \begin{center}	
 	\textbf{Mexican Drug War: Have the Military Interventions Increased Violence?}
@@ -98,13 +99,62 @@ and
 $$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
 
 Now, the fact that we are using weighted averages is relevant for the estimate of $var(\hat{\tau}).$ % One thing to check is where the variance comes from in this setting (it is not from random assignment, it has to be from the estimation of the missing potential outcomes, but how does the variance in the treatment group play a role here... for this group all the outcomes were observed so what does it mean to have the variance then?)
-Now,
+\begin{itemize}
+\item Option 1
 $$var(\hat{\tau}) = S^2(1)/J +S^2(0)/J $$
-where $S(x)$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
-$$\hat{var}(\hat{\tau}) = s^2(1)/J +s^2(0),$$
- where $s^2(1) =  \sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}(Y_{ij}(1)-\overline{Y}(1))^2 $ is the sample variance of the potential outcomes under treatment, and 
-$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, where $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0),$$ and
+where $S(x)^2$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
+$$\hat{var}(\hat{\tau}) = s^2(1)\sum_{i=1}^{N_j}w_{ij}^2 +s^2(0)\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}^2_{ijk},$$
+ where $$s^2(1) =  \sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}(Y_{ij}(1)-\overline{Y}(1))^2 $$ is the sample variance of the potential outcomes under treatment, and 
+$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, where the means are the weighted means. $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0),$$ and
 $$\hat{\overline{Y}}(1)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}Y_{ij}(1).$$
+
+\item Option 2 (the one that makes most sense at the moment is)
+$$var(\hat{\tau}) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}(w_{ij}/J)^2 S^2(1) + \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}^2 S^2(0)  $$
+where $S(1)^2$ is the variance of the homicide rate for all units under treatment, $Y_ijk(1)$, and
+ $S(0)^2$ is the variance of the homicide rate for all units under control, $Y_ijk(0)$. 
+\textbf{Maybe here it should be $Y_j(x)$ instead of $Y_ijk(x)$.}
+
+\item Option 3. In the Imbens and Rubin book it is suggested to calculate the conditional variance for each unit using matching within treated groups and within control groups.  Do the simple things work? 
+\end{itemize}
+
+\subsection{Balance Checks}
+These weights (right now it is option 2) were used to assess balance.
+
+We used matchIt to exactly match on missingness pattern (the only variable with values is ``Doctors per Medical Unit'') and Party at the municipality level. The initial balance, shown in figures \ref{initBalance1} and \ref{initBalance1}, seems reasonable for the main covariates (not including higher order terms or interactions - these haven't been checks. Also, which interactions and higher order terms would be of interest? ). There are some things to note though, the scale on the y axis is very different in the treated and control groups. However, there seems to be good overlap to find matches. One concern is the number of Homicides in 2006, the domain of the treated municipalities seems larger than that of the controls.
+
+\begin{figure}[ht]
+
+    \centering
+        \includegraphics[scale=0.6]{InitBalance1.pdf}
+\caption{Histograms to compare distributions in original pools.}
+\label{initBalance1}
+\end{figure}
+
+\begin{figure}[ht]
+
+    \centering
+        \includegraphics[scale=0.6]{InitBalance2.pdf}
+\caption{Histograms and Barplots  to compare distributions in original pools.}
+\label{initBalance2}
+\end{figure}
+
+We further explore the overlap for homicides
+\begin{figure}[ht]
+
+    \centering
+        \includegraphics[scale=0.6]{ZoomHom.pdf}
+\caption{Zooming in to Homicide Rate}
+\label{initBalance2}
+\end{figure}
+
+In some tries of matching we observe that the major imbalance is at the `Homicide 2006' covariate (should we have homicide rate or do the weights take care of that?)
+
+
+
+\begin{figure}[ht]
+    \centering
+        \includegraphics[scale=0.5]{MEloveplot.pdf}
+\end{figure}
 
 \section{Comments}
 Perhaps a more comprehensive way of approaching this problem is to analyze the homicide rate time series using Synthetic Matching.
