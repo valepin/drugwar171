@@ -30,6 +30,30 @@ Assumptions:
 
 The main idea is to combine synthetic and propensity score matching to address this question. What are the advantages of doing that? (and what's new?)
 The current proposal is to use propensity score matching to create pools of acceptable controls for each treated unit (is there some multiple comparison thing going on here? Probably not, we just cared about the observed imbalances, we are not saying anything else.). Furthermore, to get the synthetic match for treated unit $T_i$ we can choose the weights for the units in it's control pool such that the $Y_1^T,\ldots, Y_{I_i}^{T_i}$ is best matched
+
+\subsection{How to make SUTVA more feasible?}
+The main idea is to group neighboring regions that have received military interventions (that have resulted in deaths) in such a way that distances make no interference more reasonable or geographic situation such as lack of highways connecting them \url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
+We proposed the following units (the bold names are the ones that actually received an intervention):
+\begin{enumerate}
+\item \textbf{Tijuana}, Playas de Rosarito, Tecate, Ensenada (Baja California)
+\item \textbf{Nogales}, Sáric, Tubutama, Magdalena, Imuris, Santa Cruz (Sonora)
+\item \textbf{Madera}*, Temósachic, Casas Grandes, Zaragoza, Gómez Farías, Matachí (Chihuahua) Yécora, Arivechi, Sahuaripa, Nácori Chico, Huachinera, Bacerac, Bacadéhuachi (Sonora)
+\item \textbf{Juárez, Chihuahua}, Ascensión, Ahumada, Guadalupe, Praxedis G. Guerrero, Coyame del Socol, Aldama, Aquiles Serdán, Rosales, Satevó, Dr. Belisario Dominguez, Santa Isabel, Riva Palacio, Namiquipa, Buenaventura (Chihuahua)
+\item \textbf{Pánuco *}, Pueblo Viejo, Tampico Alto, El Higo, Tempoal, Ozuluama de Mascareñas (Veracruz), \textbf{Tampico}, Ciudad Madero, Altamira, González, El Mante (Tamaulipas), Ebano,Tamuín, San Vicente Tancuayalab (San Luis Potosí)
+\item\textbf{ Nuevo Laredo*, Guerrero*, Mier*, Miguel Alemán*, Díaz Ordaz*, Reynosa, Río Bravo, Matamoros*}, Camargo, Valle Hermoso, Méndez, San Fernando (Tamaulipas), Dr. Cos, Anáhuac, Gral. Bravo, China, Vallecillo, Parás, Agualeguas (Nuevo León), \textbf{Melchor Ocampo*}, Los Herreras, Los Aldamas, Gral Treviño, Cerralvo (Nuevo León)
+\item\textbf{ Bustamante*}, Villaldama, Mina, Lampazos de Naranjo (Nuevo León), Candela (Coahuila)
+\item \textbf{Santa Catarina*, Guadalupe, Juárez*, General Zuazua}, Higueras, Marín, Pesquería, Apodaca, General Escobedo, Carmen,Salinas Victoria, Ciénega de Flores, Cadereyta Jiménez, Santiago, Monterrey, San Pedro Garza García, García, San Nicolás de los Garza, (Nuevo León), Ramos Arizpe, Arteaga (Coahuila)
+\item \textbf{Villa de Cos, Fresnillo, Tepetongo*}, Pánuco, Calera, General Enrique Estrada, Jerez , Susticacán, Valparaíso, Sombrerete, Sain Alto, Río Grande, Cañitas de Felipe Pescador, General Francisco R. Murguía, Mazapil, Guadalupe,Villanueva, Monte Escobedo (Zacatecas), Villa de Ramos,  Santo Domingo  (San Luis Potosí), Huejúcar, Santa María de los Ángles (Jalisco)
+\item Teúl de González Ortega, Mezquital, Trinidad García de la Cadena, Moyahua de Estrada, Juchipila, Apozol, Santa María de la Paz, Benito Juárez (Zacatecas), Tequila, San Martín de Bolaños (Jalisco)
+\itemRincón de Romos, Tepezalá, Cosío, San José de Gracia, Pabellón de Arteaga (Aguascalientes), Cuauhtémoc, Genaro Codina, Luis Moya (Zacatecas)
+\itemSinaloa, Badiraguato, Choix, El Fuerte, Ahome, Guasave, Salvador Alvarado, Mocorito, Culiacán (Sinaloa), Guadalupe y Calvo, Morelos (Chihuahua), Tamazula (Durango) Santiago Papasquiaro*, Pueblo Nuevo, Tamazula, Otáez, San Dimas, Nuevo Ideal, Canatlán, Coneto de Comonfort, El Oro, Tepehuanes, Topia, Durango, Canelas,Mezquital (Durango), Huajicori (Nayarit), Rosario, Concordia (Sinaloa)
+\itemRosamorada*, Tepic*, Tecuala, Santiago Ixcuinta, Tuxpan, Ruíz, Del Nayar, Acaponeta, Tecuala, San Blas, Xalisco, Santa María del Oro, (Nayarit)
+La Piedad*, Numarán, Zináparo, Churintzio, Ecuandureo, Yurécuaro (Michoacán), Pénjamo (Guanajuato), Ayotlán, Degollado  (Jalisco)
+Celaya, Cortazar, Salvatierra, Tarimoro, Apaseo el Alto, Apaseo el Grande, Comonfort, Santa Cruz De Juventino Rosas, Villagrán (Guanajuato)
+\itemApatzingán, Buenavista, Aguililla, Tumbiscatío, La Huacana, Múgica, Parácuaro, Tancítaro, Tepalcatepec (Michoacán)
+Coahuayana*, Aquila, Chinicuilla (Michoacán), Ixtlahacán, Tecomán, Colima (Colima)
+\item Taxco*, Teloloapan, Arcelia, San Miguel Totolapan, Acapulco, Ajuchitlán del Progreso, San Marcos, Juan R. Escudero, Tecoanapa ,Chilpancingo de los Bravo, Coyuca de Benítez, Atoyac de Álvarez, Técpan de Galeana, Coyuca de Catalán, Pungarabato, Tlapehuala, Tlalchapa, General Canuto A. Neri, Pedro Ascencio Alquisiras, Ixcateopan de Cuauhtémoc, Tetipac,Pilcaya, Benito Juárez, Buenavista de Cuéllar, Iguala de la Independencia, Cocula, Cuetzala del Progreso, Apaxtla, General Heliodoro Castillo  (Guerrero), Tlatlaya, Amatepec, Sultepec,  Zacualpan (México), Amacuzac,Tetecala, Coatlán del Río(Morelos)
+
 	
 
 There are 2213 municipalities in the initial control pool, and the numbers per treated unit are:
