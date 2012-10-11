@@ -252,7 +252,11 @@ void clear(int theValue) {
 
 
 void drawV() {
-  
+    
+    //draw rects
+    fill(bg_color);
+    rect(0,0,width,barHeight);
+    rect(joeyWidth,0,width,height);
 
     //label button
  stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);

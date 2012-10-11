@@ -126,11 +126,17 @@ void setupJ() {
 
   //zoomout once
   zoomit(1/zoom);
+
+  //draw full map
+  drawfullJ();
 }
 
-void drawJ() {
-
-  //change from 2010 to 2007 according to boolean
+void drawfullJ() {
+    background(bg_color);
+    stroke(1);
+    strokeWeight(0.5);
+    translate(mapWidth/2-xx, mapHeight/2-yy);
+    //change from 2010 to 2007 according to boolean
   if(cart2010){
     arrayCopy(municGrey2010J,municGrey);
     arrayCopy(municCartel2010J,municCartel);
@@ -140,50 +146,125 @@ void drawJ() {
     arrayCopy(municCartel2007J,municCartel);
     arrayCopy(municHom2007J, municHom);
   }
+  
+  for(int i = 0; i < municCount; i++){
+      RShape munic = munis[i];
+      if(munic != null){
+	  fill(255);
+	  munic.draw();
+	  int[] cartcol  = cartelColor(municCartel[i]);
+	  //println(cartelTable.getInt(7,7));
+	  // modified to display the intervened municipalities
+	  if(dispInt){
+	      if(cartelTable.getInt(i+1,8)!=0){
+		  if(cartelTable.getInt(i+1,7)==1)
+		      fill(#FF0000);
+		  else 
+		      fill(#FF0000,100);
+	      }else{
+		  fill(#FFFFFF);
+	      }
+	  }else{
+	      fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
+	  }
+	  stroke(colorScheme[2]);
+	  munic.draw();
+      }
+  }
+  translate(-mapWidth/2+xx, -mapHeight/2+yy);
+
+
+
+  //draw legend
+
+
+
+
+  textSize(10);
+  textAlign(LEFT,TOP);
+  rectMode(CORNER);
+  fill(bg_color);
+  noStroke();
+  rect(0,height-barHeight*1.25,width,barHeight*1.25);
+  stroke(1);
+  for(int i = 0; i < cartelsJ.length-2; i++){
+    int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
+    fill(255);
+    rect(legendS*(i+1), height-barHeight*1.25,40,40);
+   
+    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 60,70);
+    
+    for(int j = 0; j < heatJ.length; j++){
+      fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
+      rect(legendS*(i+1), height-barHeight*1.25 + 30 - 10*j ,40,10);
+    }
+  }
+
+  textAlign(RIGHT,TOP);
+  textSize(10);
+  fill(255);
+  text("> " + (int) bJ[2], legendS-20, height-barHeight*1.25);
+  text((int) bJ[1] + " - " + (int) bJ[2], legendS-20, height-barHeight*1.25 + 10);
+  text((int) bJ[0] + " - " + (int) bJ[1], legendS-20, height-barHeight*1.25 + 20);
+  text("0 - " + (int) bJ[0], legendS-20, height-barHeight*1.25 + 30);
+  textAlign(LEFT,TOP);
+  text("Homicide Rate", 20, height-barHeight*1.25 + 45, 60,70);  
+}
+
+void drawJ() {
 
   //update graph
   update();
 
 //draw map
   smooth();
-  strokeWeight(0.1);
-  
+  strokeWeight(0.5);
+  stroke(1);
 
   RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
   translate(mapWidth/2-xx, mapHeight/2-yy);
+
+  RShape oldmunic = munis[oldMuni];
+  if(oldmunic != null){
+      fill(255);
+      oldmunic.draw();
+      int[] cartcol  = cartelColor(municCartel[oldMuni]);
+      //println(cartelTable.getInt(7,7));
+      // modified to display the intervened municipalities
+      if(dispInt){
+	  if(cartelTable.getInt(oldMuni+1,8)!=0){
+	      if(cartelTable.getInt(oldMuni+1,7)==1)
+		  fill(#FF0000);
+	      else 
+		  fill(#FF0000,100);
+	  }else{
+	      fill(#FFFFFF);
+	  }
+      }else{
+	  fill(seriesColsJ[cartcol[0]][0],municGrey[oldMuni]);
+      }
+      // stroke(colorScheme[2]);
+      oldmunic.draw();
+  }
+
   for(int i = 0; i < municCount; i++){
     RShape munic = munis[i];
     if(munic != null){
       if(munic.contains(p) & mouseX< joeyWidth & mouseY > barHeight){
         selectedMuni = i;
         hoverMuni = true;
+	fill(highlightJ);
+	munic.draw();
+	oldMuni = i;
       }else{
-        fill(255);
-        munic.draw();
-        int[] cartcol  = cartelColor(municCartel[i]);
-        //println(cartelTable.getInt(7,7));
-        // modified to display the intervened municipalities
-        if(dispInt){
-          if(cartelTable.getInt(i+1,8)!=0){
-            if(cartelTable.getInt(i+1,7)==1)
-              fill(#FF0000);
-            else 
-              fill(#FF0000,100);
-          }else{
-            fill(#FFFFFF);
-          }
-        }else{
-          fill(seriesColsJ[cartcol[0]][0],municGrey[i]);
-        }
-        stroke(colorScheme[2]);
-        munic.draw();
+	  //drawfullJ();
       }
    
-      if(hoverMuni & i==selectedMuni){
-        fill(highlightJ);
-       // fill(seriesColsJ[ cartelColor(municCartel[i])[0]][3]);
-        munic.draw();
-      }
+      // if(hoverMuni & i==selectedMuni){
+      //   fill(highlightJ);
+      //  // fill(seriesColsJ[ cartelColor(municCartel[i])[0]][3]);
+      //   munic.draw();
+      // }
 
     }
   }
@@ -222,40 +303,14 @@ textSize(16);
 
   
 //draw rectangles
-  fill(colorScheme[0]);
-  rectMode(CORNER);
-  rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
-  rect(0,0,width,barHeight);
-  rect(0,height-barHeight*1.35,joeyWidth,barHeight*1.35);
+  // fill(colorScheme[0]);
+  // rectMode(CORNER);
+  // rect(joeyWidth,barHeight,valeriaWidth,2*valeriaHeight);
+  // rect(0,0,width,barHeight);
+  // rect(0,height-barHeight*1.35,joeyWidth,barHeight*1.35);
 
   //draw legend
   //text label
-  textAlign(RIGHT,TOP);
-  textSize(10);
-  fill(255);
-  text("> " + (int) bJ[2], legendS-20, height-barHeight*1.25);
-  text((int) bJ[1] + " - " + (int) bJ[2], legendS-20, height-barHeight*1.25 + 10);
-  text((int) bJ[0] + " - " + (int) bJ[1], legendS-20, height-barHeight*1.25 + 20);
-  text("0 - " + (int) bJ[0], legendS-20, height-barHeight*1.25 + 30);
-  textAlign(LEFT,TOP);
-  text("Homicide Rate", 20, height-barHeight*1.25 + 45, 60,70);  
-
-
-  textSize(10);
-  textAlign(LEFT,TOP);
-  for(int i = 0; i < cartelsJ.length-2; i++){
-    
-    int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
-    fill(255);
-    rect(legendS*(i+1), height-barHeight*1.25,40,40);
-    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 60,70);
-    
-    for(int j = 0; j < heatJ.length; j++){
-      fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
-      rect(legendS*(i+1), height-barHeight*1.25 + 30 - 10*j ,40,10);
-    }
-  }
-  
 }
 
 
@@ -267,6 +322,7 @@ void zoomit(float zoom) {
       munis[i] = munic;
     }
   } 
+  
 }
 
 void update(){
@@ -299,6 +355,7 @@ void update(){
       zoomit(1/zoom);
       zoomcount = zoomcount - 1;
     }
+    drawfullJ();
   }
 }
 
@@ -413,6 +470,7 @@ void keyReleased(){
         zoomit(1/zoom);
       } 
     }
-    zoomcount = 0;    
+    zoomcount = 0;  
+    drawfullJ();
   }
 }

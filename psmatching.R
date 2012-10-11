@@ -15,7 +15,7 @@ LatLon<-read.delim("data/latlon.tsv", header = FALSE, sep = "\t")
 
 
 # read in the tsv's at the state level
-#ScartInt<- read.delim("data/CartelIncomeExpensesByState.tsv", header = TRUE, sep = "\t")
+ScartInt<- read.delim("data/CartelIncomeExpensesState.tsv", header = TRUE, sep = "\t")
 SHom<- read.delim("data/StateHomicides.tsv", header = TRUE, sep = "\t")
 SPop<- read.delim("data/StatePop.tsv", header = TRUE, sep = "\t")
 SGDP<- read.csv("data/stateGDPcurrentValue.csv", header = TRUE)
@@ -71,10 +71,6 @@ X$MissReadWrite05<-ifelse(Educ[,45]>0,Educ[,48]/Educ[,45],0)
 X$IndLang05<-Educ[,63]/Educ[,62]
 X$MissIndLang05<-ifelse(Educ[,63]>0,Educ[,65]/Educ[,63],0) #note that this is well defined as zero if the denominator is zero
 
-
-
-
-
 #Population 
 X$PopMun06 <- Pop[,19] 
 
@@ -86,7 +82,6 @@ X$Hom06<-Hom[,52]
 # In Dec 2006 calderon came in so if we get a party in his period it may be a
 # response. (yes, that's why I got the third column)
 X$PartyMunBC <- cartInt[,3]
-
 
 #Income (Ingresos) and Expenses (Egresos)
 X$Inc06   <- cartInt[,43]
