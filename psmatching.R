@@ -266,8 +266,25 @@ par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
 hist(psScore$fitted.values[intervened],col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
 hist(psScore$fitted.values[-intervened],col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,80))
 
+
+####
+
+
+
+
+Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
+    ,rep(1,sum(treated==0)))
+#
+InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
+    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
+# matching based on the main effect
+WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
+matches<-as.numeric(c(t(m1$match.matrix)))
+matches<-matches[!is.na(matches)]
+postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
+
+# matching on me and all 2fi with Hom06
 fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+"),"+", paste("Hom06:",names(compfull), collapse= "+")))
-#fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
 m2 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=5)
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matches2<-as.numeric(c(t(m2$match.matrix)))
@@ -280,26 +297,24 @@ hist(pst,col="lightgrey",border="white",main="propensity scores - intervened uni
 hist(psc,col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,100))
 
 
+postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
+
+#Mtching based only on Homicide Rate
+fmla <- as.formula(paste("treated ~ Hom06/PopMun06 + Hom06^2+",paste("Hom06:",names(compfull), collapse= "+")))
+mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
+# checking the distribution of propensity scores (balance on a fundamental covariate?)
+matchesH<-as.numeric(c(t(mH$match.matrix)))
+matchesH<-matches2[!is.na(matchesH)]
+
+postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matchesH])
 
 
-Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
-    ,rep(1,sum(treated==0)))
-#
-InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
-    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
-#
-WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
-matches<-as.numeric(c(t(m1$match.matrix)))
-matches<-matches[!is.na(matches)]
-postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
-
-postMatchHomSq<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
 
-lpMat<-list(Init,InitW,postMatch,postMatchHomSq)
-lpMat<-list(InitW,Init,postMatch)
+lpMat<-list(Init,InitW,postMatch,postMatchHom,postMatchHR)
+#lpMat<-list(InitW,Init,postMatch)
 
-loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomSq 5"),xlim=c(-0.5,0.5))
+loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomInt","Matched HomR"),xlim=c(-5,5))
 
 ### hist test
 
@@ -312,3 +327,5 @@ histCheck(compfull[treated==1,],compfull[matches,],1:6)
 x11()
 histCheck(compfull[treated==1,],compfull[matches2,],1:6)
 histCheck(compfull[treated==1,],compfull[treated==0,],7:13)
+
+histCheck(as.matrix(compfull[treated==1,10]/compfull[treated==1,9]*100000),as.matrix(compfull[matchesH,10]/compfull[matchesH,9]*1000000),1)
