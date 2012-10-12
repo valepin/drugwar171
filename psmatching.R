@@ -255,6 +255,7 @@ difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,rep(1,sum(treated==0)))
+Vs<-c()
 #
 
 # # matching based on the main effect
@@ -285,7 +286,7 @@ Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,d
 #Mtching based only on Homicide Rate and higher order terms that involve it
 fmla <- as.formula(paste("treated ~ Hom06+",paste("Hom06:",names(compfull), collapse= "+")))
 mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
-Vs<-c()
+
 WsTilde<-calcWeights(mH$match.matrix,dim(compfull)[1])
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matchesH<-as.numeric(c(t(mH$match.matrix)))
