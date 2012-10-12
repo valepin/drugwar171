@@ -25,7 +25,7 @@ SGDP<- read.csv("data/stateGDPcurrentValue.csv", header = TRUE)
 intervened<-which(cartInt$Intervened.Units>0)
 Nt<-length(unique(cartInt$Intervened.Units[intervened]))
 Ws<-rep(0,dim(Educ)[1])
-
+Regions<-cartInt$Intervened.Units
 # get the information relevant for each treated unit
 intUnitInfo=list()
 for(i in 1:Nt)
@@ -197,6 +197,7 @@ full <- cbind(X[,!(names(X) %in% c("State", "Municipality", "Clave"))])
 full<-full[-gotT2010,]
 treated<-treated[-gotT2010]
 Ws<-Ws[-gotT2010]
+Regions<-Regions[-gotT2010]
 
 # we have NAs impute? Match on missing?
 missind <- as.data.frame(is.na(full)[,apply(is.na(full),2,sum)>0])
@@ -217,6 +218,7 @@ compfull<-na.omit(compfull)
 compfull<-compfull[,!(names(compfull) %in% c("Exp06"))]
 treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Ws<-Ws[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
+Regions<-Regions[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
@@ -253,11 +255,9 @@ difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 
 
-Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
+Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,rep(1,sum(treated==0)))
 #
-InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
-    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
 
 # matching based on the main effect
 fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
@@ -297,17 +297,18 @@ postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCo
 
 
 
-lpMat<-list(Init,InitW,postMatch,postMatchHom,postMatchHR)
+lpMat<-list(Init,postMatch,postMatchHom,postMatchHR)
 #lpMat<-list(InitW,Init,postMatch)
 
-loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomInt","Matched HomR"),xlim=c(-5,5))
+loveplot(lpMat,labels=c("Initial","Matched ME 5","Matched HomInt","Matched HomR"),xlim=c(-5,5))
 
 ### hist test
 
 
 ### hist test
 
-TreatMat <-compfull[treated==1,]
+
+TreatMat <-compfull[treated==1 & ,]
 ContMat<-compfull[treated==0,]
 
 histCheck(compfull[treated==1,],compfull[treated==0,],1:6)
@@ -318,3 +319,44 @@ histCheck(compfull[treated==1,],compfull[matches2,],1:6)
 histCheck(compfull[treated==1,],compfull[treated==0,],7:13)
 
 histCheck(as.matrix(compfull[treated==1,10]/compfull[treated==1,9]*100000),as.matrix(compfull[matchesH,10]/compfull[matchesH,9]*1000000),1)
+
+
+######
+par(mfrow=c(2,2), mai=c(0.8,0.5,0.7,0.1))
+
+i=which(colnames(X) %in% "PopMun06")
+j=which(colnames(compfull) %in% "PopMun06")
+#homicides
+
+hist(X[intervened,i],col="coral",border="white",main=paste(names(X)[i]," before\n"),breaks=20, xlab="intervened",
+xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+
+hist(compfull[treated==1,j],col="coral",border="white",main=paste(names(compfull)[j]," after\n"),breaks=20,ylim=c(0,200), xlab="intervened",
+xlim=c(min(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE),max(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE)))
+
+
+#homicides 
+
+hist(X[-intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="control",#ylim=c(0,200),
+xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+
+hist(compfull[matchesH,j],col="grey",border="white",main=names(compfull)[j],breaks=20, xlab="control",#ylim=c(0,200),
+xlim=c(min(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE),max(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE)))
+
+
+
+#checkBalance for each Region
+regs<-sort(unique(Regions))[-1]
+for(r in regs)
+{
+    
+}
+
+
+########################
+#
+# Analysis
+#
+########################
+
+# get the information relevant for each treated unit
