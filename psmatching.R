@@ -3,7 +3,7 @@
 library(xtable)
 library(MatchIt)
 library(mice)
-load("balanceFunctions.R")
+source("balanceFunctions.R")
 # read in the tsv's at the municipality level
 Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
 cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
