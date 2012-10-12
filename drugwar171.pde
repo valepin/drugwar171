@@ -32,6 +32,9 @@ void draw() {
 
   hoverMuni=true;
   drawJ();
-  drawV();
+  if(dispInt){
+  }else{
+    drawV();
+  }
 }
 
