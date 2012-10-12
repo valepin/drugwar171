@@ -6,17 +6,19 @@ calcWeights<-function(MatchMat,N)
 {
     n<-dim(MatchMat)[1]
     wsTilde<-rep(0,N)
+    vs<-rep(0,N)
     for(i in 1:n)
     {        
         munMatch<-as.numeric(MatchMat[i,])
         # cat("munMatch",munMatch,"\n")
-        wsTilde[munMatch]<-Ws[as.numeric(rownames(MatchMat)[i])]*compfull[munMatch,9]/sum(compfull[munMatch,9]) 
+        vs[munMatch]<-compfull[munMatch,9]/sum(compfull[munMatch,9]) 
+        wsTilde[munMatch]<-Ws[as.numeric(rownames(MatchMat)[i])]*compfull[munMatch,9]/sum(compfull[munMatch,9])         
         # cat("Ws ",i,"=",as.numeric(rownames(MatchMat)[i]),"\n")
         # cat("PopNum",compfull[munMatch,9],"\n")
         # cat("PopDen ", i," = " ,compfull[munMatch,9],"\n")
-        #browser()
         #cat("NAs = ",sum(is.na(wsTilde))," i=",i,"\n")
     }
+    Vs<<-vs
     return(wsTilde)
 }
 
@@ -47,10 +49,10 @@ loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
 {
     #Let MatPlot only have the covariates to plot
     # The first one should be the original sample 
-    colors=c("aquamarine4","orchid","gray","royalblue","coral2","darkorchid")
+    colors=c("black","gray","royalblue","coral2","darkorchid")
     types=25:21
     par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1)) 
-    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg="aquamarine4", xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
+    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
     main=ifelse(cont,"t statistics for differences in continuous variables","mean differences in binary variables"),xlim=xlims)
     for(i in 2:length(MatPlot))
     {
