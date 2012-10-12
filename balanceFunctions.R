@@ -14,7 +14,8 @@ calcWeights<-function(MatchMat,N)
         # cat("Ws ",i,"=",as.numeric(rownames(MatchMat)[i]),"\n")
         # cat("PopNum",compfull[munMatch,9],"\n")
         # cat("PopDen ", i," = " ,compfull[munMatch,9],"\n")
-        # browser()
+        #browser()
+        #cat("NAs = ",sum(is.na(wsTilde))," i=",i,"\n")
     }
     return(wsTilde)
 }

@@ -1,7 +1,7 @@
 \documentclass{article}[11 pt]
 \usepackage{graphics}
 \usepackage{color}
-\usepackage{graphicx,subcaption}
+\usepackage{graphicx}
 \usepackage{amsmath,bbm,amssymb,mathrsfs,bm}
 \usepackage{amsthm}
 \usepackage{comment}
@@ -45,16 +45,16 @@ We proposed the following units (the bold names are the ones that actually recei
 \item \textbf{Santa Catarina*, Guadalupe, Juárez*, General Zuazua}, Higueras, Marín, Pesquería, Apodaca, General Escobedo, Carmen,Salinas Victoria, Ciénega de Flores, Cadereyta Jiménez, Santiago, Monterrey, San Pedro Garza García, García, San Nicolás de los Garza, (Nuevo León), Ramos Arizpe, Arteaga (Coahuila)
 \item \textbf{Villa de Cos, Fresnillo, Tepetongo*}, Pánuco, Calera, General Enrique Estrada, Jerez , Susticacán, Valparaíso, Sombrerete, Sain Alto, Río Grande, Cañitas de Felipe Pescador, General Francisco R. Murguía, Mazapil, Guadalupe,Villanueva, Monte Escobedo (Zacatecas), Villa de Ramos,  Santo Domingo  (San Luis Potosí), Huejúcar, Santa María de los Ángles (Jalisco)
 \item Teúl de González Ortega, Mezquital, Trinidad García de la Cadena, Moyahua de Estrada, Juchipila, Apozol, Santa María de la Paz, Benito Juárez (Zacatecas), Tequila, San Martín de Bolaños (Jalisco)
-\itemRincón de Romos, Tepezalá, Cosío, San José de Gracia, Pabellón de Arteaga (Aguascalientes), Cuauhtémoc, Genaro Codina, Luis Moya (Zacatecas)
-\itemSinaloa, Badiraguato, Choix, El Fuerte, Ahome, Guasave, Salvador Alvarado, Mocorito, Culiacán (Sinaloa), Guadalupe y Calvo, Morelos (Chihuahua), Tamazula (Durango) Santiago Papasquiaro*, Pueblo Nuevo, Tamazula, Otáez, San Dimas, Nuevo Ideal, Canatlán, Coneto de Comonfort, El Oro, Tepehuanes, Topia, Durango, Canelas,Mezquital (Durango), Huajicori (Nayarit), Rosario, Concordia (Sinaloa)
-\itemRosamorada*, Tepic*, Tecuala, Santiago Ixcuinta, Tuxpan, Ruíz, Del Nayar, Acaponeta, Tecuala, San Blas, Xalisco, Santa María del Oro, (Nayarit)
-La Piedad*, Numarán, Zináparo, Churintzio, Ecuandureo, Yurécuaro (Michoacán), Pénjamo (Guanajuato), Ayotlán, Degollado  (Jalisco)
+\item Rincón de Romos, Tepezalá, Cosío, San José de Gracia, Pabellón de Arteaga (Aguascalientes), Cuauhtémoc, Genaro Codina, Luis Moya (Zacatecas)
+\item Sinaloa, Badiraguato, Choix, El Fuerte, Ahome, Guasave, Salvador Alvarado, Mocorito, Culiacán (Sinaloa), Guadalupe y Calvo, Morelos (Chihuahua), Tamazula (Durango) Santiago Papasquiaro*, Pueblo Nuevo, Tamazula, Otáez, San Dimas, Nuevo Ideal, Canatlán, Coneto de Comonfort, El Oro, Tepehuanes, Topia, Durango, Canelas,Mezquital (Durango), Huajicori (Nayarit), Rosario, Concordia (Sinaloa)
+\item Rosamorada*, Tepic*, Tecuala, Santiago Ixcuinta, Tuxpan, Ruíz, Del Nayar, Acaponeta, Tecuala, San Blas, Xalisco, Santa María del Oro, (Nayarit)
+\item La Piedad*, Numarán, Zináparo, Churintzio, Ecuandureo, Yurécuaro (Michoacán), Pénjamo (Guanajuato), Ayotlán, Degollado  (Jalisco)
 Celaya, Cortazar, Salvatierra, Tarimoro, Apaseo el Alto, Apaseo el Grande, Comonfort, Santa Cruz De Juventino Rosas, Villagrán (Guanajuato)
-\itemApatzingán, Buenavista, Aguililla, Tumbiscatío, La Huacana, Múgica, Parácuaro, Tancítaro, Tepalcatepec (Michoacán)
+\item Apatzingán, Buenavista, Aguililla, Tumbiscatío, La Huacana, Múgica, Parácuaro, Tancítaro, Tepalcatepec (Michoacán)
 Coahuayana*, Aquila, Chinicuilla (Michoacán), Ixtlahacán, Tecomán, Colima (Colima)
 \item Taxco*, Teloloapan, Arcelia, San Miguel Totolapan, Acapulco, Ajuchitlán del Progreso, San Marcos, Juan R. Escudero, Tecoanapa ,Chilpancingo de los Bravo, Coyuca de Benítez, Atoyac de Álvarez, Técpan de Galeana, Coyuca de Catalán, Pungarabato, Tlapehuala, Tlalchapa, General Canuto A. Neri, Pedro Ascencio Alquisiras, Ixcateopan de Cuauhtémoc, Tetipac,Pilcaya, Benito Juárez, Buenavista de Cuéllar, Iguala de la Independencia, Cocula, Cuetzala del Progreso, Apaxtla, General Heliodoro Castillo  (Guerrero), Tlatlaya, Amatepec, Sultepec,  Zacualpan (México), Amacuzac,Tetecala, Coatlán del Río(Morelos)
 
-	
+\end{enumerate}	
 
 There are 2213 municipalities in the initial control pool, and the numbers per treated unit are:
   % latex table generated in R 2.14.0 by xtable 1.6-0 package
@@ -149,7 +149,7 @@ We used matchIt to exactly match on missingness pattern (the only variable with 
 \begin{figure}[ht]
 
     \centering
-        \includegraphics[scale=0.6]{InitBalance1.pdf}
+        \includegraphics[scale=0.6]{Images/InitBalance1.pdf}
 \caption{Histograms to compare distributions in original pools.}
 \label{initBalance1}
 \end{figure}
@@ -157,7 +157,7 @@ We used matchIt to exactly match on missingness pattern (the only variable with 
 \begin{figure}[ht]
 
     \centering
-        \includegraphics[scale=0.6]{InitBalance2.pdf}
+        \includegraphics[scale=0.6]{Images/InitBalance2.pdf}
 \caption{Histograms and Barplots  to compare distributions in original pools.}
 \label{initBalance2}
 \end{figure}
@@ -166,7 +166,7 @@ We further explore the overlap for homicides
 \begin{figure}[ht]
 
     \centering
-        \includegraphics[scale=0.6]{ZoomHom.pdf}
+        \includegraphics[scale=0.6]{Images/ZoomHom.pdf}
 \caption{Zooming in to Homicide Rate}
 \label{ZoomHom}
 \end{figure}
@@ -177,7 +177,7 @@ In some tries of matching we observe that the major imbalance is at the `Homicid
 
 \begin{figure}[ht]
     \centering
-        \includegraphics[scale=0.5]{MEloveplot.pdf}
+        \includegraphics[scale=0.5]{Images/MEloveplot.pdf}
 \end{figure}
 
 \section{Comments}

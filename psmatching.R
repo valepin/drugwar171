@@ -84,7 +84,7 @@ X$Hom06<-Hom[,52]/X$PopMun06*100000
 X$PartyMunBC <- cartInt[,3]
 
 #Income (Ingresos) and Expenses (Egresos)
-X$Inc06   <- cartInt[,43]
+X$Inc06   <- cartInt[,43]/X$PopMun06
 #X$Exp06 <- cartInt[,42] # I must have made a mistake when cleaning the data set 
 
 # State Info
@@ -208,9 +208,6 @@ names(missind) <- paste(names(as.data.frame(missind)),"miss",sep="")
 # comp<-comp[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
 # compfull <- cbind(comp,missind[(missind[,4]!=TRUE & missind[,5]!=TRUE),1:3])
 # treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
-# fmla <- as.formula(paste("treated ~ ", paste(names(full), collapse= "+")))
-# #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
-# m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC"),ratio=5)
 
 comp <- complete(mice(full,method="mean",m=1,maxit=1))
 comp<-cbind(comp[,!(names(comp) %in% c("ConsultsPerDoc","ConsultsPerMedUnit"))])
@@ -220,15 +217,11 @@ compfull<-na.omit(compfull)
 compfull<-compfull[,!(names(compfull) %in% c("Exp06"))]
 treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Ws<-Ws[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
-fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
+
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
-m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=1)
-#m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC"),ratio=5)summ
-
-
-
+names(compfull)[16] = "missIndDocsPerUnit"
 
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 pst<-match.data(m1)[treated==1,"distance"]
@@ -239,21 +232,21 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 
 # check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
-names(compfull)[16] = "missIndDocsPerUnit"
+
 TreatCov<-compfull[treated==1,]
 ContMatchesCov<-compfull[matches,]
 difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 
 # trying to understand the missing 
-data<-compfull
-data<-X[(missind[,4]!=TRUE & missind[,5]!=TRUE),c(8:17,19:21)]
-psScore<-glm(treated~.*.,data=data,family=binomial(link = "logit"))
-
-par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
-hist(psScore$fitted.values[intervened],col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
-hist(psScore$fitted.values[-intervened],col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,80))
-
+# data<-compfull
+# data<-X[(missind[,4]!=TRUE & missind[,5]!=TRUE),c(8:17,19:21)]
+# psScore<-glm(treated~.*.,data=data,family=binomial(link = "logit"))
+# 
+# par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
+# hist(psScore$fitted.values[intervened],col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
+# hist(psScore$fitted.values[-intervened],col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,80))
+# 
 
 ####
 
@@ -265,7 +258,10 @@ Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,d
 #
 InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
+
 # matching based on the main effect
+fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
+m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
 WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
 matches<-as.numeric(c(t(m1$match.matrix)))
 matches<-matches[!is.na(matches)]
@@ -274,6 +270,7 @@ postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,
 # matching on me and all 2fi with Hom06
 fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+"),"+", paste("Hom06:",names(compfull), collapse= "+")))
 m2 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=5)
+WsTilde<-calcWeights(m2$match.matrix,dim(compfull)[1])
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matches2<-as.numeric(c(t(m2$match.matrix)))
 matches2<-matches2[!is.na(matches2)]
@@ -287,9 +284,10 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 
 postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
-#Mtching based only on Homicide Rate
+#Mtching based only on Homicide Rate and higher order terms that involve it
 fmla <- as.formula(paste("treated ~ Hom06/PopMun06 + Hom06^2+",paste("Hom06:",names(compfull), collapse= "+")))
 mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
+WsTilde<-calcWeights(mH$match.matrix,dim(compfull)[1])
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matchesH<-as.numeric(c(t(mH$match.matrix)))
 matchesH<-matches2[!is.na(matchesH)]
@@ -303,6 +301,9 @@ lpMat<-list(Init,InitW,postMatch,postMatchHom,postMatchHR)
 #lpMat<-list(InitW,Init,postMatch)
 
 loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomInt","Matched HomR"),xlim=c(-5,5))
+
+### hist test
+
 
 ### hist test
 
