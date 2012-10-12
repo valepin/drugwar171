@@ -82,25 +82,23 @@
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
  				\begin{block}{Abstract}
-		In Mexico, the presidency of Felipe Calderón (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
-		The main question of interest is if homicide rates increase significantly after a military intervention. Due to the observational nature of the study we explore the feasibility of causal inference for the data obtained. Some of the challenges are the violation of SUTVA (stable unit treatment value assumption), making ignorability feasible and the partial missingness of key variables. In particular, population information is only observed every 5 years and thus the yearly population of municipalities needs to be imputed.
-
-		There are 
+		In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
+		The main question of interest is: \textbf{do homicide rates increase significantly after a military intervention?}. Due to the observational nature we explored the feasibility of causal inference for the data obtained. 
+%
+		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. As any good observational study, which mimics a randomized experiment, the \emph{design} and \emph{analysis} steps are clearly separated. The de
+		
+		
 		      \end{block}
       \vskip2ex
-      \begin{block}{Objective}
- Our goal is to use the potential outcomes framework to answer the question of interest: \textbf{Have the Military Interventions Increased Violence?}
+      \begin{block}{Estimand}
+ Following the Rubin Causal Model, let $Y_j(1)$ and $Y_j(0)$ denote the homicide rate of region $j$ one year after it received a military intervention, and what it would have been at that same point in time if it hadn't received the military intervention. The estimand of interest is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_j Y_j(1)-Y_j(0)}{J}.$$ % do we want to weigh these?
+	For this case, we can think of the treated regions as the population of interest because in principle only regions like those are likely to receive a military intervention. We assume $Y_j(1)$ is observed for all treated units. Let $N_j$ denote the number of municipalities that correspond to region $j$, then 
+	$$Y_j(1) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(1),$$
+	where  $\textrm{Pop}_{j}= \sum_i^{N_j}\textrm{Pop}_{ij}$, and $$w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{j}}.$$ 
+	However, $Y_j(0)$ is missing for all $j$. Following the reasoning above, $$Y_j(0) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(0),$$ and all $Y_{ij}(0)$ are unobserved.
       \end{block}
-		\begin{block}{SUTVA}
-			SUTVA - stable unit treatment value assumption
-			\begin{itemize}
-				\item \textbf{No hidden values of treatments} A broad definition of what ``military intervention'' means in this context helps us think of a two level treatment: receiving a military intervention (defined as ... see paper(that have resulted in deaths?)) or not receiving it.
-				\item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
-		We proposed 18 units out of which 5 are eliminated for analysis purposes because the interventions received
 
-			\end{itemize}
 
-	 \end{block}
 
       \vskip2ex
 
@@ -108,29 +106,62 @@
 
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\threecolwid}					  % create a three-column-wide column and then we will split it up later
-      \begin{block}{Altering Column Spans}
-        You can make columns that span multiple other columns relatively easily. Lengths are defined in the template that make columns look normal-ish if you want to use a four-column layout like this poster. If you want to use a different number of columns, you will have to modify those lengths accordingly at the top of the poster.tex file.
-        
-        In particular, near the top of the TeX file you will see lines that look like:
-        \begin{semiverbatim}
-          \hskip1ex\\setlength\{\\sepwid\}\{0.024\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\onecolwid\}\{0.22\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\twocolwid\}\{0.464\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\threecolwid\}\{0.708\\paperwidth\}
-        \end{semiverbatim}
-        
-        Set ``sepwid'' to be some small length somewhere near 0.025 (this is the space between columns). Then if $n$ is the number of columns you want, you should set
-        \begin{align*}
-          \text{onecolwid} & = \frac{1}{n}(1-(n+1)\times\text{sepwid}), \\
-          \text{twocolwid} & = 2\times\text{onecolwid} + \text{sepwid}, \\
-          \text{threecolwid} & = 3\times\text{onecolwid} + 2\times\text{sepwid}.
-        \end{align*}
-      \end{block}
+		\begin{block}{Assumptions \& Challenges}
+			\begin{itemize}
+			\item \textbf{SUTVA} - stable unit treatment value assumption
+			\begin{itemize}
+				\item \textbf{No hidden values of treatments} A broad definition of what ``military intervention''- any mili means in this context helps us think of a two level treatment: receiving a military intervention (defined as ... see paper(that have resulted in deaths?)) or not receiving it.
+				\item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
+		The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
+		Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are:
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|ccc}
+		  \hline
+		 \textbf{unit}& number of& Date of first &  \textbf{unit}& number of& Date of first \\ 
+		 & municipalities& intervention& & municipalities& intervention \\ 
+		  \hline
+		\textbf{1} &   5 & 2008 &  \textbf{10} &10 & 2009 \\ 
+		  \textbf{2} &   5 & 2008 &  \textbf{11} & 8 & 2008 \\  
+		  \textbf{4} &  15 & 2009 &   \textbf{12} &27 & 2007 \\
+		  \textbf{5} &  14 & 2007 &   \textbf{15} &9 & 2009 \\ 
+		  \textbf{6} &  24 & 2008 &    \textbf{16} &10 & 2007 \\ 
+		  \textbf{8} &  20 & 2009 &  \textbf{18} &35 & 2008 \\ 
+		  \textbf{9} &  18 & 2008 &  \\
+		%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
+		% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
+		%\textbf{3} &  12 & 2010
+		\hline
+		\end{tabular}
+		\end{center}
+		\end{table}
+		update this table to have the number of municipalities that received the intervention AND the main names.
+		Put the image of the intervention map next to it
+			\end{itemize}
+				\item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
+				\item \textbf{Missing Data:} there were
+				
+			\end{itemize}	
+				
+			
+			
+
+	 \end{block}
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
         \begin{column}{\onecolwid}
+			      \begin{block}{Estimation}
+					We attempt to use the information of all other municipalities to estimate each $Y_{ij}(0)$ to obtain an estimate $Y_j(0)$. We use propensity score matching to identify a set of control municipalities that look like the treated ones.
+			
+					To follow the guidelines for observational studies we will first clarify what the analysis protocol will be. Given that weights will be given, this specification will determine the way the love plots are created during the balance check process.
+					Let $M_{ij}$ be the number of municipalities matched to the $i$th municipality in region $j$. Let $$\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$$ denote the total population of all $M_{ij}$ municipalities matched to the $i$th treated municipality in region $j$. Then 
+					$$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$ where $v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$
+					Therefore,
+					$$\hat{Y}_{j}(0) =\sum_{i=1}^{N_j}w_{ij}\hat{Y}_{ij}(0)=\sum_{i=1}^{N_j}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$
+					and
+					$$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
+			Note that this could be extended to using hierarchical models. We believe that using 
+			An important 	
+			      \end{block}
           \setbeamercolor{block title}{fg=red,bg=white}%frame color
           \setbeamercolor{block body}{fg=black,bg=white}%body color
           \begin{block}{Block Colours}
@@ -169,12 +200,14 @@
           \end{alertblock}        
         %\end{column}
         %\begin{column}{\onecolwid}
-          \begin{block}{References}
-            Some references and a graphic to show you how it's done:
+          \begin{block}{Key References}
+   
             \bibliographystyle{plain}
 		        \small{\begin{thebibliography}{99}
-		        \bibitem{KLPL06} D.~W. Kribs, R. Laflamme, D. Poulin, M. Lesosky, Quantum Inf. \& Comp. \textbf{6} (2006), 383-399.
-		        \bibitem{zanardi97} P. Zanardi, M. Rasetti, Phys. Rev. Lett. \textbf{79},  3306 (1997).
+				\bibitem{Abadie} Abadie  Synthetic Matching 
+		        \bibitem{ImbensRubin} Imbens G. \& Rubin D.R., (2012)
+				\bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects},
+				\bibitem{Nexos} Nexos paper
 		   \end{thebibliography}}
 
 		      \end{block}
