@@ -74,8 +74,8 @@ X$MissIndLang05<-ifelse(Educ[,63]>0,Educ[,65]/Educ[,63],0) #note that this is we
 #Population 
 X$PopMun06 <- Pop[,19] 
 
-# Homicide Information up to 2006
-X$Hom06<-Hom[,52]
+# Homicide Rate Information up to 2006
+X$Hom06<-Hom[,52]/X$PopMun06*100000
 
 #last Party before Calderon period (?) is this the one we want?
 # I thought we mgiht want cartInt[,1]? That's the party before 2006.(NO, that's clave)
@@ -103,11 +103,11 @@ write.csv(X,"data/dataToPSMatch.csv")
 #
 ###########################
 
-par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
-#par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
+#par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
+par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
 
-for(i in 6:13)
-#for(i in 14:21)
+#for(i in 6:13)
+for(i in 14:21)
 {
     if(names(X)[i]!="PartyMunBC")
     {
@@ -119,8 +119,8 @@ for(i in 6:13)
     }    
 }
 
-for(i in 6:13)
-#for(i in 14:21)
+#for(i in 6:13)
+for(i in 14:21)
 {
     if(names(X)[i]!="PartyMunBC")
     {
@@ -133,25 +133,18 @@ for(i in 6:13)
 }
 
 #just plot the homicides
-par(mfrow=c(2,2), mai=c(0.8,0.5,0.2,0.1))
+par(mfrow=c(2,1), mai=c(0.8,0.5,0.2,0.1))
 
 i=which(colnames(X) %in% "Hom06")
 #homicides 
 hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
 xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
-#homicide rate
-hist(X[intervened,i]/X$PopMun06[intervened]*100000,col="grey",border="white",main="Homicide Rate",breaks=20, xlab="intervened",
-xlim=c(min(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE),
-max(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE)))
+
 #homicides 
-hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,200),
+hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,100),
    xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
    
 
-#homicide rate
-hist(X[-intervened,i]/X$PopMun06[-intervened]*100000,col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,140),
-xlim=c(min(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE),
-max(X[intervened,i]/X$PopMun06[intervened]*100000,X[-intervened,i]/X$PopMun06[-intervened]*100000,na.rm=TRUE)))
 
 #write.csv(X,"dataToPSMatch.csv")
 
@@ -261,8 +254,25 @@ par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
 hist(psScore$fitted.values[intervened],col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
 hist(psScore$fitted.values[-intervened],col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,80))
 
+
+####
+
+
+
+
+Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
+    ,rep(1,sum(treated==0)))
+#
+InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
+    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
+# matching based on the main effect
+WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
+matches<-as.numeric(c(t(m1$match.matrix)))
+matches<-matches[!is.na(matches)]
+postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
+
+# matching on me and all 2fi with Hom06
 fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+"),"+", paste("Hom06:",names(compfull), collapse= "+")))
-#fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
 m2 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=5)
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matches2<-as.numeric(c(t(m2$match.matrix)))
@@ -275,26 +285,24 @@ hist(pst,col="lightgrey",border="white",main="propensity scores - intervened uni
 hist(psc,col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,100))
 
 
+postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
+
+#Mtching based only on Homicide Rate
+fmla <- as.formula(paste("treated ~ Hom06/PopMun06 + Hom06^2+",paste("Hom06:",names(compfull), collapse= "+")))
+mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
+# checking the distribution of propensity scores (balance on a fundamental covariate?)
+matchesH<-as.numeric(c(t(mH$match.matrix)))
+matchesH<-matches2[!is.na(matchesH)]
+
+postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matchesH])
 
 
-Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,rep(1,sum(treated==1))
-    ,rep(1,sum(treated==0)))
-#
-InitW<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
-    ,compfull$PopMun06[treated==0]/sum(compfull$PopMun06[treated==0]))
-#
-WsTilde<-calcWeights(m1$match.matrix,dim(compfull)[1])
-matches<-as.numeric(c(t(m1$match.matrix)))
-matches<-matches[!is.na(matches)]
-postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
-
-postMatchHomSq<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
 
-lpMat<-list(Init,InitW,postMatch,postMatchHomSq)
-lpMat<-list(InitW,Init,postMatch)
+lpMat<-list(Init,InitW,postMatch,postMatchHom,postMatchHR)
+#lpMat<-list(InitW,Init,postMatch)
 
-loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomSq 5"),xlim=c(-0.5,0.5))
+loveplot(lpMat,labels=c("Initial","Initial with weights","Matched ME 5","Matched HomInt","Matched HomR"),xlim=c(-5,5))
 
 ### hist test
 
@@ -307,3 +315,5 @@ histCheck(compfull[treated==1,],compfull[matches,],1:6)
 x11()
 histCheck(compfull[treated==1,],compfull[matches2,],1:6)
 histCheck(compfull[treated==1,],compfull[treated==0,],7:13)
+
+histCheck(as.matrix(compfull[treated==1,10]/compfull[treated==1,9]*100000),as.matrix(compfull[matchesH,10]/compfull[matchesH,9]*1000000),1)

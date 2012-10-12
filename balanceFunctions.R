@@ -30,10 +30,10 @@ calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
     #browser()
     for (co in Covs) {
         means[i,1:2]=c(sum(Ws*TreatMat[,co],na.rm=TRUE),sum(WsTilde*ContMat[,co],na.rm=TRUE))
-        # means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws*(TreatMat[,co]-means[i,1])^2/sum(Ws),na.rm=TRUE)/dim(TreatMat)[1],1/2),
-        # ifelse(is.element(co,cont),sum(WsTilde*(ContMat[,co]-means[i,2])^2/sum(WsTilde),na.rm=TRUE)/dim(ContMat)[1],1/2))
-        means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws^2)*var(TreatMat[,co]),1/2),
-         ifelse(is.element(co,cont),sum(WsTilde)^2*var(ContMat[,co]),1/2))
+        means[i,3:4]=c(ifelse(is.element(co,cont),sum((Ws*TreatMat[,co]-means[i,1])^2,na.rm=TRUE)*sum(Ws^2),1/2),
+          ifelse(is.element(co,cont),sum((WsTilde*ContMat[,co]-means[i,2])^2,na.rm=TRUE)*sum(WsTilde^2),1/2))
+        # means[i,3:4]=c(ifelse(is.element(co,cont),sum(Ws^2)*var(TreatMat[,co]),1/2),
+        #   ifelse(is.element(co,cont),sum(WsTilde^2)*var(ContMat[,co]),1/2))
         i=i+1
     }
     colnames(means)=c("meanT","meanC","varT","varC")
@@ -61,7 +61,7 @@ loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
     abline(h=1:dim(MatPlot[[1]])[1], lty="dotted",col="lightgray")
     # legend("topright",legend=c("Initial","Without 0 Blacks cases","Matching of D & A","Matching of Imbalanced Or","Matching All"),
     # pch=c(25,21,22,23,24),col="white",pt.bg=c("aquamarine4","gray","coral2","royalblue","darkorchid"),bg="white")
-    legend("bottomright",legend=labels,
+    legend("topright",legend=labels,
     pch=c(25:(26-length(lpMat))),col="white",pt.bg=colors[1:length(lpMat)],bg="white",cex=0.7)   
 }
 
