@@ -191,9 +191,9 @@ for(i in I2010)
     gotT2010<-c(gotT2010,intUnitInfo[[i]]$Munis)
 }
 
-
+clave <- X$Clave
 full <- cbind(X[,!(names(X) %in% c("State", "Municipality", "Clave"))])
-
+clave <- clave[-gotT2010]
 full<-full[-gotT2010,]
 treated<-treated[-gotT2010]
 Ws<-Ws[-gotT2010]
@@ -219,7 +219,7 @@ compfull<-compfull[,!(names(compfull) %in% c("Exp06"))]
 treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Ws<-Ws[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Regions<-Regions[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
-
+clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
@@ -296,12 +296,41 @@ postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCo
 
 
 
+clavetreated <- clave[treated==1]
+regiontreated <- Regions[treated==1]
+clavematched <- clave[matchesH]
+matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=7))
+for(i in 1:length(clavetreated)){
+  matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
+}
+names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
 
-lpMat<-list(Init,postMatchHR)
+##create loveplots
+for(i in 1:length(matchframe$clave)){
+  ##calc muni statistics
+  treatsub <- matchframe$clave[i]
+  matchsub <- unlist(matchframe[i,c(paste("match",1:5,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+  ##TODO weights are not correct
+  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
 
+  ##calc region statistics. 
+  region.index <- matchframe$region[i] #Super inefficient but too tired to care
+  regsub <- subset(compfull,Regions==region.index)
+  treatsub <- matchframe[matchframe$region==reg,]$clave
+  matchsub <- unlist(matchframe[matchframe$region==reg,c(paste("match",1:5,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+##TODO weights are not correct
+  regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
 
-loveplot(lpMat,labels=c("Initial","Matched HomR"),xlim=c(-1,1))
-
+  ##loveplot
+  lpMat<-list(Init,postMatchHR,regionlove,munilove)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+  loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
+  dev.off()
+}
 ### hist test
 
 
