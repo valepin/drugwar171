@@ -33,6 +33,7 @@ void draw() {
   hoverMuni=true;
   drawJ();
   if(dispInt){
+    loveplot();
   }else{
     drawV();
   }
