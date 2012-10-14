@@ -114,23 +114,33 @@
 				\item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
 		The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
 		Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are:
+		
+	
+		
 		\begin{table}[ht]
 		\begin{center}
-		\begin{tabular}{ccc|ccc}
+		\begin{tabular}{llccccc}
 		  \hline
-		 \textbf{unit}& number of& Date of first &  \textbf{unit}& number of& Date of first \\ 
-		 & municipalities& intervention& & municipalities& intervention \\ 
+		 \textbf{unit}& \textbf{Region}& number of& Date of first & Within Region & SD Bin& SD Neyman \\
+		 && municipalities& intervention& Effect&&\\
 		  \hline
-		\textbf{1} &   5 & 2008 &  \textbf{10} &10 & 2009 \\ 
-		  \textbf{2} &   5 & 2008 &  \textbf{11} & 8 & 2008 \\  
-		  \textbf{4} &  15 & 2009 &   \textbf{12} &27 & 2007 \\
-		  \textbf{5} &  14 & 2007 &   \textbf{15} &9 & 2009 \\ 
-		  \textbf{6} &  24 & 2008 &    \textbf{16} &10 & 2007 \\ 
-		  \textbf{8} &  20 & 2009 &  \textbf{18} &35 & 2008 \\ 
-		  \textbf{9} &  18 & 2008 &  \\
-		%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
-		% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
-		%\textbf{3} &  12 & 2010
+		1&\textbf{Tijuana} &   5 & 2008 &20.89 & 1.49 & 12.87\\  
+		2&		  \textbf{Nogales} &   5 & 2008 &36.97 & 5.37 & 33.51 \\ 
+		4&		  \textbf{Ju\'{a}rez} &  15 & 2009 & 195.11 & 3.84 & 88.33 \\  
+		5&		  \textbf{P\'{a}nuco} &  14 & 2007 &  -0.90 & 0.92 & 0.39 \\  
+		6&		  \textbf{Nuevo Laredo -Matamoros} &  24 & 2008 &  0.87 & 0.87 & 1.23 \\    
+		8&		  \textbf{Santa Catarina - General Zuazua} &  20 & 2009 &  -5.06 & 0.59 & 0.89 \\  
+		9&		  \textbf{Villa de Cos -Fresnillo} &  18 & 2008 &-1.35 & 1.24 & 0.44 \\  
+		10&		\textbf{Te\'{u}l de Gonz\'{a}lez Ortega,} &10 & 2009&13.83 & 5.52 & 9.21 \\ 
+		11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008&-4.80 & 2.55 & 1.07 \\ 
+		12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo,} &27 & 2007& 4.33 & 1.19 & 1.15 \\ 
+		15&		\textbf{Celaya,} &9 & 2009  &2.84 & 1.42 & 1.82 \\ 
+		16&		\textbf{Apatzing\'{a}n} &10 & 2007 &17.50 & 3.23 & 1.81 \\ 
+		18&		\textbf{Acapulco-Taxco} &35 & 2008 & 12.45 & 1.47 & 1.86 \\ 
+		&		 \textbf{TOTAL}& 205& - &19.86& 0.78&  0.89\\
+			%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
+			% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
+			% \textbf{3} &  12 & 2010
 		\hline
 		\end{tabular}
 		\end{center}
@@ -139,7 +149,7 @@
 		Put the image of the intervention map next to it
 			\end{itemize}
 				\item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-				\item \textbf{Missing Data:} there were
+				\item \textbf{Missing Data:} there were few treated units that had one covariate missing
 				
 			\end{itemize}	
 				
@@ -150,9 +160,7 @@
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
         \begin{column}{\onecolwid}
 			      \begin{block}{Estimation}
-					We attempt to use the information of all other municipalities to estimate each $Y_{ij}(0)$ to obtain an estimate $Y_j(0)$. We use propensity score matching to identify a set of control municipalities that look like the treated ones.
-			
-					To follow the guidelines for observational studies we will first clarify what the analysis protocol will be. Given that weights will be given, this specification will determine the way the love plots are created during the balance check process.
+					Control municipalities are used to estimate each $Y_{ij}(0)$ to obtain an estimate $Y_j(0)$. We use propensity score matching to identify a set of control municipalities that look like the treated ones.
 					Let $M_{ij}$ be the number of municipalities matched to the $i$th municipality in region $j$. Let $$\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$$ denote the total population of all $M_{ij}$ municipalities matched to the $i$th treated municipality in region $j$. Then 
 					$$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$ where $v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$
 					Therefore,

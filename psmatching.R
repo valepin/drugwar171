@@ -388,4 +388,63 @@ for(r in regs)
 #
 ########################
 
-# get the information relevant for each treated unit
+# get the homicide rate
+Date<-unlist(intUnitInfo)[names(unlist(intUnitInfo))=='Date'][-I2010]
+
+
+# get rid of all the units that were eliminated for this process
+HomMod<-Hom[-gotT2010,]
+HomMod<-HomMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
+
+PopMod<-Pop[-gotT2010,]
+PopMod<-PopMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
+
+effects<-rep(NA,length(regs))
+varsB<-matrix(NA,length(regs),2)
+varsN<-matrix(NA,length(regs),2)
+Y<-rep(NA,dim(compfull)[1])
+# number of matches
+m<-5
+tracks<-c()
+for(i in 1:length(regs))
+{
+    # get the
+    r=regs[i] 
+    rowsR<-which(Regions==r)
+    matchesR<-as.numeric(mH$match.matrix[as.numeric(rownames(mH$match.matrix)) %in% rowsR,])
+    rowsMod<-c(rowsR,matchesR)
+    #we add 1 because the homicide column is right after it 
+    colH<-grep(Date[i],names(HomMod))+1
+    colP<-grep(Date[i],names(PopMod))+1
+    cat("i=",i," colH=", colH," colP=",colP,"\n")
+    Y[rowsMod]<-HomMod[rowsMod,colH]/PopMod[rowsMod,colP]
+    pj1<-mean(Y[rowsR])
+    pj0<-sum(WsTilde[matchesR]*Y[matchesR])
+    effects[i]<-(pj1-pj0)*100000
+    # pij0<-rep(NA,m)
+    # nij0<-rep(NA,m)
+    # for(j in 1:(length(matchesR)/5))
+    # {
+    #     pointer<-matchesR[((j-1)*5+1):(j*5)]
+    #     pij0[j]<-sum(Vs[pointer]*Y[pointer])
+    #     nij0[j]<-sum(PopMod[pointer,colP])
+    # }
+    varsB[i,]<-c(pj1*(1-pj1)/sum(PopMod[rowsR,colP])*100000^2,
+        pj0*(1-pj0)/sum(PopMod[rowsR,colP])*100000^2)
+        #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))
+    varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
+        var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
+        
+        
+}
+#varsN[,1]<-0#var(Y[treated==1]*100000)
+Results<-cbind(tab[-1][-I2010],regs,effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)))
+colnames(Results)<-c("Region","num Mun","effect","SD bin","SD ney")
+
+xtable(Results)
+
+Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+# Variance calculation
+
+
+#### get the plot of the effect
