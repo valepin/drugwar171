@@ -122,25 +122,34 @@ $$\hat{Y}_{j}(0) =\sum_{i=1}^{N_j}w_{ij}\hat{Y}_{ij}(0)=\sum_{i=1}^{N_j}w_{ij}\s
 and
 $$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
 
-Now, the fact that we are using weighted averages is relevant for the estimate of $var(\hat{\tau}).$ % One thing to check is where the variance comes from in this setting (it is not from random assignment, it has to be from the estimation of the missing potential outcomes, but how does the variance in the treatment group play a role here... for this group all the outcomes were observed so what does it mean to have the variance then?)
+ % One thing to check is where the variance comes from in this setting (it is not from random assignment, it has to be from the estimation of the missing potential outcomes, but how does the variance in the treatment group play a role here... for this group all the outcomes were observed so what does it mean to have the variance then?)
+% \begin{itemize}
+% \item Option 1
+% $$var(\hat{\tau}) = S^2(1)/J +S^2(0)/J $$
+% where $S(x)^2$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
+% $$\hat{var}(\hat{\tau}) = s^2(1)\sum_{i=1}^{N_j}w_{ij}^2 +s^2(0)\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}^2_{ijk},$$
+%  where $$s^2(1) =  \sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}(Y_{ij}(1)-\overline{Y}(1))^2 $$ is the sample variance of the potential outcomes under treatment, and 
+% $$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, where the means are the weighted means. $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0),$$ and
+% $$\hat{\overline{Y}}(1)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}Y_{ij}(1).$$
+% 
+% \item Option 2 (the one that makes most sense at the moment is)
+% $$var(\hat{\tau}) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}(w_{ij}/J)^2 S^2(1) + \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}^2 S^2(0)  $$
+% where $S(1)^2$ is the variance of the homicide rate for all units under treatment, $Y_ijk(1)$, and
+%  $S(0)^2$ is the variance of the homicide rate for all units under control, $Y_ijk(0)$. 
+% \textbf{Maybe here it should be $Y_j(x)$ instead of $Y_ijk(x)$.}
+% 
+% \item Option 3. In the Imbens and Rubin book it is suggested to calculate the conditional variance for each unit using matching within treated groups and within control groups.  Do the simple things work? 
+% \end{itemize}
+
+Now, the fact that we are using weighted averages is relevant for the estimate of $var(\hat{\tau}).$ We used two approaches:
 \begin{itemize}
-\item Option 1
-$$var(\hat{\tau}) = S^2(1)/J +S^2(0)/J $$
-where $S(x)^2$ is the variance of $Y_j(x)$, and  $\tilde{w}{ijk}=w_{ij}v_{ijk}/J$. Hence, 
-$$\hat{var}(\hat{\tau}) = s^2(1)\sum_{i=1}^{N_j}w_{ij}^2 +s^2(0)\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}^2_{ijk},$$
- where $$s^2(1) =  \sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}(Y_{ij}(1)-\overline{Y}(1))^2 $$ is the sample variance of the potential outcomes under treatment, and 
-$$s^2(0) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}(Y_{ijk}(0)-\hat{\overline{Y}}(0))^2,$$ is the sample variance of the potential outcomes under control, where the means are the weighted means. $$\hat{\overline{Y}}(0)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0),$$ and
-$$\hat{\overline{Y}}(1)=\sum_{j=1}^{J}\sum_{i=1}^{N_j}w_{ij}Y_{ij}(1).$$
-
-\item Option 2 (the one that makes most sense at the moment is)
-$$var(\hat{\tau}) = \sum_{j=1}^{J}\sum_{i=1}^{N_j}(w_{ij}/J)^2 S^2(1) + \sum_{j=1}^{J}\sum_{i=1}^{N_j}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}^2 S^2(0)  $$
-where $S(1)^2$ is the variance of the homicide rate for all units under treatment, $Y_ijk(1)$, and
- $S(0)^2$ is the variance of the homicide rate for all units under control, $Y_ijk(0)$. 
-\textbf{Maybe here it should be $Y_j(x)$ instead of $Y_ijk(x)$.}
-
-\item Option 3. In the Imbens and Rubin book it is suggested to calculate the conditional variance for each unit using matching within treated groups and within control groups.  Do the simple things work? 
+	\item \textbf{Neyman Variance}: As usual $Var(\hat{\tau})$
+	
+	\item \textbf{Binomial Variance}:It can be argued that $Y_j(x)\sim Bin(Pop_j,p_j(x))$. In this context the estimand is the difference of $\bar{Y}(x)=\frac{p_1(x)+p_2(x)+\cdots+p_J(x)}{J}\times 100000$\footnote{Note that the homicide rate is defined as the number of homicides in 100000 habitants.}, i.e. the average homicide rate under intervention $x$. Hence, 
+$Var(Y_j(x))=10^{10}\times p_j(x)(1-p_j(x))/Pop_j ,$ and assuming independence of the regions we get that
+$Var(\bar{Y}(x))=\frac{10^{10}\sum_{j=1}^Jp_j(x)(1-p_j(x))/Pop_j}{J^2}.$
+Furthermore, $\hat{Var}(\bar{Y}(x))=\frac{10^{10}\sum_{j=1}^J\hat{p_j}(x)(1-\hat{p_j}(x))Pop_j}{J^2}.$ (this is not the potential outcome way of estimating this!! We would usually use the Neyman estimate of the variance)
 \end{itemize}
-
 \subsection{Balance Checks}
 These weights (right now it is option 2) were used to assess balance.
 
