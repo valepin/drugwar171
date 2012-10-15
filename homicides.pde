@@ -371,7 +371,7 @@ void drawGridlines () {
     {
       if(dispInt)
       {  //println(results.getDataAt(n-1,0));
-         verticalText(results.getDataAt(n-1,0), -(plot_y2+15), x+35); 
+         verticalText(results.getDataAt(n-1,0), -(plot_y2+25), x+5); 
       }else
      { 
         verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
@@ -926,7 +926,7 @@ void resultsplot(int mun){
   stdev = new float[nReg]; 
   float regionHRD, regionHRsd;
   int i,col;
-  float x,y,lb,ub,pop;
+  float x,y,lb,ub,rMuni;
   
   // the set up
      
@@ -971,7 +971,7 @@ void resultsplot(int mun){
   
   // draw the results plot
   
-  println(nReg);
+
     // i is a counter over the rows (regions)
   for (i = 0; i < nReg; i++) {
   //estimated effect
@@ -986,24 +986,39 @@ void resultsplot(int mun){
   Maxim=370;
   Minim=-70;
 
+  rMuni = ppartycMun.getFloatAt(mun,8);
+    println(rMuni);
   // plot datapoints
-  fill( #B22222);//,170); {#B22222, #FA8080
-  stroke(#B22222);  
+
   for (i = 0; i < effects.length; i++) {
     x =  map(i, -1, nReg, plot_x1, plot_x2);
     y =  map(effects[i], Minim, Maxim, plot_y2, plot_y1);
-    lb = map(effects[i]-1.96*stdev[i], ylims[0], ylims[1], plot_y2, plot_y1);
-    ub = map(effects[i]-1.96*stdev[i], ylims[0], ylims[1], plot_y2, plot_y1);
+    lb = map(effects[i]-1.96*stdev[i], Minim, Maxim, plot_y2, plot_y1);
+    ub = map(effects[i]+1.96*stdev[i], Minim, Maxim, plot_y2, plot_y1);
    //if(datapoints[i][0]>=xlims[0] && datapoints[i][0]<=xlims[1] && datapoints[i][1]>=ylims[0] && datapoints[i][1]<=ylims[1]){
+
+      println(results.getFloatAt(i,8));
+      if(results.getFloatAt(i,8) == rMuni)
+      {
+        stroke(#008000);
+         fill(#008000);
+      }else
+      {
+        fill( #B22222);
+        stroke(#B22222);  
+      } 
       ellipse(x,y,5,5);
-      //line(x-0.1,lb,x,ub);
+      line(x,lb,x,ub);
    // }
   }
   
   //draw the average
 //  println(results.getFloatAt(13,6));
-  stroke(#000000);
+  stroke(#FA8080);
   y =  map(results.getFloatAt(13,6), Minim, Maxim, plot_y2, plot_y1);
+  line(plot_x1,y,plot_x2,y);
+    y =  map(0, Minim, Maxim, plot_y2, plot_y1);
+    stroke(bg_color);
   line(plot_x1,y,plot_x2,y);
   
   ///highlight hovered region

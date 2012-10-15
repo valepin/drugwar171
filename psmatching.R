@@ -3,7 +3,7 @@
 library(xtable)
 library(MatchIt)
 library(mice)
-source("balanceFunctions.R")
+#source("balanceFunctions.R")
 # read in the tsv's at the municipality level
 Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
 cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
@@ -225,14 +225,7 @@ clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
 names(compfull)[16] = "missIndDocsPerUnit"
 
-# checking the distribution of propensity scores (balance on a fundamental covariate?)
-pst<-match.data(m1)[treated==1,"distance"]
-psc<-match.data(m1)[matches,"distance"]
-par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
-hist(pst,col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
-hist(psc,col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,100))
-
-# check the balance on the other covariates (histograms and love plots)
+check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
 
 TreatCov<-compfull[treated==1,]
@@ -266,6 +259,14 @@ Vs<-c()
 # matches<-matches[!is.na(matches)]
 # postMatch<-calcMeansAndVars(TreatCov,compfull[matches,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches])
 # 
+# checking the distribution of propensity scores (balance on a fundamental covariate?)
+# pst<-match.data(m1)[treated==1,"distance"]
+# psc<-match.data(m1)[matches,"distance"]
+# par(mfrow=c(2,1),mai=c(0.5,0.5,0.5,0.3))
+# hist(pst,col="lightgrey",border="white",main="propensity scores - intervened units",breaks=10, xlab="intervened units",xlim=c(0,1))
+# hist(psc,col="lightblue",border="white",main="propensity scores - control units",breaks=10, xlab="contol units",xlim=c(0,1),ylim=c(0,100))
+# 
+# #
 # # matching on me and all 2fi with Hom06
 # fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+"),"+", paste("Hom06:",names(compfull), collapse= "+")))
 # m2 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missind[(missind[, 4] != TRUE & missind[, 5] != TRUE), 3]"),ratio=5)
@@ -290,7 +291,7 @@ mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDo
 WsTilde<-calcWeights(mH$match.matrix,dim(compfull)[1])
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matchesH<-as.numeric(c(t(mH$match.matrix)))
-matchesH<-matches2[!is.na(matchesH)]
+matchesH<-matchesH[!is.na(matchesH)]
 
 postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matchesH])
 
@@ -376,10 +377,7 @@ xlim=c(min(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE),max(compfull[
 
 #checkBalance for each Region
 regs<-sort(unique(Regions))[-1]
-for(r in regs)
-{
-    
-}
+
 
 
 ########################
@@ -387,6 +385,7 @@ for(r in regs)
 # Analysis
 #
 ########################
+regs<-sort(unique(Regions))[-1]
 
 # get the homicide rate
 Date<-unlist(intUnitInfo)[names(unlist(intUnitInfo))=='Date'][-I2010]
@@ -403,7 +402,7 @@ effects<-rep(NA,length(regs))
 effectsD<-rep(NA,length(regs))
 varsB<-matrix(NA,length(regs),2)
 varsN<-matrix(NA,length(regs),2)
-varsND<-matrix(NA,length(regs),2)
+varsNG<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
 # number of matches
 m<-5
@@ -440,32 +439,29 @@ for(i in 1:length(regs))
         var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
     varsN[i,]<-c(var(Ws[rowsR]*(Y[rowsR]))*100000^2/(1-sum(Ws[rowsR]^2)),
                var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-   varsND[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
+   varsNG[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
               var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))               
         
 }
 #varsN[,1]<-0#var(Y[treated==1]*100000)
-Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsND,1,sum)))
+Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsNG,1,sum)))
 colnames(Results)<-c("num Mun","Date","effect","SD bin","SD ney","effect G","SD ney G")
 
 xtable(Results)
 
-Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
-# Variance calculation
 
-VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
- var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))
-VB<-apply(varsB,2,sum)/13^2
+Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 
 ### gain scores
 ResponseG<-calcMeansAndVars(matrix(Y[treated==1]-compfull$Hom06[treated==1]/100000),
         matrix(Y[matches]-compfull$Hom06[matches]/100000),1,1,Ws[treated==1],WsTilde[matchesH])
+
 # Variance calculation
 
 VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
- var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))
+ var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))+apply(varsN,2,mean)
  VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
-  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))) 
+  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2)))+apply(varsNG,2,mean)
 VB<-apply(varsB,2,sum)/13^2
 
 
@@ -474,7 +470,10 @@ ResAv<-c(250,0, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),
 
 Results<-rbind(Results, ResAv)
 
-write("Results.tsv",Results,sep="   ")
+Res<-read.delim("data/Results.tsv", header = TRUE, sep = "\t")
+Results<-data.frame(Res[,1],Results,Res[,9])
+
+write(Results,file="Results.tsv",ncolumns=9,sep="\t")
 
 #### get the plot of the effect
 
