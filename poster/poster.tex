@@ -65,7 +65,7 @@
 % Name and authors of poster/paper/research
 %-----------------------------------------------------------
 
-\title{\begin{textblock}{1}(0,0)
+\title{\begin{textblock}{1}(0,-0.1)
 \includegraphics[scale=1]{RevisedPlainLogo.jpg}
 \end{textblock}Visualization and Causal Inference of the Mexican Drug War}
 \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
@@ -81,18 +81,30 @@
   \begin{columns}[t]												% the [t] option aligns the column's content at the top
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
- 				\begin{block}{Abstract}
-		In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
-		\textbf{Do homicide rates increase significantly after a military intervention?}.
+ 				\begin{block}{Visualize the problem}
+					\begin{figure}[htdp]
+					    \centering
+						\subfigure[2007]{
+						    \includegraphics[scale=0.43]{2007.png}
+						}
+						\subfigure[2010]{
+						    \includegraphics[scale=0.43]{2010.png}
+						}
+				\end{figure}
+	
+		%The presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
+		We attempt to answer whether \textbf{homicide rates increase significantly after a military intervention}.
 %
 %		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. 
-As any good observational study, which mimics a randomized experiment, the \emph{design} phase was completed without using the outcomes.
+%As any good observational study, which mimics a randomized experiment,
+ 
+%The \emph{design} phase was completed without using the outcomes.
 		
 		
 		      \end{block}
       \vskip1ex
       \begin{block}{Estimand}
- Let $Y_i(1)$ and $Y_i(0)$ denote the homicide rate of region $j$ one year after it received a military intervention, and what it would have been at that same point in time if it hadn't received the military intervention (Rubin Causal Model). Our estimand is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
+ Let $Y_i(1)$ and $Y_i(0)$ denote the change in homicide rate of region $j$ one year after receiving a military intervention, and what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
 Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
 	$$Y_i(1) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(1) \textrm{ and } Y_i(0) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(0),$$	
 	$$\textrm{ where }  w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{i}} \textrm{ and  }\textrm{Pop}_{i}= \sum_j^{N_i}\textrm{Pop}_{ij}.$$
@@ -106,14 +118,34 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 		$$\hat{Y}_{i}(0) =\sum_{j=1}^{N_i}w_{ij}\hat{Y}_{ij}(0)=\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$
 		and
 		$$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
-
+		We use the Neyman estimate of the variance for the confidence intervals
+			$$\hat{var}(\hat{\tau})=?????$$
       \end{block}
 
     \end{column}
 
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\threecolwid}					  % create a three-column-wide column and then we will split it up later
-		\begin{block}{Assumptions \& Challenges}
+		\begin{block}{Visualization}
+			
+				\begin{figure}[htdp]
+				    \centering
+							
+					
+					\subfigure[Love plot - balance checks]{
+					    \includegraphics[scale=1]{../Images/FinalLoveplot.pdf}
+					}
+					\hspace{1cm}
+					\subfigure[Interventions and SUTVA]{
+					\includegraphics[scale=0.85]{intervened.png}	
+					}
+					\hspace{1cm}
+					\subfigure[Results]{
+					   	\includegraphics[scale=1.1]{../Images/results.pdf}
+					}
+			\end{figure}
+			
+	
 			\begin{itemize}
 			\item \textbf{SUTVA} - stable unit treatment value assumption
 			\begin{itemize}
@@ -124,34 +156,7 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 		
 	
 		
-		\begin{table}[ht]
-		\begin{center}
-		\begin{tabular}{llccccccc}
-		  \hline
-		 \textbf{unit}& \textbf{Region}& number of& Date of first & Within Region & SD Bin& SD Neyman &Effect- Gain&SD Neyman G\\
-		 && municipalities& intervention& Effect&&& Score within&\\
-		  \hline
-		1&\textbf{Tijuana} &   5 & 2008 &20.89 & 1.49 & 12.87&20.49 & 8.27 \\  
-		2&		  \textbf{Nogales} &   5 & 2008 &36.97 & 5.37 & 33.51& 11.41 & 20.90 \\
-		4&		  \textbf{Ju\'{a}rez} &  15 & 2009 & 195.11 & 3.84 & 88.33 & 192.99 & 79.88 \\   
-		5&		  \textbf{P\'{a}nuco} &  14 & 2007 &  -0.90 & 0.92 & 0.39& 0.37 & 0.24 \\
-		6&		  \textbf{Reynosa} &  24 & 2008 &  0.87 & 0.87 & 1.23  & -3.49 & 1.48 \\  
-		8&		  \textbf{Guadalupe} &  20 & 2009 &  -5.06 & 0.59 & 0.89 & -4.27 & 0.58 \\  
-		9&		  \textbf{Villa de Cos, Fresnillo} &  18 & 2008 &-1.35 & 1.24 & 0.44 & -2.87 & 0.34 \\  
-		10&		\textbf{Te\'{u}l de Gonz\'{a}lez Ortega,} &10 & 2009&13.83 & 5.52 & 9.21& 7.32 & 4.99 \\ 
-		11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008&-4.80 & 2.55 & 1.07& -4.10 & 1.05\\
-		12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo} &27 & 2007& 4.33 & 1.19 & 1.15 & -15.84 & 0.74 \\ 
-		15&		\textbf{Celaya} &9 & 2009  &2.84 & 1.42 & 1.82& 6.74 & 1.37 \\ 
-		16&		\textbf{Apatzing\'{a}n} &10 & 2007 &17.50 & 3.23 & 1.81 &-52.81 & 5.97 \\  
-		18&		\textbf{Acapulco} &35 & 2008 & 12.45 & 1.47 & 1.86 & 1.19 & 0.77 \\ 
-		&		 \textbf{Average}& 205& - &19.86& 0.78&  0.89&14.61& 0.79\\
-			%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
-			% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
-			% \textbf{3} &  12 & 2010
-		\hline
-		\end{tabular}
-		\end{center}
-		\end{table}
+
 		update this table to have the number of municipalities that received the intervention AND the main names.
 		Put the image of the intervention map next to it
 			\end{itemize}
@@ -165,40 +170,39 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 
           \setbeamercolor{block title}{fg=red,bg=white}%frame color
           \setbeamercolor{block body}{fg=black,bg=white}%body color
-          \begin{block}{Block Colours}
-            For the standard blocks there are two colours; one for the title and one for the block body:\\
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=red,bg=white\}
-            \end{semiverbatim}
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
-            \end{semiverbatim}
-            The \emph{fg} colour sets the text colour and \emph{bg} sets the background colour.
-            For the normal blocks it makes no sense to use a background colour other than white. You \emph{can} change it, but it will look weird!
+          \begin{block}{Results}
+				\begin{table}[ht]
+				\begin{center}
+					\resizebox{25cm}{!}{
+				\begin{tabular}{llccccccc}
+				  \hline
+				 \textbf{unit}& \textbf{Region}& number of& Date of first & Within Region&SD Neyman \\
+				 && municipalities& intervention& Effect &\\
+				  \hline
+				1&\textbf{Tijuana} &   5 & 2008 &20.49 & 8.27 \\  
+				2&		  \textbf{Nogales} &   5 & 2008 & 11.41 & 20.90 \\
+				4&		  \textbf{Ju\'{a}rez} &  15 & 2009  & 192.99 & 79.88 \\   
+				5&		  \textbf{P\'{a}nuco} &  14 & 2007& 0.37 & 0.24 \\
+				6&		  \textbf{Reynosa} &  24 & 2008 &   -3.49 & 1.48 \\  
+				8&		  \textbf{Guadalupe} &  20 & 2009 & -4.27 & 0.58 \\  
+				9&		  \textbf{Villa de Cos, Fresnillo}&  18 & 2008& -2.87 & 0.34 \\  
+				10&		\textbf{Te\'{u}l de Gonz\'{a}lez Ortega} &10 & 2009& 7.32 & 4.99 \\ 
+				11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008& -4.10 & 1.05\\
+				12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo}&27 & 2007  & -15.84 & 0.74 \\ 
+				15&		\textbf{Celaya} &9 & 2009  & 6.74 & 1.37 \\ 
+				16&		\textbf{Apatzing\'{a}n} &10 & 2007  &-52.81 & 5.97 \\  
+				18&		\textbf{Acapulco} &35 & 2008  & 1.19 & 0.77 \\ 
+				&		 \textbf{Average}& 205& - &14.61& 0.79\\
+					%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
+					% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
+					% \textbf{3} &  12 & 2010
+				\hline
+				\end{tabular}}
+				\end{center}
+				\end{table}
           \end{block}
         \end{column}
 \begin{column}{\onecolwid}
-      \begin{alertblock}{Others}
-        The ``alert'' block environment looks like this. It also has justified text, but it has a border and a light background to make it stand out. You can create one like so:
-        \begin{semiverbatim}
-          {\color{red}\\begin}\{{\color{blue}alertblock}\}\{Title\}\newline
-          \hskip1ex.......\newline
-          {\color{red}\\end}\{{\color{blue}alertblock}\}
-        \end{semiverbatim}
-      \end{alertblock}
-        \end{column}
-        \begin{column}{\onecolwid}
-          \setbeamercolor{block alerted title}{fg=black,bg=norange}	% frame color
-          \setbeamercolor{block alerted body}{fg=black,bg=white}		% body color
-          \begin{alertblock}{Alert Block Colours}
-            You can similarly modify the colours for alert blocks (but try not to overdo it):\\
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=black,bg=norange\}
-            \end{semiverbatim}
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
-            \end{semiverbatim}
-          \end{alertblock}        
         %\end{column}
         %\begin{column}{\onecolwid}
           \begin{block}{Key References \& Data Source}

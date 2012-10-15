@@ -1,16 +1,21 @@
 /* Author: Valeria Espinosa
    Date: April 3, 2012
+   Update: Oct 14, 2012
    CS 171 
    Homicide Rate in Mexico (1990-2010)
 */
 
 
-Collect mtable, popul,Stable, Spopul, milInt,cartel07,cartel10,ppartycMun,ppartycS;
+Collect mtable, popul,Stable, Spopul, milInt,cartel07,cartel10,ppartycMun,ppartycS,results;
 int bg_color = 50;
 int fill_color=250;
 int plot_x1, plot_x2, plot_y1, plot_y2;
 float plot_width, plot_height,xrange, yrange;
 float x_step_size,y_step_size;
+// defining variables for the results plot
+float[] effects,stdev;
+float regionHRsd, regionHR,Maxim, Minim;
+int nReg;
 
 
 import controlP5.*;
@@ -24,7 +29,7 @@ color anuvcolor;
 
 float[] point_size;
 float[] or_size;
-float[][] datapoints,statepoints,cartelpoints,nationalpoints, allCHompoints,allCPoppoints;
+float[][] datapoints,statepoints,cartelpoints,nationalpoints, allCHompoints,allCPoppoints,resPoints;
 float[] munHR,stateHR,cartelHR,nationalHR;
 char cartS;
 boolean click = false;
@@ -100,6 +105,7 @@ void setupV() {
    cartel07 = new Collect("cartel2007HR.tsv");
    cartel10 = new Collect("cartel2010HR.tsv");
    ppartycMun = new Collect("CartelIncomeExpensesByMunicipality.tsv");
+   results = new Collect("Results.tsv");
    ppartycS = new Collect("CartelIncomeExpensesState.tsv");
    years = new int[mtable.numCols];
    // Years considered
@@ -133,14 +139,12 @@ void setupV() {
   r.setSpacingColumn(40);
 
  
- userMS = controlP5.addTextfield("Municipality, State",joeyWidth+valeriaWidth/3,valeriaHeight+barHeight,200,20);
- //userMun.setFocus(true);
- MSinf = userMS.getText();
- userMS.setId(2);
+// userMS = controlP5.addTextfield("Municipality, State",joeyWidth+valeriaWidth/3,valeriaHeight+barHeight,200,20);
+// //userMun.setFocus(true);
+// MSinf = userMS.getText();
+// userMS.setId(2);
  
  
-   controlP5.addButton("clear",0,joeyWidth+valeriaWidth/3,valeriaHeight+barHeight/2,50,20);
-  controlP5.addButton("find",0,joeyWidth+valeriaWidth/2,valeriaHeight+barHeight/2,50,20).setId(1);
  
 
   addToRadioButton(r,"2007",0);
@@ -162,34 +166,6 @@ void addToRadioButton(RadioButton theRadioButton, String theName, int theValue )
 
 
 void controlEvent(ControlEvent theEvent) {
-  //print("got an event from "+theEvent.group().name()+"\t");
-//    println("got a control event from controller with id "+theEvent.controller().id());
-//  switch(theEvent.controller().id()) {
-//    case(1):
-//      if(int(theEvent.group().value())==1){cart2010 = true;} 
-//   else{cart2010 = false;} 
-//    break;  
-//   case(2):
-//    if(((Textfield)theEvent.controller()).isAutoClear()==false) {
-//      println(" success!");
-//    } 
-//    else {
-//      println(" but Textfield.isAutoClear() is false, could not setText here.");
-//    }
-//    break;
-//  }
-  
-//   if(theEvent.controller() instanceof Textfield) {
-//    println("controlEvent: accessing a string from controller '"+theEvent.controller().name()+"': "+theEvent.controller().stringValue());
-//    // Textfield.isAutoClear() must be true
-//    print("controlEvent: trying to setText, ");
-//    ((Textfield)theEvent.controller()).setText("controlEvent: changing text.");
-
-//   }
-//  else{ 
-//  for(int i=0;i<theEvent.group().arrayValue().length;i++) {
-//    print(int(theEvent.group().arrayValue()[i]));
-//  }
   switch(int(theEvent.group().value())){
   case 0:
     cart2010 = false;
@@ -357,20 +333,32 @@ void drawAxesLabels (String x_axis, String y_axis) {
 void drawGridlines () { 
   //define the ranges accordingly
   // these should be in the original scale
-  xrange =  xlims[1]-xlims[0];
-  yrange = ylims[1]-ylims[0];
+  if(dispInt)
+  {
+    xrange =15;
+     steps = 14;
+     yrange = 370-(-70);
+  }else
+  {
+    steps=22;
+    xrange =  xlims[1]-xlims[0];  
+    yrange = ylims[1]-ylims[0];
+  }
+  
+   float x_step_size = plot_width / steps;
+  
   
  int stepsy =10;
 
   // steps defined at top of document, default 10
-  float x_step_size = plot_width / steps;
+ 
   float y_step_size = plot_height / stepsy;
 
       stroke(255);
       textSize(10);
   // x gridlines
   for (int n =1; n <= steps; n++) {
-
+  
     float x = plot_x1 + n * x_step_size;
   
     // draw grid lines
@@ -378,9 +366,17 @@ void drawGridlines () {
     //text(,x, plot_y2);
 
     // label grid lines as well
-    
+
     if(n>0 & n<steps)
-    verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
+    {
+      if(dispInt)
+      {  //println(results.getDataAt(n-1,0));
+         verticalText(results.getDataAt(n-1,0), -(plot_y2+15), x+35); 
+      }else
+     { 
+        verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
+      }  
+    }
   }
   // y grid lines
    for (int n =1; n <= 10; n++) {
@@ -394,13 +390,22 @@ void drawGridlines () {
 
     // label grid lines as well
     textSize(10);
-    text(String.format("%.2f",ylims[0]+(n * yrange)/stepsy), plot_x1-20,y);
-     
-      
+          if(dispInt)
+      {  //println(results.getDataAt(n-1,0));
+         text(String.format("%.2f",-70+(n * yrange)/stepsy), plot_x1-20,y);
+      }else
+     { 
+        text(String.format("%.2f",ylims[0]+(n * yrange)/stepsy), plot_x1-20,y);
+      }        
   }
+  if(dispInt)
+  {  //println(results.getDataAt(n-1,0));
+     //text(String.format("%.2f",-70), plot_x1-20,y);
+  }else
+ { 
+    text(String.format("%.2f",ylims[0]), plot_x1-20, plot_y2 );
+  }  
   
-     text(String.format("%.2f",ylims[0]), plot_x1-20, plot_y2 );
-    //text(xlims[0], plot_x1, plot_y2+15 );
 
 }  
 
@@ -915,4 +920,92 @@ float truncate(float x, float dec){
 //  return false;
 //}
 
+void resultsplot(int mun){
+  int nReg = results.numRows-1;
+  effects = new float[nReg]; 
+  stdev = new float[nReg]; 
+  float regionHRD, regionHRsd;
+  int i,col;
+  float x,y,lb,ub,pop;
+  
+  // the set up
+     
+     //draw rects
+    fill(bg_color);
+    rect(0,0,width,barHeight);
+    rect(joeyWidth,0,width,height);
 
+    //label button
+ stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth,20);
+    text("Press r to restart ",joeyWidth/2,58);
+  
+  /*
+  | IMPORTANT:
+  | the next two lines determine the dimensions of the plot area
+  */
+  int w = int (valeriaWidth);
+  int h = int (valeriaHeight);
+  
+  strokeWeight(1);
+ 
+  
+  /*
+  | Start Drawing here.
+  | Change these methods if necessary, clearly
+  | commenting where any changes have been made
+  */
+  drawPlotArea(w, h);
+ 
+  drawTitle(popul.getDataAt(selectedMuni, 1)+", "+ Spopul.getDataAt(state, 1) );
+    drawAxesLabels("", "gain in homicide rate difference");
+    drawGridlines();
+
+      
+  
+
+//  if((mouseX<joeyWidth && mouseY> barHeight))
+//  {
+//     allCartTS=false; 
+//  }
+  
+  // draw the results plot
+  
+  println(nReg);
+    // i is a counter over the rows (regions)
+  for (i = 0; i < nReg; i++) {
+  //estimated effect
+  //println(results.getFloatAt(i,6));
+  effects[i] =   results.getFloatAt(i,6);
+    //estimated sd
+    // println(results.getFloatAt(i,7));
+    stdev[i] =   results.getFloatAt(i,7);
+  }
+  
+  // this should use max and min functions, but they weren't working so I put them in manually
+  Maxim=370;
+  Minim=-70;
+
+  // plot datapoints
+  fill( #B22222);//,170); {#B22222, #FA8080
+  stroke(#B22222);  
+  for (i = 0; i < effects.length; i++) {
+    x =  map(i, -1, nReg, plot_x1, plot_x2);
+    y =  map(effects[i], Minim, Maxim, plot_y2, plot_y1);
+    lb = map(effects[i]-1.96*stdev[i], ylims[0], ylims[1], plot_y2, plot_y1);
+    ub = map(effects[i]-1.96*stdev[i], ylims[0], ylims[1], plot_y2, plot_y1);
+   //if(datapoints[i][0]>=xlims[0] && datapoints[i][0]<=xlims[1] && datapoints[i][1]>=ylims[0] && datapoints[i][1]<=ylims[1]){
+      ellipse(x,y,5,5);
+      //line(x-0.1,lb,x,ub);
+   // }
+  }
+  
+  //draw the average
+//  println(results.getFloatAt(13,6));
+  stroke(#000000);
+  y =  map(results.getFloatAt(13,6), Minim, Maxim, plot_y2, plot_y1);
+  line(plot_x1,y,plot_x2,y);
+  
+  ///highlight hovered region
+
+}
