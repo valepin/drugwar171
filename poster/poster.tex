@@ -10,11 +10,11 @@
 \usepackage{graphicx}			% allows us to import images
 \usepackage{bbm,amssymb,mathrsfs}
 %\usepackage{natbib}
-\usepackage{graphicx,psfrag,dcolumn,amsmath,bm,color}
+%\usepackage{graphicx,psfrag,dcolumn,amsmath,bm,color}
 \usepackage{amssymb}
 \usepackage{exscale}
 \usepackage{textpos}
-\usepackage[tight]{subfigure}
+\usepackage[tight]{subcaption}
 %-----------------------------------------------------------
 % Define the column width and poster size
 % To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
@@ -65,11 +65,18 @@
 % Name and authors of poster/paper/research
 %-----------------------------------------------------------
 
-\title{\begin{textblock}{1}(0,0.32)
-\includegraphics[scale=0.8]{RevisedPlainLogo.jpg}
-\end{textblock}Visualization and Causal Inference of the Mexican Drug War}
+\title{\includegraphics[scale=0.8]{RevisedPlainLogo.jpg}
+Visualization and Causal Inference of the Mexican Drug War}
 \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
-\institute{Statistics Department, Harvard University}%\\[\medskipamount]
+\institute{Statistics Department, Harvard University}
+
+% for some reason the textblock in the title was not letting me compile
+
+% \title{\begin{textblock}{1}(0,0.32)
+% \includegraphics[scale=0.8]{RevisedPlainLogo.jpg}
+% \end{textblock}Visualization and Causal Inference of the Mexican Drug War}
+% \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
+% \institute{Statistics Department, Harvard University}%\\[\medskipamount]
 
 
 %-----------------------------------------------------------
@@ -82,7 +89,7 @@
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
  				\begin{block}{Abstract}
-		In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
+	%	In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
 		The main question of interest is: \textbf{do homicide rates increase significantly after a military intervention?}. Due to the observational nature we explored the feasibility of causal inference for the data obtained. 
 %
 		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. As any good observational study, which mimics a randomized experiment, the \emph{design} and \emph{analysis} steps are clearly separated. The de
