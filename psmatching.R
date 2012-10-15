@@ -480,6 +480,7 @@ write("Results.tsv",Results,sep="   ")
 
 
 
+
 colors=c("coral2","coral","royalblue","coral2","darkorchid")
 
 par(mar=c(9,5,2,2))
@@ -503,3 +504,8 @@ points(c(1:n),Res[-14,4],type='p',col="white",bg='gray',pch=23,cex=0.7)
 segments(c(1:n),Res[-14,4]-1.96*Res[-14,6],c(1:n),Res[-14,4]+1.96*Res[-14,6],col='darkgray',lty=1)
 segments(c(1:n)-0.1,Res[-14,4]-1.96*Res[-14,6],c(1:n)+.1,Res[-14,4]-1.96*Res[-14,6],col='darkgray',lty=1)
 segments(c(1:n)-0.1,Res[-14,4]+1.96*Res[-14,6],c(1:n)+.1,Res[-14,4]+1.96*Res[-14,6],col='darkgray',lty=1)
+
+
+#### get the plot of the effect
+
+
