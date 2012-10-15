@@ -22,11 +22,20 @@ When we start to approach this problem the first to consider is what data is ava
 The measure of violence that we are using is homicide rate, Y. This could be debatable, maybe a combined measure of different kinds of crimes would be better.
 
 Assumptions:
-\begin{itemize}
-	\item SUTVA
-	\item Unconfoundedness: a very strong assumption is that we have all the covariates that could affect the homicide rates. In other words that we have all covariates, X, such that given X,  W is independent of Y.
-	\item That homicide rates, Y, are an accurate measure of violence. 
-\end{itemize}
+		\begin{itemize}
+		\item \textbf{SUTVA} - stable unit treatment value assumption
+		\begin{itemize}
+			\item \textbf{No hidden values of treatments} A broad definition of what ``military intervention''- any mili means in this context helps us think of a two level treatment: receiving a military intervention (defined as ... see paper(that have resulted in deaths?)) or not receiving it.
+			\item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
+	The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
+	Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are shown in Table \ref{tabR}
+		\end{itemize}
+			\item \textbf{Unconfoundedness}: a very strong assumption is that we have all the covariates that could affect the homicide rates. In other words that we have all covariates, X, such that given X,  W is independent of Y. Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
+			\item \textbf{Missing Data:} there were few treated units that had one covariate (Doctors per medical unit) missing, we exactly matched on that and Political Party in power before Calder\'{o}n.
+				\item That homicide rates, Y, are an accurate measure of violence. 				
+		\end{itemize}
+
+
 
 The main idea is to combine synthetic and propensity score matching to address this question. What are the advantages of doing that? (and what's new?)
 The current proposal is to use propensity score matching to create pools of acceptable controls for each treated unit (is there some multiple comparison thing going on here? Probably not, we just cared about the observed imbalances, we are not saying anything else.). Furthermore, to get the synthetic match for treated unit $T_i$ we can choose the weights for the units in it's control pool such that the $Y_1^T,\ldots, Y_{I_i}^{T_i}$ is best matched
@@ -143,7 +152,11 @@ $$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
 
 Now, the fact that we are using weighted averages is relevant for the estimate of $var(\hat{\tau}).$ We used two approaches:
 \begin{itemize}
-	\item \textbf{Neyman Variance}: As usual $Var(\hat{\tau})$
+	\item \textbf{Neyman Variance}: As usual $Var(\overline{Y}(1))=Var(Y(1))/I$. Now, 
+	\begin{eqnarray*}
+		Var(\overline{Y}(0))&=&E(Var(\overline{Y}(0)|Y_i(0))) + Var(E(\overline{Y}(0)|Y_i(0)))\\
+		&E() &
+	\end{eqnarray*}
 	
 	\item \textbf{Binomial Variance}:It can be argued that $Y_j(x)\sim Bin(Pop_j,p_j(x))$. In this context the estimand is the difference of $\bar{Y}(x)=\frac{p_1(x)+p_2(x)+\cdots+p_J(x)}{J}\times 100000$\footnote{Note that the homicide rate is defined as the number of homicides in 100000 habitants.}, i.e. the average homicide rate under intervention $x$. Hence, 
 $Var(Y_j(x))=10^{10}\times p_j(x)(1-p_j(x))/Pop_j ,$ and assuming independence of the regions we get that

@@ -403,6 +403,7 @@ effectsD<-rep(NA,length(regs))
 varsB<-matrix(NA,length(regs),2)
 varsN<-matrix(NA,length(regs),2)
 varsNG<-matrix(NA,length(regs),2)
+PjsG<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
 # number of matches
 m<-5
@@ -419,11 +420,12 @@ for(i in 1:length(regs))
     colP<-grep(Date[i],names(PopMod))+1
     cat("i=",i," colH=", colH," colP=",colP,"\n")
     Y[rowsMod]<-HomMod[rowsMod,colH]/PopMod[rowsMod,colP]
-    pj1<-mean(Y[rowsR])
+    pj1<-sum(Ws[rowsR]*Y[rowsR])
     pj0<-sum(WsTilde[matchesR]*Y[matchesR])
     effects[i]<-(pj1-pj0)*100000
-    effectsD[i]<-(pj1-mean(compfull$Hom06[rowsR]/100000)-
-        pj0+mean(compfull$Hom06[matchesR])/100000)*100000
+    effectsD[i]<-(mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))-
+        mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000)))*100000
+    PjsG[i,]<-c(mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000,mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000    
     # pij0<-rep(NA,m)
     # nij0<-rep(NA,m)
     # for(j in 1:(length(matchesR)/5))
@@ -435,13 +437,15 @@ for(i in 1:length(regs))
     varsB[i,]<-c(pj1*(1-pj1)/sum(PopMod[rowsR,colP])*100000^2,
         pj0*(1-pj0)/sum(PopMod[rowsR,colP])*100000^2)
         #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))
-    varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
-        var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
+    # varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
+    #     var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))
+    # varsNG[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
+    #               var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))    
     varsN[i,]<-c(var(Ws[rowsR]*(Y[rowsR]))*100000^2/(1-sum(Ws[rowsR]^2)),
                var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-   varsNG[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
-              var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))               
-        
+   m1<-mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))
+   m0<-mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))
+    varsNG[i,]<-c(0,var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))           
 }
 #varsN[,1]<-0#var(Y[treated==1]*100000)
 Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsNG,1,sum)))
@@ -459,9 +463,11 @@ ResponseG<-calcMeansAndVars(matrix(Y[treated==1]-compfull$Hom06[treated==1]/1000
 # Variance calculation
 
 VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
- var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))+apply(varsN,2,mean)
- VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
-  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2)))+apply(varsNG,2,mean)
+ var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsN[,2]))
+ # VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+ #  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsNG[,2]))
+  VNG<-c(var(PjsG[,1])/length(effectsD),
+   var(PjsG[,2])/length(effectsD)+mean(varsNG[,2]))
 VB<-apply(varsB,2,sum)/13^2
 
 
@@ -472,8 +478,8 @@ Results<-rbind(Results, ResAv)
 
 Res<-read.delim("data/Results.tsv", header = TRUE, sep = "\t")
 Results<-data.frame(Res[,1],Results,Res[,9])
-
-write(Results,file="Results.tsv",ncolumns=9,sep="\t")
+Results[-14,2:8]<-(Res[,1],Results,Res[,9])
+write(t(Results),file="Results.tsv",ncolumns=9,sep="\t")
 
 #### get the plot of the effect
 

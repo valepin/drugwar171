@@ -14,7 +14,8 @@
 \usepackage{amssymb}
 \usepackage{exscale}
 \usepackage{textpos}
-\usepackage[tight]{subfigure}
+%\usepackage{caption}
+\usepackage{subfigure}
 %-----------------------------------------------------------
 % Define the column width and poster size
 % To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
@@ -105,7 +106,7 @@
 		      \end{block}
       \vskip1ex
       \begin{block}{Estimand}
- Let $Y_i(1)$ denote the homicide rate change in region $i$ from 2006 to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention,  $W$, for the regions that were intervened ($W=1$), $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
+ Let $Y_i(1)$ denote the homicide rate change in region $i$ from 2006 to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention,  $W$, for the regions that were intervened ($W=1$), $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\displaystyle\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
 Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
 	$$Y_i(1) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(1) \textrm{ and } Y_i(0) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(0),$$	
 	$$\textrm{ where }  w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{i}} \textrm{ and  }\textrm{Pop}_{i}= \sum_j^{N_i}\textrm{Pop}_{ij}.$$
@@ -115,14 +116,14 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 		\begin{itemize}
 		\item \textbf{SUTVA}
 		\begin{itemize}
-			\item \textbf{No hidden values of treatments} Broad definition of treatment levels: at least one municipality in the region received an intervention between 2007-2010, or not as reported in \cite{NEXOS} . 
+			\item \textbf{No hidden values of treatments} Broad definition of treatment: at least one municipality in the region received an intervention between 2007-2010, or not (\cite{NEXOS}). 
 			\item \textbf{No interference between units} Grouped close regions that received an intervention, and their neighboring municipalities to make the ``no interference'' assumption  more reasonable. %For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
 	%The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
 		\end{itemize}
 			\item \textbf{Unconfoundedness} We assume we have all covariates, \textbf{X}, such that given \textbf{X},  treatment assignment is independent of \textbf{Y}.
 			 %Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. 
 			%Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-			\item \textbf{Missing Data} Few treated units had have one missing value (\emph{Doctors per medical unit}). We exactly matched on missingness pattern and Political Party in power in municipality before Calder\'{o}n.
+			\item \textbf{Missing Data} One covariate had missing values. We exactly matched on missingness pattern and Political Party in municipality before Calder\'{o}n.
 			\item \textbf{Appropriateness of response variable} We assume Y is an adequate measure of violence.	 %Perhaps other crimes should be included			
 		\end{itemize}
 \end{block}
@@ -145,8 +146,8 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 			We know that $var(\hat{\tau})$ is largest under additivity of potenital outcomes. In that case  $var(\hat{\tau}) =var(\overline{Y}(1))+var(\overline{Y}(0)).$ We use that over estimate to get confidence intervals.% note that this is a case when we wouldn't want to be conservative!!!
 			Now, \begin{eqnarray*}
 				var(\hat{\overline{Y}}(0))&=&E(var(\hat{\overline{Y}}(0)|Y_i(0) \forall i))+var(E(\hat{\overline{Y}}(0)|Y_i(0) \forall i))
-				=E(\sum var(\hat{Y}_i(0))/I)+var(\sum_iY_i(0))/I\\
-				&=&E(\frac{\sum_{j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{1-\sum_{j,k}w^2_{ijk}})+var(Y(0))/I =\frac{\sum_{i,j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{I(1-\sum_{jw}w^2_{ijk})})+S^2(0)/I.\\
+			 	=E(\sum var(\hat{Y}_i(0))/I)+var(\sum_iY_i(0))/I\\
+			 	&=&E(\frac{\sum_{j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{1-\sum_{j,k}w^2_{ijk}})+var(Y(0))/I =\frac{\sum_{i,j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{I(1-\sum_{j,w}w^2_{ijk})})+S^2(0)/I.\\
 			\end{eqnarray*}
 			 	Now, $var(\hat{\overline{Y}}(1)) = S^2(1)/I$ because the all $Y_j(1)$ are observed.
 				\begin{figure}[htdp]
@@ -162,7 +163,7 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 					}
 					\hspace{1cm}
 					\subfigure[Results]{
-					   	\includegraphics[scale=1.1]{../Images/results.pdf}
+					   	\includegraphics[scale=1.1]{../Images/results.png}
 					}
 			\end{figure}
 			
@@ -206,7 +207,7 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 				\hline
 				\end{tabular}}
 				\end{center}
-				\caption{}
+				%\caption{}
 				\label{tab1}
 				\end{table}
           \end{block}
