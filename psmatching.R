@@ -391,7 +391,7 @@ for(r in regs)
 # get the homicide rate
 Date<-unlist(intUnitInfo)[names(unlist(intUnitInfo))=='Date'][-I2010]
 
-
+ matches=matchesH
 # get rid of all the units that were eliminated for this process
 HomMod<-Hom[-gotT2010,]
 HomMod<-HomMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
@@ -400,8 +400,10 @@ PopMod<-Pop[-gotT2010,]
 PopMod<-PopMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
 
 effects<-rep(NA,length(regs))
+effectsD<-rep(NA,length(regs))
 varsB<-matrix(NA,length(regs),2)
 varsN<-matrix(NA,length(regs),2)
+varsND<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
 # number of matches
 m<-5
@@ -421,6 +423,8 @@ for(i in 1:length(regs))
     pj1<-mean(Y[rowsR])
     pj0<-sum(WsTilde[matchesR]*Y[matchesR])
     effects[i]<-(pj1-pj0)*100000
+    effectsD[i]<-(pj1-mean(compfull$Hom06[rowsR]/100000)-
+        pj0+mean(compfull$Hom06[matchesR])/100000)*100000
     # pij0<-rep(NA,m)
     # nij0<-rep(NA,m)
     # for(j in 1:(length(matchesR)/5))
@@ -434,17 +438,64 @@ for(i in 1:length(regs))
         #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))
     varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
         var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-        
+    varsN[i,]<-c(var(Ws[rowsR]*(Y[rowsR]))*100000^2/(1-sum(Ws[rowsR]^2)),
+               var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
+   varsND[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
+              var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))               
         
 }
 #varsN[,1]<-0#var(Y[treated==1]*100000)
-Results<-cbind(tab[-1][-I2010],regs,effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)))
-colnames(Results)<-c("Region","num Mun","effect","SD bin","SD ney")
+Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsND,1,sum)))
+colnames(Results)<-c("num Mun","Date","effect","SD bin","SD ney","effect G","SD ney G")
 
 xtable(Results)
 
 Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 # Variance calculation
 
+VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+ var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))
+VB<-apply(varsB,2,sum)/13^2
+
+### gain scores
+ResponseG<-calcMeansAndVars(matrix(Y[treated==1]-compfull$Hom06[treated==1]/100000),
+        matrix(Y[matches]-compfull$Hom06[matches]/100000),1,1,Ws[treated==1],WsTilde[matchesH])
+# Variance calculation
+
+VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+ var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2)))
+ VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))) 
+VB<-apply(varsB,2,sum)/13^2
+
+
+ResAv<-c(250,0, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),
+    (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(VNG)))
+
+Results<-rbind(Results, ResAv)
+
+write("Results.tsv",Results,sep="   ")
 
 #### get the plot of the effect
+
+colors=c("black","gray","royalblue","coral2","darkorchid")
+types=25:21
+par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1)) 
+plot(1:dim(Results)[1], Results[]col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
+main=ifelse(cont,"t statistics for differences in continuous variables","mean differences in binary variables"),xlim=xlims)
+for(i in 2:length(MatPlot))
+{
+    points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.2)
+}
+
+<<<<<<< HEAD
+#### get the plot of the effect
+=======
+axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1)
+abline(v=0)
+abline(h=1:dim(MatPlot[[1]])[1], lty="dotted",col="lightgray")
+# legend("topright",legend=c("Initial","Without 0 Blacks cases","Matching of D & A","Matching of Imbalanced Or","Matching All"),
+# pch=c(25,21,22,23,24),col="white",pt.bg=c("aquamarine4","gray","coral2","royalblue","darkorchid"),bg="white")
+legend("topright",legend=labels,
+pch=c(25:(26-length(lpMat))),col="white",pt.bg=colors[1:length(lpMat)],bg="white",cex=0.7)
+>>>>>>> 335c12f688ff71c523ea77a4871ef904f91efca3
