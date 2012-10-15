@@ -120,9 +120,19 @@ Visualization and Causal Inference of the Mexican Drug War}
           \item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
             The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
             Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are:
-		
+            
 
-            \begin{table}[ht]
+        \end{itemize}
+      \item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
+      \item \textbf{Missing Data:} there were few treated units that had one covariate missing
+				
+      \end{itemize}	
+      
+
+  \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
+        \begin{column}{\twocolwid}
+\begin{footnotesize}
+                     \begin{table}
               \begin{center}
 		\begin{tabular}{llccccccc}
 		  \hline
@@ -150,15 +160,18 @@ Visualization and Causal Inference of the Mexican Drug War}
               \end{tabular}
             \end{center}
           \end{table}
+     
           update this table to have the number of municipalities that received the intervention AND the main names.
           Put the image of the intervention map next to it
-        \end{itemize}
- 
-      \item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-      \item \textbf{Missing Data:} there were few treated units that had one covariate missing
-				
-      \end{itemize}	
-      
+\end{footnotesize}
+        \end{column}
+\begin{column}{\onecolwid}
+            \vspace{0.75in}
+            \begin{center}
+              \includegraphics[width=7.2in]{intervened.png}
+            \end{center}    
+        \end{column}
+      \end{columns}
       
   \end{block}
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
