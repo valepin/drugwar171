@@ -3,7 +3,7 @@
 library(xtable)
 library(MatchIt)
 library(mice)
-#load("balanceFunctions.R")
+source("balanceFunctions.R")
 # read in the tsv's at the municipality level
 Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
 cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
@@ -191,9 +191,9 @@ for(i in I2010)
     gotT2010<-c(gotT2010,intUnitInfo[[i]]$Munis)
 }
 
-
+clave <- X$Clave
 full <- cbind(X[,!(names(X) %in% c("State", "Municipality", "Clave"))])
-
+clave <- clave[-gotT2010]
 full<-full[-gotT2010,]
 treated<-treated[-gotT2010]
 Ws<-Ws[-gotT2010]
@@ -219,7 +219,7 @@ compfull<-compfull[,!(names(compfull) %in% c("Exp06"))]
 treated<-treated[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Ws<-Ws[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 Regions<-Regions[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
-
+clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
@@ -296,12 +296,41 @@ postMatchHR<-calcMeansAndVars(TreatCov,compfull[matchesH,],difmeanCovs,difmeanCo
 
 
 
+clavetreated <- clave[treated==1]
+regiontreated <- Regions[treated==1]
+clavematched <- clave[matchesH]
+matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=7))
+for(i in 1:length(clavetreated)){
+  matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
+}
+names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
 
-lpMat<-list(Init,postMatchHR)
+##create loveplots
+for(i in 1:length(matchframe$clave)){
+  ##calc muni statistics
+  treatsub <- matchframe$clave[i]
+  matchsub <- unlist(matchframe[i,c(paste("match",1:5,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+  ##TODO weights are not correct
+  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
 
+  ##calc region statistics. 
+  region.index <- matchframe$region[i] #Super inefficient but too tired to care
+  regsub <- subset(compfull,Regions==region.index)
+  treatsub <- matchframe[matchframe$region==reg,]$clave
+  matchsub <- unlist(matchframe[matchframe$region==reg,c(paste("match",1:5,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+##TODO weights are not correct
+  regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
 
-loveplot(lpMat,labels=c("Initial","Matched HomR"),xlim=c(-1,1))
-
+  ##loveplot
+  lpMat<-list(Init,postMatchHR,regionlove,munilove)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+  loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
+  dev.off()
+}
 ### hist test
 
 
@@ -449,20 +478,28 @@ write("Results.tsv",Results,sep="   ")
 
 #### get the plot of the effect
 
-colors=c("black","gray","royalblue","coral2","darkorchid")
-types=25:21
-par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1)) 
-plot(1:dim(Results)[1], Results[]col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
-main=ifelse(cont,"t statistics for differences in continuous variables","mean differences in binary variables"),xlim=xlims)
-for(i in 2:length(MatPlot))
-{
-    points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.2)
-}
 
-axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1)
-abline(v=0)
-abline(h=1:dim(MatPlot[[1]])[1], lty="dotted",col="lightgray")
-# legend("topright",legend=c("Initial","Without 0 Blacks cases","Matching of D & A","Matching of Imbalanced Or","Matching All"),
-# pch=c(25,21,22,23,24),col="white",pt.bg=c("aquamarine4","gray","coral2","royalblue","darkorchid"),bg="white")
-legend("topright",legend=labels,
-pch=c(25:(26-length(lpMat))),col="white",pt.bg=colors[1:length(lpMat)],bg="white",cex=0.7)
+
+colors=c("coral2","coral","royalblue","coral2","darkorchid")
+
+par(mar=c(9,5,2,2))
+Res<-read.delim("data/Results.tsv", header = TRUE, sep = "\t")
+n=dim(Res)[1]-1
+plot(c(1:n),Res[-14,7] ,type='p',col="white", bg=colors[1],ylab="homicide rate pero 100000 inhabitants",xlab='Region'
+    ,xaxt="n",pch=21,ylim=c(-70,370))
+
+    
+axis(side=1, at=c(1:n),labels=Res[-14,1],las=2,family="serif",font.lab=1,cex.axis=0.7)
+segments(c(1:n),Res[-14,7]-1.96*Res[-14,8],c(1:n),Res[-14,7]+1.96*Res[-14,8],col=colors[2],lty=1)
+segments(c(1:n)-0.1,Res[-14,7]-1.96*Res[-14,8],c(1:n)+.1,Res[-14,7]-1.96*Res[-14,8],col=colors[2],lty=1)
+segments(c(1:n)-0.1,Res[-14,7]+1.96*Res[-14,8],c(1:n)+.1,Res[-14,7]+1.96*Res[-14,8],col=colors[2],lty=1)
+abline(h=Res[14,7],lty=1,col="black")
+abline(h=Res[14,7]-1.96*Res[14,8],lty=3,col="black")
+abline(h=Res[14,7]+1.96*Res[14,8],lty=3,col="black")
+abline(h=0,lty=1,col="darkgray")
+
+
+points(c(1:n),Res[-14,4],type='p',col="white",bg='gray',pch=23,cex=0.7)
+segments(c(1:n),Res[-14,4]-1.96*Res[-14,6],c(1:n),Res[-14,4]+1.96*Res[-14,6],col='darkgray',lty=1)
+segments(c(1:n)-0.1,Res[-14,4]-1.96*Res[-14,6],c(1:n)+.1,Res[-14,4]-1.96*Res[-14,6],col='darkgray',lty=1)
+segments(c(1:n)-0.1,Res[-14,4]+1.96*Res[-14,6],c(1:n)+.1,Res[-14,4]+1.96*Res[-14,6],col='darkgray',lty=1)

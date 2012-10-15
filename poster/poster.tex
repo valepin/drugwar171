@@ -29,7 +29,7 @@
 \newlength{\threecolwid}
 \setlength{\paperwidth}{48in}
 \setlength{\paperheight}{36in}
-\setlength{\sepwid}{0.024\paperwidth}
+\setlength{\sepwid}{0.020\paperwidth}
 \setlength{\onecolwid}{0.22\paperwidth}
 \setlength{\twocolwid}{0.464\paperwidth}
 \setlength{\threecolwid}{0.708\paperwidth}
@@ -65,8 +65,8 @@
 % Name and authors of poster/paper/research
 %-----------------------------------------------------------
 
-\title{\begin{textblock}{1}(0,0.32)
-\includegraphics[scale=0.8]{RevisedPlainLogo.jpg}
+\title{\begin{textblock}{1}(0,0)
+\includegraphics[scale=1]{RevisedPlainLogo.jpg}
 \end{textblock}Visualization and Causal Inference of the Mexican Drug War}
 \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
 \institute{Statistics Department, Harvard University}%\\[\medskipamount]
@@ -83,24 +83,31 @@
     \begin{column}{\onecolwid}
  				\begin{block}{Abstract}
 		In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
-		The main question of interest is: \textbf{do homicide rates increase significantly after a military intervention?}. Due to the observational nature we explored the feasibility of causal inference for the data obtained. 
+		\textbf{Do homicide rates increase significantly after a military intervention?}.
 %
-		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. As any good observational study, which mimics a randomized experiment, the \emph{design} and \emph{analysis} steps are clearly separated. The de
+%		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. 
+As any good observational study, which mimics a randomized experiment, the \emph{design} phase was completed without using the outcomes.
 		
 		
 		      \end{block}
-      \vskip2ex
+
       \begin{block}{Estimand}
- Following the Rubin Causal Model, let $Y_j(1)$ and $Y_j(0)$ denote the homicide rate of region $j$ one year after it received a military intervention, and what it would have been at that same point in time if it hadn't received the military intervention. The estimand of interest is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_j Y_j(1)-Y_j(0)}{J}.$$ % do we want to weigh these?
-	For this case, we can think of the treated regions as the population of interest because in principle only regions like those are likely to receive a military intervention. We assume $Y_j(1)$ is observed for all treated units. Let $N_j$ denote the number of municipalities that correspond to region $j$, then 
-	$$Y_j(1) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(1),$$
-	where  $\textrm{Pop}_{j}= \sum_i^{N_j}\textrm{Pop}_{ij}$, and $$w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{j}}.$$ 
-	However, $Y_j(0)$ is missing for all $j$. Following the reasoning above, $$Y_j(0) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(0),$$ and all $Y_{ij}(0)$ are unobserved.
+ Let $Y_i(1)$ and $Y_i(0)$ denote the homicide rate of region $j$ one year after it received a military intervention, and what it would have been at that same point in time if it hadn't received the military intervention (Rubin Causal Model). Our estimand is the average causal effect of the military intervention for the regions that were intervened. That is $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
+Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
+	$$Y_i(1) = \sum_{i=1}^{N_j}w_{ij}Y_{ij}(1) \textrm{ and } Y_i(0) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(0),$$	
+	$$\textrm{ where }  w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{i}} \textrm{ and  }\textrm{Pop}_{i}= \sum_j^{N_i}\textrm{Pop}_{ij}.$$
+	However, $Y_i(0)$ and $Y_{ij}(0)$ are missing  $\forall i, j$.
       \end{block}
+      \begin{block}{Estimation}
+		Propensity score matching was used to identify a set of 5 control municipalities that look like each treated ones, and ultimately estimate $Y_{ij}(0)$ and $Y_i(0)$. 
+		Let $M_{ij}$ be the number of municipalities matched to the $j$th municipality in region $i$, and $$\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$$ is the sum of their populations. Then,
+		$$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$ where $v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$
+		Therefore,
+		$$\hat{Y}_{i}(0) =\sum_{j=1}^{N_i}w_{ij}\hat{Y}_{ij}(0)=\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$
+		and
+		$$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
 
-
-
-      \vskip2ex
+      \end{block}
 
     \end{column}
 
@@ -149,8 +156,7 @@
 		Put the image of the intervention map next to it
 			\end{itemize}
 				\item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-				\item \textbf{Missing Data:} there were few treated units that had one covariate missing
-				
+				\item \textbf{Missing Data:} there were few treated units that had one covariate (Doctors per medical unit) missing, we exactly matched on that and Political Party in power before Calder\'{o}n.				
 			\end{itemize}	
 				
 			
@@ -159,17 +165,7 @@
 	 \end{block}
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
         \begin{column}{\onecolwid}
-			      \begin{block}{Estimation}
-					Control municipalities are used to estimate each $Y_{ij}(0)$ to obtain an estimate $Y_j(0)$. We use propensity score matching to identify a set of control municipalities that look like the treated ones.
-					Let $M_{ij}$ be the number of municipalities matched to the $i$th municipality in region $j$. Let $$\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$$ denote the total population of all $M_{ij}$ municipalities matched to the $i$th treated municipality in region $j$. Then 
-					$$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$ where $v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$
-					Therefore,
-					$$\hat{Y}_{j}(0) =\sum_{i=1}^{N_j}w_{ij}\hat{Y}_{ij}(0)=\sum_{i=1}^{N_j}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),$$
-					and
-					$$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}.$$
-			Note that this could be extended to using hierarchical models. We believe that using 
-			An important 	
-			      \end{block}
+
           \setbeamercolor{block title}{fg=red,bg=white}%frame color
           \setbeamercolor{block body}{fg=black,bg=white}%body color
           \begin{block}{Block Colours}

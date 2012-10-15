@@ -247,17 +247,33 @@ void drawJ() {
       oldmunic.draw();
   }
 
+  int selectedregion = 99;
   for(int i = 0; i < municCount; i++){
     RShape munic = munis[i];
+    int region = cartelTable.getInt(i+1,8);
     if(munic != null){
       if(munic.contains(p) & mouseX< joeyWidth & mouseY > barHeight){
+	selectedregion = cartelTable.getInt(i+1,8);
         selectedMuni = i;
         hoverMuni = true;
-	fill(highlightJ);
+	if(dispInt & cartelTable.getInt(i+1,7)==1){
+	    fill(#32CD32);
+	}else{
+	    fill(highlightJ);
+	}
 	munic.draw();
 	oldMuni = i;
       }else{
+	  if(dispInt){
+	      if(region == selectedregion & cartelTable.getInt(i+1,8)!=0){
+		  fill(#008000);
+		  munic.draw();
+		  oldMuni = i;
+		  fill(#FFFFFF);
+	      }
+	  }
 	  //drawfullJ();
+	  // oldMuni = i;
       }
    
       // if(hoverMuni & i==selectedMuni){
@@ -473,4 +489,10 @@ void keyReleased(){
     zoomcount = 0;  
     drawfullJ();
   }
+}
+
+void loveplot(){
+  String fn = "Images/MEloveplot.png";
+  PImage locImage = loadImage(fn);
+  image(locImage,joeyWidth,valeriaHeight);
 }

@@ -95,6 +95,3 @@ histCheck<-function(TreatMat, ContMat, Covs)
         }
     }    
 }
-
-
-
