@@ -87,11 +87,11 @@ Visualization and Causal Inference of the Mexican Drug War}
   \begin{columns}[t]												% the [t] option aligns the column's content at the top
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
- 				\begin{block}{Abstract}
+ 				\begin{block}{Problem Description}
 	%	In Mexico, the presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
 		The main question of interest is: \textbf{do homicide rates increase significantly after a military intervention?}. Due to the observational nature we explored the feasibility of causal inference for the data obtained. 
 %
-		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. As any good observational study, which mimics a randomized experiment, the \emph{design} and \emph{analysis} steps are clearly separated. The de
+		There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. As any good observational study, which mimics a randomized experiment, the \emph{design} and \emph{analysis} steps are clearly separated.
 		
 		
 		      \end{block}
@@ -112,25 +112,24 @@ Visualization and Causal Inference of the Mexican Drug War}
 
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\threecolwid}					  % create a three-column-wide column and then we will split it up later
-		\begin{block}{Assumptions \& Challenges}
-			\begin{itemize}
-			\item \textbf{SUTVA} - stable unit treatment value assumption
-			\begin{itemize}
-				\item \textbf{No hidden values of treatments} A broad definition of what ``military intervention''- any mili means in this context helps us think of a two level treatment: receiving a military intervention (defined as ... see paper(that have resulted in deaths?)) or not receiving it.
-				\item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
-		The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
-		Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are:
+      \begin{block}{Assumptions \& Challenges}
+        \begin{itemize}
+        \item \textbf{SUTVA} - stable unit treatment value assumption
+          \begin{itemize}
+          \item \textbf{No hidden values of treatments} A broad definition of what ``military intervention''- any mili means in this context helps us think of a two level treatment: receiving a military intervention (defined as ... see paper(that have resulted in deaths?)) or not receiving it.
+          \item \textbf{No interference between units} The main idea is to group neighboring regions that have received military interventions in such a way that distances make the ``no interference'' assumption  more reasonable. For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
+            The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
+            Following this reasoning 2213 municipalities were included in the initial control pool. Our 13 treated regions are:
 		
-	
-		
-		\begin{table}[ht]
-		\begin{center}
+
+            \begin{table}[ht]
+              \begin{center}
 		\begin{tabular}{llccccccc}
 		  \hline
-		 \textbf{unit}& \textbf{Region}& number of& Date of first & Within Region & SD Bin& SD Neyman &Effect- Gain&SD Neyman G\\
-		 && municipalities& intervention& Effect&&& Score within&\\
+                  \textbf{unit}& \textbf{Region}& number of& Date of first & Within Region & SD Bin& SD Neyman &Effect- Gain&SD Neyman G\\
+                  && municipalities& intervention& Effect&&& Score within&\\
 		  \hline
-		1&\textbf{Tijuana} &   5 & 2008 &20.89 & 1.49 & 12.87&20.49 & 8.27 \\  
+                  1&\textbf{Tijuana} &   5 & 2008 &20.89 & 1.49 & 12.87&20.49 & 8.27 \\  
 		2&		  \textbf{Nogales} &   5 & 2008 &36.97 & 5.37 & 33.51& 11.41 & 20.90 \\
 		4&		  \textbf{Ju\'{a}rez} &  15 & 2009 & 195.11 & 3.84 & 88.33 & 192.99 & 79.88 \\   
 		5&		  \textbf{P\'{a}nuco} &  14 & 2007 &  -0.90 & 0.92 & 0.39& 0.37 & 0.24 \\
@@ -148,21 +147,20 @@ Visualization and Causal Inference of the Mexican Drug War}
 			% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
 			% \textbf{3} &  12 & 2010
 		\hline
-		\end{tabular}
-		\end{center}
-		\end{table}
-		update this table to have the number of municipalities that received the intervention AND the main names.
-		Put the image of the intervention map next to it
-			\end{itemize}
-				\item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-				\item \textbf{Missing Data:} there were few treated units that had one covariate missing
+              \end{tabular}
+            \end{center}
+          \end{table}
+          update this table to have the number of municipalities that received the intervention AND the main names.
+          Put the image of the intervention map next to it
+        \end{itemize}
+ 
+      \item \textbf{Unconfoundedness}: Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
+      \item \textbf{Missing Data:} there were few treated units that had one covariate missing
 				
-			\end{itemize}	
-				
-			
-			
-
-	 \end{block}
+      \end{itemize}	
+      
+      
+  \end{block}
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
         \begin{column}{\onecolwid}
 			      \begin{block}{Estimation}
@@ -191,27 +189,20 @@ Visualization and Causal Inference of the Mexican Drug War}
           \end{block}
         \end{column}
 \begin{column}{\onecolwid}
-      \begin{alertblock}{Others}
-        The ``alert'' block environment looks like this. It also has justified text, but it has a border and a light background to make it stand out. You can create one like so:
-        \begin{semiverbatim}
-          {\color{red}\\begin}\{{\color{blue}alertblock}\}\{Title\}\newline
-          \hskip1ex.......\newline
-          {\color{red}\\end}\{{\color{blue}alertblock}\}
-        \end{semiverbatim}
-      \end{alertblock}
+\begin{block}{Homicide rate in 2007}
+            \vspace{0.75in}
+            \begin{center}
+              \includegraphics[width=7.2in]{2007.png}
+            \end{center}
+          \end{block}        
         \end{column}
         \begin{column}{\onecolwid}
-          \setbeamercolor{block alerted title}{fg=black,bg=norange}	% frame color
-          \setbeamercolor{block alerted body}{fg=black,bg=white}		% body color
-          \begin{alertblock}{Alert Block Colours}
-            You can similarly modify the colours for alert blocks (but try not to overdo it):\\
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=black,bg=norange\}
-            \end{semiverbatim}
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
-            \end{semiverbatim}
-          \end{alertblock}        
+          \begin{block}{Homicide rate in 2010}
+            \vspace{0.75in}
+            \begin{center}
+              \includegraphics[width=7.2in]{2010.png}
+            \end{center}
+          \end{block}        
         %\end{column}
         %\begin{column}{\onecolwid}
           \begin{block}{Key References \& Data Source}
