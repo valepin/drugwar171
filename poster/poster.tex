@@ -148,14 +148,16 @@ Visualization and Causal Inference of the Mexican Drug War
         and
         $$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}=\overline{Y}(1)+\overline{Y}(0) .$$
         We know that $var(\hat{\tau})$ is largest under additivity of potenital outcomes. In that case  $var(\hat{\tau}) =var(\overline{Y}(1))+var(\overline{Y}(0)).$ We use that over estimate to get confidence intervals.% note that this is a case when we wouldn't want to be conservative!!!
-        Now, \begin{eqnarray*}
-          var(\hat{\overline{Y}}(0))&=&E(var(\hat{\overline{Y}}(0)|Y_i(0) \forall i))+var(E(\hat{\overline{Y}}(0)|Y_i(0) \forall i))
-          =E(\sum var(\hat{Y}_i(0))/I)+var(\sum_iY_i(0))/I\\
-          &=&E(\frac{\sum_{j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{1-\sum_{j,k}w^2_{ijk}})+var(Y(0))/I =\frac{\sum_{i,j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{I(1-\sum_{j,w}w^2_{ijk})})+S^2(0)/I.\\
-        \end{eqnarray*}
-        Now, $var(\hat{\overline{Y}}(1)) = S^2(1)/I$ because the all $Y_j(1)$ are observed.
+        % Now, \begin{eqnarray*}
+        %   var(\hat{\overline{Y}}(0))&=&E(var(\hat{\overline{Y}}(0)|Y_i(0) \forall i))+var(E(\hat{\overline{Y}}(0)|Y_i(0) \forall i))
+        %   =E(\sum var(\hat{Y}_i(0))/I)+var(\sum_iY_i(0))/I\\
+        %   &=&E(\frac{\sum_{j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{1-\sum_{j,k}w^2_{ijk}})+var(Y(0))/I =\frac{\sum_{i,j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{I(1-\sum_{j,w}w^2_{ijk})})+S^2(0)/I.\\
+        % \end{eqnarray*}
+        % Now, $var(\hat{\overline{Y}}(1)) = S^2(1)/I$ because the all $Y_j(1)$ are observed.
+We estimate the variance assuming $Y_i(x)\sim Pois(p_i(x)*Pop_i)$ for $x=0,1$. Hence $var(\overline{Y})$
+
       \end{block}
-      \begin{block}{ Visualization}	
+      \begin{block}{ Visualization \& Results}	
         
         \begin{columns}[t,totalwidth=\twocolwid]
           \begin{column}{\onecolwid}
@@ -225,21 +227,27 @@ Visualization and Causal Inference of the Mexican Drug War
 
       \begin{block}{Processing}
         Details about processing?
+        We're running out of room the left perhaps we can put Visualize the problem over here? OK
+      \end{block}
+
+      \begin{block}{Conclusions}
+        Details about processing?
         We're running out of room the left perhaps we can put Visualize the problem over here?
+      \end{block}
+
+      \begin{block}{Data Sources}
+       INEGI, CIDAC, Stratfor, Nexos
       \end{block}
 
       \begin{block}{Key References \& Data Source}
    
         \bibliographystyle{plain}
         \small{\begin{thebibliography}{99}
-          \bibitem{Abadie} Abadie  Synthetic Matching 
-          \bibitem{NEXOS} Escalante F, \emph{Homicidios 2008-2009 La muerte tiene permiso}
+          \bibitem{Abadie} Abadie, Diamond, Hainmueller  \emph{Synthetic Control Methods for Comparative Case Studies} (2009)
+          \bibitem{NEXOS} Escalante F, \emph{Homicidios 2008-2009 La muerte tiene permiso} (2011)
           \bibitem{ImbensRubin} Imbens G. \& Rubin D.R., (2012)
-          \bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects},
+          \bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects}(),
             % \bibitem{Valle} Diego Valle visualization
-          \bibitem{CIDAC} CIDAC
-          \bibitem{INEGI} INEGI
-          \bibitem{SMaps} Stratfor Maps
           \end{thebibliography}}
         
       \end{block}
