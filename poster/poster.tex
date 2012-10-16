@@ -32,6 +32,7 @@
 \usetheme{confposter}
 \usepackage{exscale}
 \usepackage{calc}
+\usepackage{caption}
 \usepackage{subfigure}
 
 %-----------------------------------------------------------
@@ -71,9 +72,8 @@
 
 \title{
 Visualization and Causal Inference of the Mexican Drug War
- \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
 }
-\author{Joseph Kelly}
+\author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
 \institute{Department of Statistics, Harvard University}
 
 
@@ -157,67 +157,77 @@ Visualization and Causal Inference of the Mexican Drug War
       \end{block}
       \begin{block}{ Visualization}	
         
-        \begin{figure}[htdp]
-          \centering												
-          \subfigure[Love plot - balance checks]{
-            \includegraphics[scale=1]{../Images/FinalLoveplot.pdf}
-          }
-          \hspace{1cm}
-          \subfigure[Interventions and SUTVA]{
-            \includegraphics[scale=0.85]{intervened.png}	
-          }
-          \hspace{1cm}
-          \subfigure[Results]{
-            \includegraphics[scale=1.1]{../Images/results.png}
-          }
-          \begin{minipage}[ht]{0.58\linewidth}
-            % \begin{table}[ht]
-            %   \begin{center}
-            \resizebox{15cm}{!}{
-              \begin{tabular}{llccc}
-                \hline
-                \textbf{unit}& \textbf{Region}& number of& Date of first & $Y_j(1)-Y_j(0)$ (SD) \\
-                && municipalities& intervention& \\
-                \hline
-                4&		  \textbf{Ju\'{a}rez} &  15 & 2009  & 192.99 (79.88) \\ 				
-                1&		  \textbf{Tijuana} &   5 & 2008 &20.49  (8.27)\\  
-                2&		  \textbf{Nogales} &   5 & 2008 & 11.41  (20.90) \\
-                10&	 	  \textbf{Te\'{u}l de Gonz\'{a}lez Ortega} &10 & 2009& 7.32  (4.99) \\
-                15&		\textbf{Celaya} &9 & 2009  & 6.74 (1.37) \\ 				
-                18&		\textbf{Acapulco} &35 & 2008  & 1.19  (0.77) \\    
-                5&		  \textbf{P\'{a}nuco} &  14 & 2007& 0.37  (0.24) \\
-                9&		  \textbf{Villa de Cos, Fresnillo}&  18 & 2008& -2.87  (0.34) \\				
-                6&		  \textbf{Reynosa} &  24 & 2008 &   -3.49  (1.48) \\
-                11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008& -4.10  (1.05)\\  
-                8&		  \textbf{Guadalupe} &  20 & 2009 & -4.27  (0.58) \\  
-                12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo}&27 & 2007  & -15.84  (0.74) \\ 
-                16&		\textbf{Apatzing\'{a}n} &10 & 2007  &-52.81  (5.97) \\ 
-                \hline
-                \hline 
-                &		 \textbf{$\hat{\tau}$}& 205& - &14.61 (23.14)\\
-                % \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
-                % \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
-                % \textbf{3} &  12 & 2010
-                \hline
-              \end{tabular}}
-            % \end{center}
-            % 		% \caption{}
-            % \label{tab1}
-            % \end{table}
-          \end{minipage}\hfill
-          
-        \end{figure}
+        \begin{columns}[t,totalwidth=\twocolwid]
+          \begin{column}{\onecolwid}
+            \begin{figure}[htdp]
+              \includegraphics[scale=1]{../Images/FinalLoveplot.pdf}
+              \caption*{Love plot - balance checks}
+            \end{figure}
+
+             \begin{figure}[htdp]
+               \includegraphics[scale=1.1]{../Images/results.png}
+              \caption*{Results}
+            \end{figure}
+          \end{column}
+
+          \begin{column}{\onecolwid}
+            \begin{figure}[htdp]
+              \includegraphics[scale=0.85]{intervened.png}
+              \caption*{Interventions and SUTVA}
+            \end{figure}
+            \vspace{2cm}
+            \begin{figure}[htdp]
+              {\raggedright
+              \begin{minipage}[ht]{0.58\linewidth}
+                \resizebox{25cm}{!}{
+                  \begin{tabular}{llccc}
+                    \hline
+                    \textbf{unit}& \textbf{Region}& number of& Date of first & $Y_j(1)-Y_j(0)$ (SD) \\
+                    && municipalities& intervention& \\
+                    \hline
+                    4&		  \textbf{Ju\'{a}rez} &  15 & 2009  & 192.99 (79.88) \\ 				
+                    1&		  \textbf{Tijuana} &   5 & 2008 &20.49  (8.27)\\  
+                    2&		  \textbf{Nogales} &   5 & 2008 & 11.41  (20.90) \\
+                    10&	 	  \textbf{Te\'{u}l de Gonz\'{a}lez Ortega} &10 & 2009& 7.32  (4.99) \\
+                    15&		\textbf{Celaya} &9 & 2009  & 6.74 (1.37) \\ 				
+                    18&		\textbf{Acapulco} &35 & 2008  & 1.19  (0.77) \\    
+                    5&		  \textbf{P\'{a}nuco} &  14 & 2007& 0.37  (0.24) \\
+                    9&		  \textbf{Villa de Cos, Fresnillo}&  18 & 2008& -2.87  (0.34) \\				
+                    6&		  \textbf{Reynosa} &  24 & 2008 &   -3.49  (1.48) \\
+                    11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008& -4.10  (1.05)\\  
+                    8&		  \textbf{Guadalupe} &  20 & 2009 & -4.27  (0.58) \\  
+                    12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo}&27 & 2007  & -15.84  (0.74) \\ 
+                    16&		\textbf{Apatzing\'{a}n} &10 & 2007  &-52.81  (5.97) \\ 
+                    \hline
+                    \hline 
+                    &		 \textbf{$\hat{\tau}$}& 205& - &14.61 (23.14)\\
+                    % \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
+                    % \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
+                    % \textbf{3} &  12 & 2010
+                    \hline
+                  \end{tabular}}
+              \end{minipage}\hfill
+            }
+              \caption*{Results}
+            \end{figure}
+          \end{column}
+        \end{columns}
       \end{block}
     \end{column}
 
+
     \begin{column}{\sepwid}\end{column}	
 
-  
-     % \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
 
     \begin{column}{\onecolwid}
       % \end{column}
       % \begin{column}{\onecolwid}
+
+      \begin{block}{Processing}
+        Details about processing?
+        We're running out of room the left perhaps we can put Visualize the problem over here?
+      \end{block}
+
       \begin{block}{Key References \& Data Source}
    
         \bibliographystyle{plain}
