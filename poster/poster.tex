@@ -87,28 +87,11 @@ Visualization and Causal Inference of the Mexican Drug War
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
       \vskip-3ex 
-      \begin{block}{Visualize the problem}
-        \begin{figure}[htdp]
-          \centering
-          \subfigure[2007]{
-            \includegraphics[scale=0.43]{2007.png}
-          }
-          \subfigure[2010]{
-            \includegraphics[scale=0.43]{2010.png}
-          }
-        \end{figure}
-	
-        % The presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. %We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities.
-        We attempt to answer whether \textbf{homicide rates increase significantly after a military intervention}.
-        % 
-        % There are many challenges involved in answering this question. Here, we attempt to point them out and a first try at answering this question. 
-%As any good observational study, which mimics a randomized experiment,
- 
-%The \emph{design} phase was completed without using the outcomes.
-		
-		
+      \begin{block}{Problem Description}
+        The presidency of Felipe Calder\'{o}n (2006-2012) has been characterized for the war against organized crime, raising many questions regarding security and violence. We attempt to visualize and analyze homicide rates at the municipality level, and link this to information obtained about the association of drug cartels to municipalities with goal to answer whether \textbf{homicide rates increase significantly after a military intervention}.
       \end{block}
-      \vskip0.5ex
+ \vskip0.5ex
+      
       \begin{block}{Estimand}
         Let $Y_i(1)$ denote the homicide rate change in region $i$ from 2006 to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention,  $W$, for the regions that were intervened ($W=1$), $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\displaystyle\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
         Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
@@ -117,19 +100,22 @@ Visualization and Causal Inference of the Mexican Drug War
 	However, $Y_i(0)$ and $Y_{ij}(0)$ are missing  $\forall i, j$.
       \end{block}
       \begin{block}{Key Assumptions}
+        {\small 
         \begin{itemize}
-        \item \textbf{SUTVA}
-          \begin{itemize}
-          \item \textbf{No hidden values of treatments} Broad definition of treatment: at least one municipality in the region received an intervention between 2007-2010, or not (\cite{NEXOS}). 
-          \item \textbf{No interference between units} Grouped close regions that received an intervention, and their neighboring municipalities to make the ``no interference'' assumption  more reasonable. %For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
-	%The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. 
-          \end{itemize}
-        \item \textbf{Unconfoundedness} We assume we have all covariates, \textbf{X}, such that given \textbf{X},  treatment assignment is independent of \textbf{Y}.
+          \item \textbf{SUTVA:No hidden values of treatments}\\
+            Broad definition of treatment: at least one municipality in the region received an intervention between 2007-2010, or not (\cite{NEXOS}).
+          \item \textbf{SUTVA:No interference between units} \\
+             Grouped close regions that received an intervention, and their neighboring municipalities to make the ``no interference'' assumption  more reasonable. %For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
+	%The last homicide rate that we have corresponds to 2010. That eliminated some of the interventions mentioned in the Nexos paper. }
+        \item \textbf{Unconfoundedness} \\
+           We assume we have all covariates, \textbf{X}, such that given \textbf{X},  treatment assignment is independent of \textbf{Y}.
           % Unfortunately we didn't get experts to guide most of our decisions. However, we did get to interact with a couple of them and made our covariate choices based on the information received and our understanding of the relevant information. 
           % Our covariates include: location, political party before Calder\'{o}n, income 2006, education and medical information at 2005, percentage of indigenous language speakers, 2006 homicide rate at the municipality level, and GDP, Homicide Rate and Population at the state level.
-        \item \textbf{Missing Data} One covariate had missing values. We exactly matched on missingness pattern and Political Party in municipality before Calder\'{o}n.
+        \item \textbf{Missing Data}\\
+           One covariate had missing values. We exactly matched on missingness pattern and Political Party in municipality before Calder\'{o}n. 
         \item \textbf{Appropriateness of response variable} We assume Y is an adequate measure of violence.	 %Perhaps other crimes should be included			
         \end{itemize}
+      }
       \end{block}
 
     \end{column}
@@ -224,10 +210,26 @@ We estimate the variance assuming the homicide rates have a Poisson distribution
       % \end{column}
       % \begin{column}{\onecolwid}
 
-      \begin{block}{Processing}
-        Details about processing?
-        We're running out of room the left perhaps we can put Visualize the problem over here? OK
+      \begin{block}{Visualization and Processing}
+        \begin{figure}[htdp]
+          \centering
+          \subfigure[2007]{
+            \includegraphics[scale=0.43]{2007.png}
+          }
+          \subfigure[2010]{
+            \includegraphics[scale=0.43]{2010.png}
+          }
+        \end{figure}
+	Processing is an open source programming language that allows the creation of dynamic graphics and tables. Due to the sheer size of the data we had collected the use of dynamic graphics ended up playing a significant role in how we would present the results of the analysis. Namely, the use of dynamic graphics allows:
+        \begin{itemize}
+          \item The user to navigate through some 2500 municipalities and view the homicide rate all within the same window via a map of Mexico.
+          \item The presentation of further information to the user such as cartel presence and homicide rate over time.
+          \item The presentation of matched municipalities and the corresponding causal effects for each region.
+        \end{itemize}
+		
       \end{block}
+
+    
 
       \begin{block}{Conclusions}
         Details about processing?
