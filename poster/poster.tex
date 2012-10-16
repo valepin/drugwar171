@@ -108,7 +108,7 @@ Visualization and Causal Inference of the Mexican Drug War
 		
 		
 		      \end{block}
-      \vskip1ex
+      \vskip0.5ex
       \begin{block}{Estimand}
  Let $Y_i(1)$ denote the homicide rate change in region $i$ from 2006 to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention,  $W$, for the regions that were intervened ($W=1$), $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{\displaystyle\sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
 Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
@@ -135,11 +135,11 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
     \end{column}
 
     \begin{column}{\sepwid}\end{column}			% empty spacer column
-    \begin{column}{\threecolwid}
+    \begin{column}{\twocolwid}
 				 \vskip-3ex 					  % create a three-column-wide column and then we will split it up later
-		\begin{block}{Estimation \& Visualization}
-			2213 municipalities were included in the initial control pool, and 13 regions (205 municipalities) were considered the treated units. 
-			Propensity score matching was used to identify a set of 5 control municipalities that look like each treated ones, and ultimately estimate $Y_{ij}(0)$ and $Y_i(0)$. 
+		\begin{block}{Estimation}
+			The control pool consists of 2213 municipalities. There are 13 treated regions considered (205 municipalities). 
+			Propensity score matching was used to identify 5 control municipalities that look like each treated ones, and estimate $Y_{ij}(0)$ and $Y_i(0)$. 
 			Let $M_{ij}$ be the number of municipalities matched to the $j$th municipality in region $i$, and $\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$ is the sum of their populations. Then,
 			$$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),\textrm{ where } v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$$
 			Therefore,
@@ -154,10 +154,11 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 			 	&=&E(\frac{\sum_{j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{1-\sum_{j,k}w^2_{ijk}})+var(Y(0))/I =\frac{\sum_{i,j,k}w_{ijk}(Y_{ijk}(0)-Y_i(0))^2}{I(1-\sum_{j,w}w^2_{ijk})})+S^2(0)/I.\\
 			\end{eqnarray*}
 			 	Now, $var(\hat{\overline{Y}}(1)) = S^2(1)/I$ because the all $Y_j(1)$ are observed.
+			\end{block}
+			\begin{block}{ Visualization}	
+				
 				\begin{figure}[htdp]
-				    \centering
-							
-					
+				    \centering												
 					\subfigure[Love plot - balance checks]{
 					    \includegraphics[scale=1]{../Images/FinalLoveplot.pdf}
 					}
@@ -169,6 +170,42 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 					\subfigure[Results]{
 					   	\includegraphics[scale=1.1]{../Images/results.png}
 					}
+					\begin{minipage}[ht]{0.58\linewidth}
+						% \begin{table}[ht]
+						% \begin{center}
+							\resizebox{15cm}{!}{
+						\begin{tabular}{llccc}
+						  \hline
+						 \textbf{unit}& \textbf{Region}& number of& Date of first & $Y_j(1)-Y_j(0)$ (SD) \\
+						 && municipalities& intervention& \\
+						  \hline
+						4&		  \textbf{Ju\'{a}rez} &  15 & 2009  & 192.99 (79.88) \\ 				
+						1&		  \textbf{Tijuana} &   5 & 2008 &20.49  (8.27)\\  
+						2&		  \textbf{Nogales} &   5 & 2008 & 11.41  (20.90) \\
+						10&	 	  \textbf{Te\'{u}l de Gonz\'{a}lez Ortega} &10 & 2009& 7.32  (4.99) \\
+						15&		\textbf{Celaya} &9 & 2009  & 6.74 (1.37) \\ 				
+						18&		\textbf{Acapulco} &35 & 2008  & 1.19  (0.77) \\    
+						5&		  \textbf{P\'{a}nuco} &  14 & 2007& 0.37  (0.24) \\
+						9&		  \textbf{Villa de Cos, Fresnillo}&  18 & 2008& -2.87  (0.34) \\				
+						6&		  \textbf{Reynosa} &  24 & 2008 &   -3.49  (1.48) \\
+						11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008& -4.10  (1.05)\\  
+						8&		  \textbf{Guadalupe} &  20 & 2009 & -4.27  (0.58) \\  
+						12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo}&27 & 2007  & -15.84  (0.74) \\ 
+						16&		\textbf{Apatzing\'{a}n} &10 & 2007  &-52.81  (5.97) \\ 
+						\hline
+						\hline 
+						&		 \textbf{$\hat{\tau}$}& 205& - &14.61 (23.14)\\
+							%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
+							% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
+							% \textbf{3} &  12 & 2010
+						\hline
+						\end{tabular}}
+						% \end{center}
+						% 		%\caption{}
+						% 		\label{tab1}
+						% 		\end{table}
+					 \end{minipage}\hfill
+					
 			\end{figure}
 			
 	
@@ -176,46 +213,7 @@ Let $N_i$ denote the number of municipalities that correspond to region $i$, the
 				
 	 \end{block}
       \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
-        \begin{column}{\onecolwid}
 
-          \setbeamercolor{block title}{fg=red,bg=white}%frame color
-          \setbeamercolor{block body}{fg=black,bg=white}%body color
-          \begin{block}{Results}
-				\begin{table}[ht]
-				\begin{center}
-					\resizebox{25cm}{!}{
-				\begin{tabular}{llccc}
-				  \hline
-				 \textbf{unit}& \textbf{Region}& number of& Date of first & $Y_j(1)-Y_j(0)$ (SD) \\
-				 && municipalities& intervention& \\
-				  \hline
-				4&		  \textbf{Ju\'{a}rez} &  15 & 2009  & 192.99 (79.88) \\ 				
-				1&		  \textbf{Tijuana} &   5 & 2008 &20.49  (8.27)\\  
-				2&		  \textbf{Nogales} &   5 & 2008 & 11.41  (20.90) \\
-				10&	 	  \textbf{Te\'{u}l de Gonz\'{a}lez Ortega} &10 & 2009& 7.32  (4.99) \\
-				15&		\textbf{Celaya} &9 & 2009  & 6.74 (1.37) \\ 				
-				18&		\textbf{Acapulco} &35 & 2008  & 1.19  (0.77) \\    
-				5&		  \textbf{P\'{a}nuco} &  14 & 2007& 0.37  (0.24) \\
-				9&		  \textbf{Villa de Cos, Fresnillo}&  18 & 2008& -2.87  (0.34) \\				
-				6&		  \textbf{Reynosa} &  24 & 2008 &   -3.49  (1.48) \\
-				11&		\textbf{Rinc\'{o}n de Romos} & 8 & 2008& -4.10  (1.05)\\  
-				8&		  \textbf{Guadalupe} &  20 & 2009 & -4.27  (0.58) \\  
-				12&		\textbf{Sinaloa, Badiraguato, Pueblo Nuevo}&27 & 2007  & -15.84  (0.74) \\ 
-				16&		\textbf{Apatzing\'{a}n} &10 & 2007  &-52.81  (5.97) \\ 
-				\hline
-				\hline 
-				&		 \textbf{$\hat{\tau}$}& 205& - &14.61 (23.14)\\
-					%   \textbf{7} &   5 & 2010* & \textbf{17} &6 & 2010* \\
-					% \textbf{13} &11 & 2010* &  \textbf{14} &9 & 2010* \\ 
-					% \textbf{3} &  12 & 2010
-				\hline
-				\end{tabular}}
-				\end{center}
-				%\caption{}
-				\label{tab1}
-				\end{table}
-          \end{block}
-        \end{column}
 \begin{column}{\onecolwid}
         %\end{column}
         %\begin{column}{\onecolwid}

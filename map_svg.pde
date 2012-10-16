@@ -156,11 +156,19 @@ void drawfullJ() {
 	  //println(cartelTable.getInt(7,7));
 	  // modified to display the intervened municipalities
 	  if(dispInt){
-	      if(cartelTable.getInt(i+1,8)!=0){
+              // there must be a cleaner way to do this
+              int reg = cartelTable.getInt(i+1,8);
+	      if(reg!=0){
 		  if(cartelTable.getInt(i+1,7)==1)
-		      fill(#FF0000);
-		  else 
-		      fill(#FF0000,100);
+                      if(reg!=3 && reg!=7 && reg!=13 && reg!=14 & reg!=17)
+		        fill(#FF0000);
+                      else
+                        fill(#000000);
+		  else
+                      if(reg!=3 && reg!=7 && reg!=13 && reg!=14 & reg!=17)
+		        fill(#FF0000,100);
+                      else
+                        fill(#000000,100);          
 	      }else{
 		  fill(#FFFFFF);
 	      }

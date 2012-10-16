@@ -194,13 +194,13 @@ void find() {
   if(comaPos > 0)
   {
     theMun = MSinf.substring(0,comaPos-1);
-    println(theMun);
+    //println(theMun);
     theState = MSinf.substring(comaPos+2);  
-    println(theState);
+    //println(theState);
   }else
  {
    theMun = MSinf;
-   println("All input taken as municipality name. The last match found will be selected. Include ',' between Municipality and State if that's notthe case.");
+   //println("All input taken as municipality name. The last match found will be selected. Include ',' between Municipality and State if that's notthe case.");
    noStateflag = true;
  } 
   //println("a textfield event for controller 'Municipality': "+theMun);
@@ -371,7 +371,7 @@ void drawGridlines () {
     {
       if(dispInt)
       {  //println(results.getDataAt(n-1,0));
-         verticalText(results.getDataAt(n-1,0), -(plot_y2+25), x+5); 
+         verticalText(results.getDataAt(n-1,0), -(plot_y2+42), x+5); 
       }else
      { 
         verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
@@ -949,6 +949,7 @@ void resultsplot(int mun){
   
   strokeWeight(1);
  
+  state = floor(popul.getFloatAt(selectedMuni,0)/1000)-1;
   
   /*
   | Start Drawing here.
@@ -987,7 +988,7 @@ void resultsplot(int mun){
   Minim=-70;
 
   rMuni = ppartycMun.getFloatAt(mun,8);
-    println(rMuni);
+    //println(rMuni);
   // plot datapoints
 
   for (i = 0; i < effects.length; i++) {
@@ -997,7 +998,7 @@ void resultsplot(int mun){
     ub = map(effects[i]+1.96*stdev[i], Minim, Maxim, plot_y2, plot_y1);
    //if(datapoints[i][0]>=xlims[0] && datapoints[i][0]<=xlims[1] && datapoints[i][1]>=ylims[0] && datapoints[i][1]<=ylims[1]){
 
-      println(results.getFloatAt(i,8));
+      //println(results.getFloatAt(i,8));
       if(results.getFloatAt(i,8) == rMuni)
       {
         stroke(#008000);
@@ -1007,7 +1008,7 @@ void resultsplot(int mun){
         fill( #B22222);
         stroke(#B22222);  
       } 
-      ellipse(x,y,5,5);
+      ellipse(x,y,7,7);
       line(x,lb,x,ub);
    // }
   }
@@ -1016,6 +1017,13 @@ void resultsplot(int mun){
 //  println(results.getFloatAt(13,6));
   stroke(#FA8080);
   y =  map(results.getFloatAt(13,6), Minim, Maxim, plot_y2, plot_y1);
+  lb = map(results.getFloatAt(13,6)-1.96*results.getFloatAt(13,7), Minim, Maxim, plot_y2, plot_y1);
+  ub = map(results.getFloatAt(13,6)+1.96*results.getFloatAt(13,7), Minim, Maxim, plot_y2, plot_y1);
+  line(plot_x1,y,plot_x2,y);
+  strokeWeight(0.5);
+  line(plot_x1,lb,plot_x2,lb);
+  line(plot_x1,ub,plot_x2,ub);
+  strokeWeight(1);
   line(plot_x1,y,plot_x2,y);
     y =  map(0, Minim, Maxim, plot_y2, plot_y1);
     stroke(bg_color);
