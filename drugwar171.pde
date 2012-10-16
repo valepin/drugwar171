@@ -34,7 +34,7 @@ void draw() {
   drawJ();
   if(dispInt){
     resultsplot(selectedMuni);
-    loveplot();
+    //loveplot();
   }else{
     drawV();
   }

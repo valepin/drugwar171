@@ -399,6 +399,7 @@ Date<-unlist(intUnitInfo)[names(unlist(intUnitInfo))=='Date'][-I2010]
 
  matches=matchesH
 # get rid of all the units that were eliminated for this process
+Hom<-Hom[,-grep("Criminal",names(Hom))]
 HomMod<-Hom[-gotT2010,]
 HomMod<-HomMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
 
@@ -415,9 +416,10 @@ varsNGv<-matrix(NA,length(regs),2)
 PjsG<-matrix(NA,length(regs),2)
 Pjs<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
+G<-rep(NA,dim(compfull)[1])
 # number of matches
 m<-5
-tracks<-c()
+
 for(i in 1:length(regs))
 {
     # get the
@@ -426,40 +428,34 @@ for(i in 1:length(regs))
     matchesR<-as.numeric(mH$match.matrix[as.numeric(rownames(mH$match.matrix)) %in% rowsR,])
     rowsMod<-c(rowsR,matchesR)
     #we add 1 because the homicide column is right after it 
-    colH<-grep(Date[i],names(HomMod))+1
+    colH<-grep(Date[i],names(HomMod))+4
     colP<-grep(Date[i],names(PopMod))+1
     cat("i=",i," colH=", colH," colP=",colP,"\n")
+    # get the response
     Y[rowsMod]<-HomMod[rowsMod,colH]/PopMod[rowsMod,colP]
+    G[rowsMod]<-HomMod[rowsMod,colH]/PopMod[rowsMod,colP]-HomMod[rowsMod,colH-6]/PopMod[rowsMod,colP-2]
+    # get the post treatment homicide rate estimates
     pj1<-sum(Ws[rowsR]*Y[rowsR])
     pj0<-sum(WsTilde[matchesR]*Y[matchesR])
     effects[i]<-(pj1-pj0)*100000
-    effectsD[i]<-(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))-
-        sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000)))*100000
-    PjsG[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000,sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000)    
-    Pjs[i,]<-c(sum(Ws[rowsR]*(Y[rowsR])*100000,sum(WsTilde[matchesR]*(Y[matchesR])*100000)    
-    
-    # pij0<-rep(NA,m)
-    # nij0<-rep(NA,m)
-    # for(j in 1:(length(matchesR)/5))
-    # {
-    #     pointer<-matchesR[((j-1)*5+1):(j*5)]
-    #     pij0[j]<-sum(Vs[pointer]*Y[pointer])
-    #     nij0[j]<-sum(PopMod[pointer,colP])
-    # }
-    varsB[i,]<-c(pj1*(1-pj1)/sum(PopMod[rowsR,colP])*100000^2,
-        pj0*(1-pj0)/sum(PopMod[rowsR,colP])*100000^2)
-        #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))pj0
-    # varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
-    #     var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))
-    # varsNG[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
-    #               var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))    
+    Pjs[i,]<-c(sum(Ws[rowsR]*Y[rowsR])*100000,sum(WsTilde[matchesR]*Y[matchesR])*100000)    
+    # get the post-pre treatment homicide rate estimates    
+    effectsD[i]<-(sum(Ws[rowsR]*G[rowsR])-sum(WsTilde[matchesR]*G[matchesR]))*100000
+    PjsG[i,]<-c(sum(Ws[rowsR]*G[rowsR])*100000,sum(WsTilde[matchesR]*G[matchesR])*100000)    
+    #    
+    varsB[i,]<-c(pj1/sum(PopMod[rowsR,colP])*100000^2,
+        pj0/sum(PopMod[rowsR,colP])*100000^2)
+    varsN[i,]<-c(sum(Ws[rowsR]*Y[rowsR]^2)*100000^2/(1-sum(Ws[rowsR]^2)),
+        sum(WsTilde[matchesR]*Y[matchesR]^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))
+    varsNG[i,]<-c(sum(Ws[rowsR]*(G[rowsR]-PjsG[i,1])^2)*100000^2/(1-sum(Ws[rowsR]^2)),
+                   sum(WsTilde[matchesR]*(G[matchesR]-PjsG[i,2])^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))    
     varsN[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-pj1)^2)*100000^2/(1-sum(Ws[rowsR]^2)),
                sum(WsTilde[matchesR]*(Y[matchesR]-pj0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))                   
    m1<-mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))
    m0<-mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))
-    varsNGv[i,]<-c(0,sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))  
-    varsNG[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[matchesR]/100000-m1)^2)*100000^2/(1-sum(Ws[rowsR]^2),
-            sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))           
+    # varsNGv[i,]<-c(0,sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))  
+    # varsNG[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[matchesR]/100000-m1)^2)*100000^2/(1-sum(Ws[rowsR]^2),
+    #         sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))           
 }
 #varsN[,1]<-0#var(Y[treated==1]*100000)
 Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsNG,1,sum)))
@@ -491,9 +487,9 @@ ResAv<-c(250,0, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),
 Results<-rbind(Results, ResAv)
 
 Res<-read.delim("data/Results.tsv", header = TRUE, sep = "\t")
-Results<-data.frame(Res[,1],Results,Res[,9])
-Results[-14,2:8]<-(Res[,1],Results,Res[,9])
-write(t(Results),file="Results.tsv",ncolumns=9,sep="\t")
+Results<-Results[c(order(Results[-14,6],decreasing=T),14),]
+output<-data.frame(Res[,1],rownames(Results), Results[,c(1,2,6,4)])
+write(t(output),file="Results.tsv",ncolumns=6,sep="\t")
 
 #### get the plot of the effect
 

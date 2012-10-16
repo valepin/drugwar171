@@ -371,7 +371,7 @@ void drawGridlines () {
     {
       if(dispInt)
       {  //println(results.getDataAt(n-1,0));
-         verticalText(results.getDataAt(n-1,0), -(plot_y2+42), x+5); 
+         verticalText(results.getDataAt(n-1,0), -(plot_y2+45), x+5); 
       }else
      { 
         verticalText(nf(years[n-1],0), -(plot_y2+15), x+5);
@@ -977,15 +977,15 @@ void resultsplot(int mun){
   for (i = 0; i < nReg; i++) {
   //estimated effect
   //println(results.getFloatAt(i,6));
-  effects[i] =   results.getFloatAt(i,6);
+  effects[i] =   results.getFloatAt(i,4);
     //estimated sd
     // println(results.getFloatAt(i,7));
-    stdev[i] =   results.getFloatAt(i,7);
+    stdev[i] =   results.getFloatAt(i,5);
   }
   
   // this should use max and min functions, but they weren't working so I put them in manually
-  Maxim=370;
-  Minim=-70;
+  Maxim=160;
+  Minim=-40;
 
   rMuni = ppartycMun.getFloatAt(mun,8);
     //println(rMuni);
@@ -999,7 +999,7 @@ void resultsplot(int mun){
    //if(datapoints[i][0]>=xlims[0] && datapoints[i][0]<=xlims[1] && datapoints[i][1]>=ylims[0] && datapoints[i][1]<=ylims[1]){
 
       //println(results.getFloatAt(i,8));
-      if(results.getFloatAt(i,8) == rMuni)
+      if(results.getFloatAt(i,1) == rMuni)
       {
         stroke(#008000);
          fill(#008000);
@@ -1008,7 +1008,7 @@ void resultsplot(int mun){
         fill( #B22222);
         stroke(#B22222);  
       } 
-      ellipse(x,y,7,7);
+      ellipse(x,y,5,5);
       line(x,lb,x,ub);
    // }
   }
@@ -1016,13 +1016,15 @@ void resultsplot(int mun){
   //draw the average
 //  println(results.getFloatAt(13,6));
   stroke(#FA8080);
-  y =  map(results.getFloatAt(13,6), Minim, Maxim, plot_y2, plot_y1);
-  lb = map(results.getFloatAt(13,6)-1.96*results.getFloatAt(13,7), Minim, Maxim, plot_y2, plot_y1);
-  ub = map(results.getFloatAt(13,6)+1.96*results.getFloatAt(13,7), Minim, Maxim, plot_y2, plot_y1);
+  y =  map(results.getFloatAt(13,4), Minim, Maxim, plot_y2, plot_y1);
   line(plot_x1,y,plot_x2,y);
-  strokeWeight(0.5);
-  line(plot_x1,lb,plot_x2,lb);
-  line(plot_x1,ub,plot_x2,ub);
+  //and the bound
+//  lb = map(results.getFloatAt(13,4)-1.96*results.getFloatAt(13,5), Minim, Maxim, plot_y2, plot_y1);
+//  ub = map(results.getFloatAt(13,4)+1.96*results.getFloatAt(13,5), Minim, Maxim, plot_y2, plot_y1);
+//
+//  strokeWeight(0.5);
+//  line(plot_x1,lb,plot_x2,lb);
+//  line(plot_x1,ub,plot_x2,ub);
   strokeWeight(1);
   line(plot_x1,y,plot_x2,y);
     y =  map(0, Minim, Maxim, plot_y2, plot_y1);
