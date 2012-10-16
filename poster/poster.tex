@@ -1,3 +1,4 @@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LaTeX poster template
 % Created by Nathaniel Johnston
@@ -8,14 +9,7 @@
 \documentclass[final]{beamer}
 \usepackage[scale=1.24]{beamerposter}
 \usepackage{graphicx}			% allows us to import images
-\usepackage{bbm,amssymb,mathrsfs}
-%\usepackage{natbib}
-\usepackage{graphicx,psfrag,dcolumn,amsmath,bm,color}
-\usepackage{amssymb}
-\usepackage{exscale}
-\usepackage{textpos}
-%\usepackage{caption}
-\usepackage{subfigure}
+
 %-----------------------------------------------------------
 % Define the column width and poster size
 % To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
@@ -30,13 +24,15 @@
 \newlength{\threecolwid}
 \setlength{\paperwidth}{48in}
 \setlength{\paperheight}{36in}
-\setlength{\sepwid}{0.020\paperwidth}
+\setlength{\sepwid}{0.024\paperwidth}
 \setlength{\onecolwid}{0.22\paperwidth}
 \setlength{\twocolwid}{0.464\paperwidth}
 \setlength{\threecolwid}{0.708\paperwidth}
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
 \usepackage{exscale}
+\usepackage{calc}
+\usepackage{subfigure}
 
 %-----------------------------------------------------------
 % The next part fixes a problem with figure numbering. Thanks Nishan!
@@ -66,11 +62,19 @@
 % Name and authors of poster/paper/research
 %-----------------------------------------------------------
 
-\title{\begin{textblock}{1}(0,-0.1)
-\includegraphics[scale=1]{RevisedPlainLogo.jpg}
-\end{textblock}Visualization and Causal Inference of the Mexican Drug War}
-\author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
-\institute{Statistics Department, Harvard University}%\\[\medskipamount]
+% \title{\begin{textblock}{1}(0,-0.1)
+% \includegraphics[scale=1]{RevisedPlainLogo.jpg}
+% \end{textblock}Visualization and Causal Inference of the Mexican Drug War}
+% \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
+% \institute{Statistics Department, Harvard University}%\\[\medskipamount]
+
+
+\title{
+Visualization and Causal Inference of the Mexican Drug War
+ \author{Valeria Espinosa and Joseph Kelly \vskip0.5ex \small{vespinos@fas.harvard.edu, kelly2@fas.harvard.edu}}
+}
+\author{Joseph Kelly}
+\institute{Department of Statistics, Harvard University}
 
 
 %-----------------------------------------------------------
