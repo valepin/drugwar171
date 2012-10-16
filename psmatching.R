@@ -225,7 +225,7 @@ clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
 names(compfull)[16] = "missIndDocsPerUnit"
 
-check the balance on the other covariates (histograms and love plots)
+#check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
 
 TreatCov<-compfull[treated==1,]
@@ -285,6 +285,7 @@ Vs<-c()
 #postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
 #Mtching based only on Homicide Rate and higher order terms that involve it
+source("balanceFunctions.R")
 fmla <- as.formula(paste("treated ~ Hom06+",paste("Hom06:",names(compfull), collapse= "+")))
 mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
 
@@ -305,6 +306,12 @@ for(i in 1:length(clavetreated)){
   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
 }
 names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
+
+lpMat<-list(Init,postMatchHR)
+pdf("Images/FinalLoveplot.pdf")
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
+dev.off()
+}
 
 ##create loveplots
 for(i in 1:length(matchframe$clave)){
@@ -338,7 +345,7 @@ for(i in 1:length(matchframe$clave)){
 ### hist test
 
 
-TreatMat <-compfull[treated==1 & ,]
+TreatMat <-compfull[treated==1,]
 ContMat<-compfull[treated==0,]
 
 histCheck(compfull[treated==1,],compfull[treated==0,],1:6)
