@@ -52,11 +52,11 @@ loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
     colors=c("black","gray","royalblue","coral2","darkorchid")
     types=25:21
     par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1)) 
-    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.2, 
+    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=2.5, 
     main=ifelse(cont,"t statistics for differences in continuous variables","mean differences in binary variables"),xlim=xlims)
     for(i in 2:length(MatPlot))
     {
-        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.2)
+        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=2.5)
     }
  
     axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1)
