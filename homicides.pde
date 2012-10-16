@@ -337,7 +337,7 @@ void drawGridlines () {
   {
     xrange =15;
      steps = 14;
-     yrange = 370-(-70);
+     yrange = 200;
   }else
   {
     steps=22;
@@ -392,7 +392,7 @@ void drawGridlines () {
     textSize(10);
           if(dispInt)
       {  //println(results.getDataAt(n-1,0));
-         text(String.format("%.2f",-70+(n * yrange)/stepsy), plot_x1-20,y);
+         text(String.format("%.2f",-40+(n * yrange)/stepsy), plot_x1-20,y);
       }else
      { 
         text(String.format("%.2f",ylims[0]+(n * yrange)/stepsy), plot_x1-20,y);
