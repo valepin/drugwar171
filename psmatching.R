@@ -403,7 +403,10 @@ effectsD<-rep(NA,length(regs))
 varsB<-matrix(NA,length(regs),2)
 varsN<-matrix(NA,length(regs),2)
 varsNG<-matrix(NA,length(regs),2)
+varsNGv<-matrix(NA,length(regs),2)
+varsNGv<-matrix(NA,length(regs),2)
 PjsG<-matrix(NA,length(regs),2)
+Pjs<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
 # number of matches
 m<-5
@@ -423,9 +426,11 @@ for(i in 1:length(regs))
     pj1<-sum(Ws[rowsR]*Y[rowsR])
     pj0<-sum(WsTilde[matchesR]*Y[matchesR])
     effects[i]<-(pj1-pj0)*100000
-    effectsD[i]<-(mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))-
-        mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000)))*100000
-    PjsG[i,]<-c(mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000,mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000    
+    effectsD[i]<-(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))-
+        sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000)))*100000
+    PjsG[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000,sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000)    
+    Pjs[i,]<-c(sum(Ws[rowsR]*(Y[rowsR])*100000,sum(WsTilde[matchesR]*(Y[matchesR])*100000)    
+    
     # pij0<-rep(NA,m)
     # nij0<-rep(NA,m)
     # for(j in 1:(length(matchesR)/5))
@@ -436,16 +441,18 @@ for(i in 1:length(regs))
     # }
     varsB[i,]<-c(pj1*(1-pj1)/sum(PopMod[rowsR,colP])*100000^2,
         pj0*(1-pj0)/sum(PopMod[rowsR,colP])*100000^2)
-        #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))
+        #sum(Ws[rowsR]^2*pij0*(1-pij0))*100000^2/sum(nij0))pj0
     # varsN[i,]<-c(var(Ws[rowsR]*Y[rowsR])*100000^2/(1-sum(Ws[rowsR]^2)),
     #     var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))
     # varsNG[i,]<-c(var(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))*100000^2/(1-sum(Ws[rowsR]^2)),
     #               var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-    varsN[i,]<-c(var(Ws[rowsR]*(Y[rowsR]))*100000^2/(1-sum(Ws[rowsR]^2)),
-               var(WsTilde[matchesR]*Y[matchesR])*100000^2/(1-sum(WsTilde[matchesR]^2)))    
+    varsN[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-pj1)^2)*100000^2/(1-sum(Ws[rowsR]^2)),
+               sum(WsTilde[matchesR]*(Y[matchesR]-pj0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))                   
    m1<-mean(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[rowsR]/100000))
    m0<-mean(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000))
-    varsNG[i,]<-c(0,var(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))           
+    varsNGv[i,]<-c(0,sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))  
+    varsNG[i,]<-c(sum(Ws[rowsR]*(Y[rowsR]-compfull$Hom06[matchesR]/100000-m1)^2)*100000^2/(1-sum(Ws[rowsR]^2),
+            sum(WsTilde[matchesR]*(Y[matchesR]-compfull$Hom06[matchesR]/100000-m0)^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))           
 }
 #varsN[,1]<-0#var(Y[treated==1]*100000)
 Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),effectsD,sqrt(apply(varsNG,1,sum)))
@@ -466,7 +473,7 @@ VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2
  var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsN[,2]))
  # VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
  #  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsNG[,2]))
-  VNG<-c(var(PjsG[,1])/length(effectsD),
+  VNG<-c(var(PjsG[,1])/length(effectsD)+mean(varsNG[,1]),
    var(PjsG[,2])/length(effectsD)+mean(varsNG[,2]))
 VB<-apply(varsB,2,sum)/13^2
 
