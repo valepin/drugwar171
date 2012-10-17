@@ -245,7 +245,7 @@ difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 ####
 
-
+source("balanceFunctions.R")
 Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,rep(1,sum(treated==0)))
 Vs<-c()
@@ -326,8 +326,8 @@ for(i in 1:length(matchframe$clave)){
   ##calc region statistics. 
   region.index <- matchframe$region[i] #Super inefficient but too tired to care
   regsub <- subset(compfull,Regions==region.index)
-  treatsub <- matchframe[matchframe$region==reg,]$clave
-  matchsub <- unlist(matchframe[matchframe$region==reg,c(paste("match",1:5,sep=""))])
+  treatsub <- matchframe[matchframe$region==region.index,]$clave
+  matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:5,sep=""))])
   reg.treat.cov <-  compfull[clave%in%treatsub,]
   reg.control.cov <-  compfull[clave%in%matchsub,]
 ##TODO weights are not correct
@@ -335,13 +335,14 @@ for(i in 1:length(matchframe$clave)){
 
   ##loveplot
   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=270,height=270)
+#png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
   dev.off()
 }
 ### hist test
 
-
+source("balanceFunctions.R")
 ### hist test
 
 
