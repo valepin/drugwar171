@@ -311,6 +311,10 @@ lpMat<-list(Init,postMatchHR)
 pdf("Images/FinalLoveplot.pdf")
 loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 dev.off()
+
+png("Images/MEloveplot.png",width=500,height=350)
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
+dev.off()
 }
 
 ##create loveplots
@@ -335,7 +339,7 @@ for(i in 1:length(matchframe$clave)){
 
   ##loveplot
   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=270,height=270)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
 #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
   dev.off()
