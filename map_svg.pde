@@ -265,27 +265,37 @@ void drawJ() {
 	selectedregion = cartelTable.getInt(i+1,8);
         selectedMuni = i;
         hoverMuni = true;
+
+	//loveplot
+	if(dispInt){
+	    if(cartelTable.getInt(i+1,8)!=0){
+		String muniname = ""+ Integer.parseInt(split(municClave[i],'_')[1]);
+		lovefn = "Images/loveplot" + muniname + ".png";
+	    }else{
+		lovefn = "Images/MEloveplot.png";
+	    }
+	}
+
 	if(dispInt & cartelTable.getInt(i+1,7)==1){
 	    fill(#32CD32);
 	    // loveplot(lovefn);
-	}else{
-	    lovefn = "Images/MEloveplot.png";
+	}else{   
 	    fill(highlightJ);
 	}
 	munic.draw();
 	oldMuni = i;
-      }else{
-	  if(dispInt){
-	      if(region == selectedregion & cartelTable.getInt(i+1,8)!=0){
+      // }else{
+      // 	  if(dispInt){
+      // 	      if(region == selectedregion & cartelTable.getInt(i+1,8)!=0){
 		 
-		  String muniname = ""+ Integer.parseInt(split(municClave[i],'_')[1]);
-		  lovefn = "Images/loveplot" + muniname + ".png";
-		  fill(#008000);
-		  munic.draw();
-		  oldMuni = i;
-		  fill(#FFFFFF);
-	      }
-	  }
+      // 		  String muniname = ""+ Integer.parseInt(split(municClave[i],'_')[1]);
+      // 		  lovefn = "Images/loveplot" + muniname + ".png";
+      // 		  fill(#008000);
+      // 		  munic.draw();
+      // 		  oldMuni = i;
+      // 		  fill(#FFFFFF);
+      // 	      }
+      // 	  }
 	  //drawfullJ();
 	  // oldMuni = i;
       }
