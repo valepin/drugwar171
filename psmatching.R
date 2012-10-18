@@ -312,6 +312,7 @@ pdf("Images/FinalLoveplot.pdf")
 loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 dev.off()
 
+source("balanceFunctions.R")
 png("Images/MEloveplot.png",width=500,height=350)
 loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 dev.off()
@@ -325,7 +326,7 @@ for(i in 1:length(matchframe$clave)){
   reg.treat.cov <-  compfull[clave%in%treatsub,]
   reg.control.cov <-  compfull[clave%in%matchsub,]
   ##TODO weights are not correct
-  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
+  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
 
   ##calc region statistics. 
   region.index <- matchframe$region[i] #Super inefficient but too tired to care
