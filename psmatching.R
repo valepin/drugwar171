@@ -3,7 +3,7 @@
 library(xtable)
 library(MatchIt)
 library(mice)
-#source("balanceFunctions.R")
+source("balanceFunctions.R")
 # read in the tsv's at the municipality level
 Educ<- read.delim("data/MunEducation.tsv", header = TRUE, sep = "\t")
 cartInt<- read.delim("data/CartelIncomeExpensesByMunicipality.tsv", header = TRUE, sep = "\t")
@@ -285,7 +285,7 @@ Vs<-c()
 #postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
 #Mtching based only on Homicide Rate and higher order terms that involve it
-source("balanceFunctions.R")
+
 fmla <- as.formula(paste("treated ~ Hom06+",paste("Hom06:",names(compfull), collapse= "+")))
 mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
 
@@ -400,7 +400,7 @@ Date<-unlist(intUnitInfo)[names(unlist(intUnitInfo))=='Date'][-I2010]
  matches=matchesH
 # get rid of all the units that were eliminated for this process
 Hom<-Hom[,-grep("Criminal",names(Hom))]
-HomMod<-Hom[-gotT2010,]
+HomMod<-HomMod[-gotT2010,]
 HomMod<-HomMod[(missind[,4]!=TRUE & missind[,5]!=TRUE),]
 
 PopMod<-Pop[-gotT2010,]
@@ -488,7 +488,7 @@ Results<-rbind(Results, ResAv)
 
 Res<-read.delim("data/Results.tsv", header = TRUE, sep = "\t")
 Results<-Results[c(order(Results[-14,6],decreasing=T),14),]
-output<-data.frame(Res[,1],rownames(Results), Results[,c(1,2,6,4)])
+output<-data.frame(Res[c(order(Results[-14,6],decreasing=T),14),1],rownames(Results), Results[,c(1,2,6,4)])
 write(t(output),file="Results.tsv",ncolumns=6,sep="\t")
 
 #### get the plot of the effect
