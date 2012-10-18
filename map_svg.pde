@@ -19,6 +19,7 @@ int municCount;
 int[] colorScheme = {50, 153, 0, 255};
 //int[] colorScheme = { 255, 255, 0, 50};
 String[] municClave;
+String lovefn ="Images/MEloveplot.png";
 char[] municCartel;
 char[] municCartel2007J;
 char[] municCartel2010J;
@@ -264,22 +265,37 @@ void drawJ() {
 	selectedregion = cartelTable.getInt(i+1,8);
         selectedMuni = i;
         hoverMuni = true;
+
+	//loveplot
+	if(dispInt){
+	    if(cartelTable.getInt(i+1,8)!=0){
+		String muniname = ""+ Integer.parseInt(split(municClave[i],'_')[1]);
+		lovefn = "Images/loveplot" + muniname + ".png";
+	    }else{
+		lovefn = "Images/MEloveplot.png";
+	    }
+	}
+
 	if(dispInt & cartelTable.getInt(i+1,7)==1){
 	    fill(#32CD32);
-	}else{
+	    // loveplot(lovefn);
+	}else{   
 	    fill(highlightJ);
 	}
 	munic.draw();
 	oldMuni = i;
-      }else{
-	  if(dispInt){
-	      if(region == selectedregion & cartelTable.getInt(i+1,8)!=0){
-		  fill(#008000);
-		  munic.draw();
-		  oldMuni = i;
-		  fill(#FFFFFF);
-	      }
-	  }
+      // }else{
+      // 	  if(dispInt){
+      // 	      if(region == selectedregion & cartelTable.getInt(i+1,8)!=0){
+		 
+      // 		  String muniname = ""+ Integer.parseInt(split(municClave[i],'_')[1]);
+      // 		  lovefn = "Images/loveplot" + muniname + ".png";
+      // 		  fill(#008000);
+      // 		  munic.draw();
+      // 		  oldMuni = i;
+      // 		  fill(#FFFFFF);
+      // 	      }
+      // 	  }
 	  //drawfullJ();
 	  // oldMuni = i;
       }
@@ -296,6 +312,7 @@ void drawJ() {
   //draw buttons
   //translate(xx, -joeyHeight/1.3+yy);
   translate(-mapWidth/2+xx, -mapHeight/2+yy);
+  
   
   //draw background for widget
   fill(colorScheme[0]);
@@ -499,8 +516,7 @@ void keyReleased(){
   }
 }
 
-void loveplot(){
-  String fn = "Images/MEloveplot.png";
+void loveplot(String fn){
   PImage locImage = loadImage(fn);
   image(locImage,joeyWidth,valeriaHeight);
 }

@@ -245,7 +245,7 @@ difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 ####
 
-
+source("balanceFunctions.R")
 Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,rep(1,sum(treated==0)))
 Vs<-c()
@@ -311,6 +311,11 @@ lpMat<-list(Init,postMatchHR)
 pdf("Images/FinalLoveplot.pdf")
 loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 dev.off()
+
+source("balanceFunctions.R")
+png("Images/MEloveplot.png",width=500,height=350)
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
+dev.off()
 }
 
 ##create loveplots
@@ -321,13 +326,13 @@ for(i in 1:length(matchframe$clave)){
   reg.treat.cov <-  compfull[clave%in%treatsub,]
   reg.control.cov <-  compfull[clave%in%matchsub,]
   ##TODO weights are not correct
-  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
+  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
 
   ##calc region statistics. 
   region.index <- matchframe$region[i] #Super inefficient but too tired to care
   regsub <- subset(compfull,Regions==region.index)
-  treatsub <- matchframe[matchframe$region==reg,]$clave
-  matchsub <- unlist(matchframe[matchframe$region==reg,c(paste("match",1:5,sep=""))])
+  treatsub <- matchframe[matchframe$region==region.index,]$clave
+  matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:5,sep=""))])
   reg.treat.cov <-  compfull[clave%in%treatsub,]
   reg.control.cov <-  compfull[clave%in%matchsub,]
 ##TODO weights are not correct
@@ -335,13 +340,14 @@ for(i in 1:length(matchframe$clave)){
 
   ##loveplot
   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
+#png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
   dev.off()
 }
 ### hist test
 
-
+source("balanceFunctions.R")
 ### hist test
 
 

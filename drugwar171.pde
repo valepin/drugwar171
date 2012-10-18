@@ -34,7 +34,8 @@ void draw() {
   drawJ();
   if(dispInt){
     resultsplot(selectedMuni);
-    //loveplot();
+    //   loveplot("Images/MEloveplot.png");
+    loveplot(lovefn);
   }else{
     drawV();
   }
