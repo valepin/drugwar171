@@ -517,6 +517,9 @@ void keyReleased(){
 }
 
 void loveplot(String fn){
-  PImage locImage = loadImage(fn);
-  image(locImage,joeyWidth,valeriaHeight);
+    File f = new File(dataPath("")+"../"+fn);
+    if(f.exists()){
+	PImage locImage = loadImage(fn);
+	image(locImage,joeyWidth,valeriaHeight);
+    }
 }
