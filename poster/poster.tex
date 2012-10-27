@@ -132,7 +132,7 @@
         $$\hat{Y}_{i}(0) \quad =\quad \sum_{j=1}^{N_i}w_{ij}\hat{Y}_{ij}(0)\quad =\quad\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0)\quad =\quad
         \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0) \quad \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
         and
-        $$\hat{\tau}=\frac{\sum_j Y_j(1)}{J}-\frac{\sum_{j=1}^{J}\hat{Y}_j(0)}{J}=\overline{Y}(1)-\overline{Y}(0) .$$
+        $$\hat{\tau}=\frac{\sum_i^{I} Y_i(1)}{I}-\frac{\sum_{i=1}^{I}\hat{Y}_j(0)}{i}=\overline{Y}(1)-\overline{Y}(0) .$$
         We know that $var(\hat{\tau})\leq var(\overline{Y}(1))+var(\overline{Y}(0))$, and it achieves the bound under additivity of potential outcomes. We use that over estimate and assume the homicide rates have a Poisson distribution to get confidence intervals.% note that this is a case when we wouldn't want to be conservative!!!
         % Now, \begin{eqnarray*}
         %   var(\hat{\overline{Y}}(0))&=&E(var(\hat{\overline{Y}}(0)|Y_i(0) \forall i))+var(E(\hat{\overline{Y}}(0)|Y_i(0) \forall i))
@@ -161,7 +161,7 @@
 		\begin{columns}[t,totalwidth=\twocolwid]
 	          \begin{column}{\onecolwid}
 	            \begin{figure}[htdp]
-	              \includegraphics[scale=1.3]{../Images/results.png}
+	              \includegraphics[scale=0.9]{../Images/results.png}
 	              %\caption*{Results}
 	            \end{figure}
 	        \end{column}
@@ -177,19 +177,19 @@
 					\textbf{Region}& number of& Date of first & Regional causal & SD \\
                     & municipalities& intervention&  effect ($\hat{\tau_j}$)& \\ 
 					  \hline
-					 \textbf{Ju\'{a}rez}  & 15 & 2009 & 147.54 & 4.33 \\ 
-					 \textbf{Tijuana} & 5 & 2008 & 30.60 & 6.15 \\ 
-					   \textbf{Nogales} & 5 & 2008 & 21.18 & 1.84 \\ 
-					   \textbf{Te\'{u}l}  & 36 & 2008 & 19.89 & 1.85 \\
-					   \textbf{Celaya}  & 29 & 2007 & 11.31 & 1.37 \\ 
-					   \textbf{Acapulco}  & 20 & 2009 & 8.49 & 0.89 \\ 
-					   \textbf{P\'{a}nuco}  & 10 & 2009 & 4.15 & 5.10 \\ 
-					  \textbf{Villa de Cos}  & 22 & 2008 & 3.94 & 1.53 \\ 
-					   \textbf{Reynosa}  & 9 & 2009 & 3.34 & 1.36 \\ 
-					   \textbf{Rinc\'{o}n de Romos}  & 24 & 2008 & 0.47 & 1.14 \\ 
-					   \textbf{Guadalupe}  & 14 & 2007 & -3.32 & 1.02 \\ 
-					   \textbf{Sinaloa}  & 7 & 2008 & -10.14 & 3.32 \\ 
-					   \textbf{Apatzing\'{a}n} & 9 & 2007 & -25.78 & 3.38 \\
+					\textbf{Ju\'{a}rez} &  15 & 2009 & 147.54 & 4.33 \\ %& 4 
+					 \textbf{Nogales}  &   5 & 2008 & 30.60 & 6.15 \\ %& 2
+					  \textbf{Tijuana} &   5 & 2008 & 21.18 & 1.84 \\ %& 1 
+					  \textbf{Acapulco}   &  36 & 2008 & 19.89 & 1.85 \\ %& 18
+					\textbf{Sinaloa}  &  29 & 2007 & 11.31 & 1.37 \\ %& 12
+					  \textbf{Guadalupe}  &  20 & 2009 & 8.49 & 0.89 \\ %& 8
+					   \textbf{Te\'{u}l}&  10 & 2009 & 4.15 & 5.10 \\ % & 10 
+					 \textbf{Villa de Cos}  &  22 & 2008 & 3.94 & 1.53 \\ %& 9
+					    \textbf{Celaya} &   9 & 2009 & 3.34 & 1.36 \\ % & 15
+					   \textbf{Reynosa}  &  24 & 2008 & 0.47 & 1.14 \\ %& 6
+					   \textbf{P\'{a}nuco}  &  14 & 2007 & -3.32 & 1.02 \\ %& 5
+					   \textbf{Rinc\'{o}n de Romos}  &   7 & 2008 & -10.14 & 3.32 \\ %& 11
+					   \textbf{Apatzing\'{a}n}  &   9 & 2007 & -25.78 & 3.38 \\%& 16
 					\hline
 					\hline 
 					  $\quad \quad \hat{\tau}$  & 250 & - & 22.42 & 0.85 \\ 
@@ -212,7 +212,7 @@
       % \end{column}
       % \begin{column}{\onecolwid}
 \vskip-3ex
-      \begin{block}{Visualization and Processing}
+      \begin{block}{Processing}
         \begin{figure}[htdp]
           \centering
           \subfigure[2007]{
