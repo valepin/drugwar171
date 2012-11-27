@@ -93,16 +93,17 @@
       \end{block}
       
       \begin{block}{Estimand}
-        Let $Y_i(1)$ denote the homicide rate change in region $i$ from one year before to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention, for the regions that were intervened, $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{ \sum_{i=1}^{I} Y_i(1)-Y_i(0)}{I}.$$
+        Let $Y_i(1)$ denote the homicide rate change in region $i$ from one year before to one year after receiving a military intervention, and $Y_i(0)$ what it would have been if it hadn't received it (Rubin Causal Model). Our estimand is the average causal effect of the military intervention, for the regions that could be intervened, $$\tau=\overline{Y}(1)-\overline{Y}(0)=\frac{ \sum_{i=1}^{N} Y_i(1)-Y_i(0)}{N},$$
+where $N$ is the total number of such regions.
         Let $N_i$ denote the number of municipalities that correspond to region $i$, then 
 	$$Y_i(1) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(1) \textrm{ and } Y_i(0) = \sum_{j=1}^{N_i}w_{ij}Y_{ij}(0),$$	
 	$$\textrm{ where }  w_{ij}= \frac{\textrm{Pop}_{ij}}{\textrm{Pop}_{i}} \textrm{ and  }\textrm{Pop}_{i}= \sum_j^{N_i}\textrm{Pop}_{ij}.$$
-	However, $Y_i(0)$ and $Y_{ij}(0)$ are missing  $\forall i, j$.
+	%However, $Y_i(0)$ and $Y_{ij}(0)$ are missing  $\forall i, j$.
       \end{block}
       \begin{block}{Key Assumptions}
         {\small 
         \begin{itemize}
-          \item \textbf{SUTVA:No hidden values of treatments}\\
+          \item \textbf{SUTVA: No hidden values of treatments}\\
             Broad definition of treatment: at least one municipality in the region received an intervention between 2007-2010, or not (\cite{NEXOS}).
           \item \textbf{SUTVA:No interference between units} \\
              Grouped close regions that received an intervention, and their neighboring municipalities to make the ``no interference'' assumption  more reasonable. %For treated regions that are side to side were also assessed in terms of neighboring  geographic situation such as lack of highways connecting them %\url{http://mx.kalipedia.com/kalipediamedia/geografia/media/200805/11/geomexico/20080511klpgeogmx_4_Ges_SCO.png} or big mountains between them, or closeness to where the crops or smuggling routes are \url{http://utopiaguatemala.files.wordpress.com/2011/11/mexico_routes_in_466.gif} (can we find such data?).
@@ -124,16 +125,19 @@
     \begin{column}{\twocolwid}
       \vskip-3ex 			
       \begin{block}{Estimation}
-        The control pool consists of 2213 municipalities. There are 13 treated regions considered (205 municipalities). 
-        Propensity score matching was used to identify 5 control municipalities that look like each treated ones, and estimate $Y_{ij}(0)$ and $Y_i(0)$. 
-        Let $M_{ij}$ be the number of municipalities matched to the $j$th municipality in region $i$, and $\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$ is the sum of their populations. Then,
-        $$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0),\quad \quad \textrm{ where } v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$$
+        The control pool consists of 2213 municipalities. Let I denote the number of treated regions (here 13, 205 municipalities).
+          Let $M_{ij}$ be the number of municipalities matched, using propensity score, to the $j$th municipality in region $i$, and estimate $Y_{ij}(0)$ and $Y_i(0)$. Here $M_{ij}=5$.
+        Let $\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$ be the sum of the populations of these matched municipalities. Then,
+        $$\hat{Y}_{ij}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y^{obs}_{ijk}(0),\quad \quad \textrm{ where } v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$$
         Therefore,
-        $$\hat{Y}_{i}(0) \quad =\quad \sum_{j=1}^{N_i}w_{ij}\hat{Y}_{ij}(0)\quad =\quad\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y_{ijk}(0)\quad =\quad
-        \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y_{ijk}(0) \quad \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
+        $$\hat{Y}_{i}(0) \quad =\quad \sum_{j=1}^{N_i}w_{ij}\hat{Y^{obs]}}_{ij}(0)\quad =\quad\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y^{obs}_{ijk}(0)\quad =\quad
+        \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y^{obs}_{ijk}(0) \quad \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
         and
-        $$\hat{\tau}=\frac{\sum_i^{I} Y_i(1)}{I}-\frac{\sum_{i=1}^{I}\hat{Y}_j(0)}{i}=\overline{Y}(1)-\overline{Y}(0) .$$
-        We know that $var(\hat{\tau})\leq var(\overline{Y}(1))+var(\overline{Y}(0))$, and it achieves the bound under additivity of potential outcomes. We use that over estimate and assume the homicide rates have a Poisson distribution to get confidence intervals.% note that this is a case when we wouldn't want to be conservative!!!
+        $$\hat{\tau}=\frac{\sum_i^{I} Y_i(1)}{I}-\frac{\sum_{i=1}^{I}\hat{Y}_i(0)}{I}=\overline{Y^{obs}}(1)-\overline{\hat{Y}}(0) .$$
+        We know that $var(\hat{\tau})\leq var(\overline{Y}(1))+var(\overline{Y}(0))$,% add reference
+  and it achieves the bound under additivity of potential outcomes. We use estimates of these quantities to estimate the variance. Note that the within region estimate of the variance is calculated based on the 5 synthetic control regions matched to each treated one.
+
+% and assume the homicide rates have a Poisson distribution to get confidence intervals.% note that this is a case when we wouldn't want to be conservative!!!
         % Now, \begin{eqnarray*}
         %   var(\hat{\overline{Y}}(0))&=&E(var(\hat{\overline{Y}}(0)|Y_i(0) \forall i))+var(E(\hat{\overline{Y}}(0)|Y_i(0) \forall i))
         %   =E(\sum var(\hat{Y}_i(0))/I)+var(\sum_iY_i(0))/I\\
@@ -177,22 +181,22 @@
 					\textbf{Region}& number of& Date of first & Regional causal & SD \\
                     & municipalities& intervention&  effect ($\hat{\tau_j}$)& \\ 
 					  \hline
-					\textbf{Ju\'{a}rez} &  15 & 2009 & 147.54 & 4.33 \\ %& 4 
-					 \textbf{Nogales}  &   5 & 2008 & 30.60 & 6.15 \\ %& 2
-					  \textbf{Tijuana} &   5 & 2008 & 21.18 & 1.84 \\ %& 1 
-					  \textbf{Acapulco}   &  36 & 2008 & 19.89 & 1.85 \\ %& 18
-					\textbf{Sinaloa}  &  29 & 2007 & 11.31 & 1.37 \\ %& 12
-					  \textbf{Guadalupe}  &  20 & 2009 & 8.49 & 0.89 \\ %& 8
-					   \textbf{Te\'{u}l}&  10 & 2009 & 4.15 & 5.10 \\ % & 10 
-					 \textbf{Villa de Cos}  &  22 & 2008 & 3.94 & 1.53 \\ %& 9
-					    \textbf{Celaya} &   9 & 2009 & 3.34 & 1.36 \\ % & 15
-					   \textbf{Reynosa}  &  24 & 2008 & 0.47 & 1.14 \\ %& 6
-					   \textbf{P\'{a}nuco}  &  14 & 2007 & -3.32 & 1.02 \\ %& 5
-					   \textbf{Rinc\'{o}n de Romos}  &   7 & 2008 & -10.14 & 3.32 \\ %& 11
-					   \textbf{Apatzing\'{a}n}  &   9 & 2007 & -25.78 & 3.38 \\%& 16
+					\textbf{Ju\'{a}rez} &  15 & 2009 & 147.54 &20.44 \\ %& 4 
+					 \textbf{Nogales}  &   5 & 2008 & 30.60 & 11.17 \\ %& 2
+					  \textbf{Tijuana} &   5 & 2008 & 21.18 & 7.34\\ %& 1 
+					  \textbf{Acapulco}   &  36 & 2008 & 19.89 & 1.98 \\ %& 18
+					\textbf{Sinaloa}  &  29 & 2007 & 11.31 & 4.83 \\ %& 12
+					  \textbf{Guadalupe}  &  20 & 2009 & 8.49 & 6.17 \\ %& 8
+					   \textbf{Te\'{u}l}&  10 & 2009 & 4.15 & 5.49 \\ % & 10 
+					 \textbf{Villa de Cos}  &  22 & 2008 & 3.94 & 8.36 \\ %& 9
+					    \textbf{Celaya} &   9 & 2009 & 3.34 & 18.89 \\ % & 15
+					   \textbf{Reynosa}  &  24 & 2008 & 0.47 & 5.50 \\ %& 6
+					   \textbf{P\'{a}nuco}  &  14 & 2007 & -3.32 & 5.63 \\ %& 5
+					   \textbf{Rinc\'{o}n de Romos}  &   7 & 2008 & -10.14 &6.05 \\ %& 11
+					   \textbf{Apatzing\'{a}n}  &   9 & 2007 & -25.78 & 4.64 \\%& 16
 					\hline
 					\hline 
-					  $\quad \quad \hat{\tau}$  & 250 & - & 22.42 & 0.85 \\ 
+					  $\quad \quad \hat{\tau}$  & 250 & - & 22.42 & 38.10 \\ 
 					   \hline
 					\end{tabular}}
 	              \end{minipage}\hfill
@@ -212,7 +216,7 @@
       % \end{column}
       % \begin{column}{\onecolwid}
 \vskip-3ex
-      \begin{block}{Processing}
+      \begin{block}{\url{http://www.processing.org}}
         \begin{figure}[htdp]
           \centering
           \subfigure[2007]{
@@ -241,7 +245,8 @@
           \bibitem{Abadie} Abadie, Diamond, Hainmueller  \emph{Synthetic Control Methods for Comparative Case Studies} (2009)
           \bibitem{NEXOS} Escalante F, \emph{Homicidios 2008-2009 La muerte tiene permiso} (2011)
           \bibitem{ImbensRubin} Imbens G. \& Rubin D.R., (2012)
-          \bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects}(),
+          \bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects},
+\bibitem{Processing} Fry, B. and Reas, C., Processing Library for Visual Arts and Design
             % \bibitem{Valle} Diego Valle visualization
           \end{thebibliography}}        
       \end{block}
