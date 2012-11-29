@@ -194,17 +194,13 @@ void find() {
   if(comaPos > 0)
   {
     theMun = MSinf.substring(0,comaPos-1);
-    //println(theMun);
     theState = MSinf.substring(comaPos+2);  
-    //println(theState);
   }else
  {
    theMun = MSinf;
-   //println("All input taken as municipality name. The last match found will be selected. Include ',' between Municipality and State if that's notthe case.");
    noStateflag = true;
  } 
-  //println("a textfield event for controller 'Municipality': "+theMun);
-  //println("a textfield event for controller 'State': "+userS.getText());
+
   for(int i=0 ; i < nMun;i++)
   {
      munName = mtable.getDataAt(i, 1);
@@ -370,7 +366,7 @@ void drawGridlines () {
     if(n>0 & n<steps)
     {
       if(dispInt)
-      {  //println(results.getDataAt(n-1,0));
+      { 
          verticalText(results.getDataAt(n-1,0), -(plot_y2+45), x+5); 
       }else
      { 
@@ -988,7 +984,7 @@ void resultsplot(int mun){
   Minim=-40;
 
   rMuni = ppartycMun.getFloatAt(mun,8);
-    //println(rMuni);
+    println(rMuni);
   // plot datapoints
 
   for (i = 0; i < effects.length; i++) {
@@ -998,7 +994,6 @@ void resultsplot(int mun){
     ub = map(effects[i]+1.96*stdev[i], Minim, Maxim, plot_y2, plot_y1);
    //if(datapoints[i][0]>=xlims[0] && datapoints[i][0]<=xlims[1] && datapoints[i][1]>=ylims[0] && datapoints[i][1]<=ylims[1]){
 
-      //println(results.getFloatAt(i,8));
       if(results.getFloatAt(i,1) == rMuni)
       {
         stroke(#008000);
@@ -1031,6 +1026,23 @@ void resultsplot(int mun){
     stroke(bg_color);
   line(plot_x1,y,plot_x2,y);
   
-  ///highlight hovered region
+  ///display information
+    for ( i = 0; i < effects.length; i++) {
+    x =  map(i, -1, nReg, plot_x1, plot_x2);
+    y =  map(effects[i], Minim, Maxim, plot_y2, plot_y1);
+    // if mouse is within hover radius of a point. note: 1 is VERY accurate
+    if (near(x,y, mouseX, mouseY, 5)) {
+     stroke(bg_color);
+     line(plot_x1,y,plot_x2+10,y);
+      stroke(250); fill(250); textAlign(CENTER);textSize(12); 
+       textFont(legendfont);
+            text(results.getDataAt(i,0)+" Region", width-350,  barHeight/2);
+             textSize(12);
+             textAlign(LEFT);
+             text("number of municipalities: " +results.getDataAt(i,2)+" ", width- 250,barHeight/2-20);
+      text("estimated effect (se): " + truncate(effects[i],2)+" ("+ truncate(stdev[i],4)+")",width- 250,barHeight/2-5); 
+   text("first intervention date: " +results.getDataAt(i,3)+ " ",width- 250,barHeight/2+10);  
+    }}
+  
 
 }
