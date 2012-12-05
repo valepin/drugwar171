@@ -479,15 +479,17 @@ for(i in 1:length(regs))
     varsNv[i,2]<-var(c(Ws[rowsR]%*%matrix(Y[matchesR],ncol=m,byrow=T)))*100000^2/m
     varsNG[i,]<-c(sum(Ws[rowsR]*(G[rowsR]-PjsG[i,1])^2)*100000^2/(1-sum(Ws[rowsR]^2)),
                    sum(WsTilde[matchesR]*(G[matchesR]-PjsG[i,2])^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-    varsNGv[i,2]<-var(c(Ws[rowsR]%*%matrix(G[matchesR],ncol=m,byrow=T)))*100000^2/m             
+    varsNGv[i,2]<-var(c(Ws[rowsR]%*%matrix(G[matchesR],ncol=m,byrow=T)))*100000^2/m
+    # check if that region can be taken in to account for the "two year" effect, and for the "three year" effect respectively
+    if()             
 }
 
 
 #varsN[,1]<-0#var(Y[treated==1]*100000)
-Results<-cbind(tab[-1,][-I2010,],effects,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),effectsD,sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
-colnames(Results)<-c("num Mun","Date","effect","SD bin","SD ney","SD reg","effect G","SD ney G","SD reg G")
+Results<-cbind(tab[-1,][-I2010,],Pjs[,1],effectsD,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),PjsG[,1],effectsD,sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
+colnames(Results)<-c("num Mun","Date","obs HR","effect","SD bin","SD ney","SD reg","obs HR change","effect G","SD ney G","SD reg G")
 
-
+ordRegs<- order(Results[,7],decreasing=T)
 regNames<-c("Tijuana","Nogales","Juárez","Pánuco","Reynosa","Guadalupe","Villa de Cos","Teúl","Rincón de Romos","Sinaloa",
             "Celaya","Apatzingán","Acapulco")
             
@@ -510,25 +512,24 @@ VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2
 VB<-apply(varsB,2,sum)/13^2
 
 
-ResAv<-c(250,0, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),
-    (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(VNG)))
-
 # potential outcome perspective    
-    ResAv<-c(250,0, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),
+    ResAv<-c(250,0,Response[,1]*100000, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),ResponseG[,1]*100000,
         (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])))    
 
 regNames<-regNames[order(Results[,7],decreasing=T)]
 
-Results<-Results[order(Results[,7],decreasing=T),c(1,2,7,9)]
+Results<-Results[order(Results[,9],decreasing=T),c(1,2,8,9,11)]
 regionPointer<-rownames(Results)
 
-Results<-rbind(Results, ResAv[c(1,2,6,7)])
+Results<-rbind(Results, ResAv[c(1,2,7:9)])
 rownames(Results)<-c(regNames, "Average")
 
 xtable(Results)
 
 output<-data.frame(cbind(rownames(Results),c(regionPointer,0),Results))
+# note that this does not respect the column names. To keep processing running it is necessary to write the header in Results.tsv
 write(t(output),file="data/Results.tsv",ncolumns=6,sep="\t")
+
 
 #### get the plot of the effect
 
