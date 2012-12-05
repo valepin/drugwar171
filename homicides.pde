@@ -366,7 +366,7 @@ void drawGridlines () {
     if(n>0 & n<steps)
     {
       if(dispInt)
-      { 
+      {
          verticalText(results.getDataAt(n-1,0), -(plot_y2+45), x+5); 
       }else
      { 
@@ -984,7 +984,7 @@ void resultsplot(int mun){
   Minim=-40;
 
   rMuni = ppartycMun.getFloatAt(mun,8);
-    println(rMuni);
+    //println(rMuni);
   // plot datapoints
 
   for (i = 0; i < effects.length; i++) {
@@ -1026,7 +1026,7 @@ void resultsplot(int mun){
     stroke(bg_color);
   line(plot_x1,y,plot_x2,y);
   
-  ///display information
+  //display information
     for ( i = 0; i < effects.length; i++) {
     x =  map(i, -1, nReg, plot_x1, plot_x2);
     y =  map(effects[i], Minim, Maxim, plot_y2, plot_y1);
@@ -1040,9 +1040,9 @@ void resultsplot(int mun){
              textSize(12);
              textAlign(LEFT);
              text("number of municipalities: " +results.getDataAt(i,2)+" ", width- 250,barHeight/2-20);
-      text("estimated effect (se): " + truncate(effects[i],2)+" ("+ truncate(stdev[i],4)+")",width- 250,barHeight/2-5); 
-   text("first intervention date: " +results.getDataAt(i,3)+ " ",width- 250,barHeight/2+10);  
-    }}
+             text("estimated effect (se): " + truncate(effects[i],2)+" ("+ truncate(stdev[i],4)+")",width- 250,barHeight/2-5); 
+             text("first intervention date: " +results.getDataAt(i,3)+ " ",width- 250,barHeight/2+10);  
+    }
+  }
   
-
 }
