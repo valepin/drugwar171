@@ -29,6 +29,11 @@ Thumbs.db
 *.log
 *.out
 *.gz
+*.dvi
+*.nav
+*.snm
+*.toc
+*.vrb
 
 # emacs related files #
 *~
@@ -38,4 +43,4 @@ tramp
 .\#*
 
 # images
-Images/*
+#Images/*
