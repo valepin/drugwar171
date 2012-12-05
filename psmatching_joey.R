@@ -71,12 +71,20 @@ X$MissReadWrite05<-ifelse(Educ[,45]>0,Educ[,48]/Educ[,45],0)
 X$IndLang05<-Educ[,63]/Educ[,62]
 X$MissIndLang05<-ifelse(Educ[,63]>0,Educ[,65]/Educ[,63],0) #note that this is well defined as zero if the denominator is zero
 
+
+                                        #joey block start
+
 #Population 
 X$PopMun06 <- Pop[,19] 
+Population <-  Pop[,c(-1,-2)]
+names(Population) <- paste("PoMun",formatC(1990:2010 %% 100, width = 2, format = "d", flag = "0"),sep="")
+## Homicide Rate Information up to 2006
 
-# Homicide Rate Information up to 2006
-X$Hom06<-Hom[,52]/X$PopMun06*100000
-
+outcome <- Hom[,grep("Hom",names(Hom))]* 1/Population
+names(outcome) <- paste("Hom",formatC(1990:2010 %% 100, width = 2, format = "d", flag = "0"),sep="")
+X <- cbind(X,outcome)
+                                        #joey block end
+  
 #last Party before Calderon period (?) is this the one we want?
 # I thought we mgiht want cartInt[,1]? That's the party before 2006.(NO, that's clave)
 # In Dec 2006 calderon came in so if we get a party in his period it may be a
@@ -226,7 +234,9 @@ clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
-names(compfull)[16] = "missIndDocsPerUnit"
+names(compfull)[dim(compfull)[2]] = "missIndDocsPerUnit"
+joeydata <- cbind(compfull,treated,Regions)
+write.csv(joeydata,file="data/joeydata.csv")
 
 #check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
