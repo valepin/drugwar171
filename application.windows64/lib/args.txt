@@ -1,0 +1,3 @@
+
+drugwar171
+drugwar171.jar,core.jar,controlP5.jar,opengl.jar,gluegen-rt.jar,jogl.jar,batikfont.jar,geomerative.jar

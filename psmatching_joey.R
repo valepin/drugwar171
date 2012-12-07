@@ -80,7 +80,7 @@ Population <-  Pop[,c(-1,-2)]
 names(Population) <- paste("PoMun",formatC(1990:2010 %% 100, width = 2, format = "d", flag = "0"),sep="")
 ## Homicide Rate Information up to 2006
 
-outcome <- Hom[,grep("Hom",names(Hom))]* 1/Population
+outcome <- Hom[,grep("Hom",names(Hom))]* 100000/Population
 names(outcome) <- paste("Hom",formatC(1990:2010 %% 100, width = 2, format = "d", flag = "0"),sep="")
 X <- cbind(X,outcome)
                                         #joey block end
@@ -104,7 +104,7 @@ X$StateGDP06 <- SGDP[X$Clave%/%1000,grep(2006,names(SGDP))]
 X$PartyMunBC <- cartInt[,3]
 
 
-write.csv(X,"data/dataToPSMatch.csv")
+#write.csv(X,"data/dataToPSMatch.csv")
 
 
 
@@ -114,46 +114,46 @@ write.csv(X,"data/dataToPSMatch.csv")
 #
 ###########################
 
-#par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
-par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
+## #par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
+## par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
 
-#for(i in 6:13)
-for(i in 14:20)
-{
-    if(names(X)[i]!="PartyMunBC")
-    {
-        hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
-        xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
-    }else
-    {
-        barplot(table(X[intervened,i]),col="grey",border="white",xlab="intervened")
-    }    
-}
+## #for(i in 6:13)
+## for(i in 14:20)
+## {
+##     if(names(X)[i]!="PartyMunBC")
+##     {
+##         hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+##         xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+##     }else
+##     {
+##         barplot(table(X[intervened,i]),col="grey",border="white",xlab="intervened")
+##     }    
+## }
 
-#for(i in 6:13)
-for(i in 14:20)
-{
-    if(names(X)[i]!="PartyMunBC")
-    {
-        hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,
-           xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
-    }else
-    {
-        barplot(table(X[-intervened,i]),col="lightblue",border="white",xlab="control")
-    }    
-}
+## #for(i in 6:13)
+## for(i in 14:20)
+## {
+##     if(names(X)[i]!="PartyMunBC")
+##     {
+##         hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,
+##            xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+##     }else
+##     {
+##         barplot(table(X[-intervened,i]),col="lightblue",border="white",xlab="control")
+##     }    
+## }
 
-#just plot the homicides
-par(mfrow=c(2,1), mai=c(0.8,0.5,0.2,0.1))
+## #just plot the homicides
+## par(mfrow=c(2,1), mai=c(0.8,0.5,0.2,0.1))
 
-i=which(colnames(X) %in% "Hom06")
-#homicides 
-hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
-xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+## i=which(colnames(X) %in% "Hom06")
+## #homicides 
+## hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+## xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
 
-#homicides 
-hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,100),
-   xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+## #homicides 
+## hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,100),
+##    xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
    
 
 
@@ -164,7 +164,7 @@ hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",brea
 # Now, what about the missingness?
 #
 ###########################
-palette <- colorRampPalette(c('#0033BB','#ffffff'))(256)
+#palette <- colorRampPalette(c('#0033BB','#ffffff'))(256)
 
 # the intervened units
 data<-matrix(as.numeric(!is.na(X[intervened,])),nrow=dim(X[intervened,])[1],ncol=dim(X[intervened,])[2])
@@ -172,7 +172,7 @@ rownames(data)= X$Clave[intervened]
 colnames(data)= colnames(X)
 
 
-missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+#missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
 ####
 n<-300
 contPool<-setdiff(1:dim(X)[1], intervened)
@@ -182,7 +182,7 @@ rownames(data)= X$Clave[samp]
 colnames(data)= colnames(X)
 
 
-missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+#missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
 
 
 
@@ -235,7 +235,7 @@ clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
 names(compfull)[dim(compfull)[2]] = "missIndDocsPerUnit"
-joeydata <- cbind(compfull,treated,Regions)
+joeydata <- cbind(compfull,treated,Regions,clave)
 write.csv(joeydata,file="data/joeydata.csv")
 
 #check the balance on the other covariates (histograms and love plots)
