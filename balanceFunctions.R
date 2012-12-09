@@ -10,6 +10,7 @@ calcWeights<-function(MatchMat,N)
     for(i in 1:n)
     {        
         munMatch<-as.numeric(MatchMat[i,])
+        munMatch<-munMatch[!is.na(munMatch)]
         # cat("munMatch",munMatch,"\n")
         vs[munMatch]<-compfull[munMatch,9]/sum(compfull[munMatch,9]) 
         wsTilde[munMatch]<-Ws[as.numeric(rownames(MatchMat)[i])]*compfull[munMatch,9]/sum(compfull[munMatch,9])         
@@ -45,13 +46,13 @@ calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
 
 }
 
-loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
+loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3),bg_col="#32323299", leg_col="white", position="topright") # if not the
 {
     #Let MatPlot only have the covariates to plot
     # The first one should be the original sample 
     colors=c("black","gray","royalblue","coral2","darkorchid")
     types=25:21
-    par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1),col="white",bg="#32323299",col.axis="white",col.lab="white") 
+    par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1),col=bg_col,bg=bg_col,col.axis=leg_col,col.lab=leg_col) 
     plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.5, 
     main=ifelse(cont,""),xlim=xlims)
     for(i in 2:length(MatPlot))
@@ -59,13 +60,11 @@ loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3))
         points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.5)
     }
  
-    axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1,col="white",col.ticks="white",col.lab="white")
-    abline(v=0)
+    axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1,col=leg_col,col.ticks=leg_col,col.lab=leg_col)
+    abline(v=0,col=leg_col)
     abline(h=1:dim(MatPlot[[1]])[1], lty="dotted",col="lightgray")
-    # legend("topright",legend=c("Initial","Without 0 Blacks cases","Matching of D & A","Matching of Imbalanced Or","Matching All"),
-    # pch=c(25,21,22,23,24),col="white",pt.bg=c("aquamarine4","gray","coral2","royalblue","darkorchid"),bg="white")
-    legend("topright",legend=labels,
-    pch=c(25:(26-length(lpMat))),col="white",pt.bg=colors[1:length(lpMat)],bg="#32323299",cex=1.5)   
+    legend(position,legend=labels,box.col=bg_col,
+    pch=c(25:(26-length(lpMat))),col=bg_col,pt.bg=colors[1:length(lpMat)],bg=bg_col,text.col=leg_col,cex=1.5)   
 }
 
 histCheck<-function(TreatMat, ContMat, Covs)
@@ -95,3 +94,4 @@ histCheck<-function(TreatMat, ContMat, Covs)
         }
     }    
 }
+
