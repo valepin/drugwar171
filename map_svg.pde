@@ -189,7 +189,7 @@ void drawfullJ() {
 
 
 
-  textSize(10);
+  textSize(tsize);
   textAlign(LEFT,TOP);
   rectMode(CORNER);
   fill(bg_color);

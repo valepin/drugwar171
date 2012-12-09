@@ -4,7 +4,7 @@
    Homicide Rate in Mexico (1990-2010)
 */
 
-
+int tsize = 10;
 int width = 1024;
 int height = 600;
 int selectedMuni;
@@ -21,13 +21,6 @@ int anuvWidth=(int) 4*width/10;
 
 
 void setup() {
-  println(barHeight);
-  println(joeyWidth);
-  println(joeyHeight);
-  println(valeriaHeight);
-  println(valeriaWidth);
-  println(anuvHeight);
-  println(anuvWidth);
   size(width, height);
   if (frame != null) {
     frame.setResizable(true);

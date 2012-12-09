@@ -128,7 +128,7 @@ void setupV() {
   //set the checkbox for cartel year to use 
 
     controlP5 = new ControlP5(this);
-  r = controlP5.addRadioButton("radioButton",joeyWidth-40, 30);
+  r = controlP5.addRadioButton("radioButton",joeyWidth*8/10, 30);
   r.setColorForeground(color(bg_color));
   r.setColorValue(color(200));
   r.setColorActive(color(255));
@@ -231,9 +231,9 @@ void drawV() {
     rect(joeyWidth,0,width,height);
 
     //label button
- stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);
-  text("Year of Stratfor Cartel Sketch ",joeyWidth,20);
-    text("Press r to restart ",joeyWidth/2,58);
+ stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(tsize);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth*9/10,20);
+  text("Press r to restart ",(int) width*8/100,58);
   
   /*
   | IMPORTANT:
@@ -305,19 +305,20 @@ void drawPlotArea(int w, int h) {
 void drawTitle (String t) {
   textFont(font);
   fill(fill_color);
+  textAlign(LEFT);
+  textSize(tsize*2);
+  text(t, 0, 40);
   textAlign(CENTER);
-  textSize(40);
-  text(t, joeyWidth/2, 40);
 
 }
 
 void drawAxesLabels (String x_axis, String y_axis) {
-  textSize(14);
+  textSize((int) tsize*1.5);
   
   // axis labels are centered between adjacent edge of plot area and window
   text(x_axis, joeyWidth+valeriaWidth-30, plot_y2+40);
   verticalText(y_axis, -height/4, joeyWidth+15);
-  textSize(10);
+  textSize(tsize);
   verticalText("per 100000 inhabitants ", -height/4,joeyWidth+30);
 
  
@@ -351,7 +352,7 @@ void drawGridlines () {
   float y_step_size = plot_height / stepsy;
 
       stroke(255);
-      textSize(10);
+      textSize(tsize);
   // x gridlines
   for (int n =1; n <= steps; n++) {
   
@@ -385,7 +386,7 @@ void drawGridlines () {
     //text(,x, plot_y2);
 
     // label grid lines as well
-    textSize(10);
+    textSize(tsize);
           if(dispInt)
       {  //println(results.getDataAt(n-1,0));
          text(String.format("%.2f",-40+(n * yrange)/stepsy), plot_x1-20,y);
@@ -691,10 +692,10 @@ void inspectDataPoints (float[] vector, float[][] matrix, char type) {
     if (near(x,y, mouseX, mouseY, 5)) {
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
-      stroke(250); fill(250); textAlign(CENTER);textSize(12); 
+      stroke(250); fill(250); textAlign(CENTER);textSize(tsize); 
       text(" ("+ years[i]+")", width-400,  valeriaHeight-40);
       textFont(legendfont);
-      fill(250); textSize(12);
+      fill(250); textSize(tsize);
       textAlign(LEFT);
       text("population: " + floor(matrix[i][1]), width- 420,valeriaHeight-25);
       text("homicides :" + floor(matrix[i][0]),width- 420,valeriaHeight-10  );
@@ -740,7 +741,7 @@ void drawLegend(){
   
   textAlign(LEFT);
   stroke(250); fill(250);
-  textSize(12);
+  textSize(tsize);
 
    text("National", joeyWidth +45*valeriaWidth/100, valeriaHeight-10);
     text(Spopul.getDataAt(state, 1), joeyWidth +45*valeriaWidth/100, valeriaHeight-30); 
@@ -786,8 +787,8 @@ void drawIntervention(int mun, int sta, color cInt)
      strokeWeight(2);
      fill(cInt);
      line(x,plot_y1,x,plot_y2);
-     if(countInt==0){text("Military Intervention:",width-200, plot_y1-25);}     
-     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), width- 190,  plot_y1- 10);
+     if(countInt==0){text("Military Intervention:",9*width/10, plot_y1-25);}     
+     text(milInt.getDataAt(i,3)+"/"+ milInt.getDataAt(i,4)+"/" +floor(intYear), 9*width/10,  plot_y1- 10);
      countInt++;
    }
  }  
@@ -823,9 +824,9 @@ void drawPartyChange(int mun, int sta, color cInt)
      strokeWeight(2);
      line(x,plot_y1,x,plot_y2);
      //text(,width-250, 35);
-     text("Party change: "+ partyb + " to " + partya, width- 400, plot_y1-25);
-      textSize(8); 
-      text("(PAN, PAN-PRD, PRD, PRI, Other)",width-390, plot_y1-10);
+     text("Party change: "+ partyb + " to " + partya, width*7/10, plot_y1-25);
+      textSize(tsize); 
+      text("(PAN, PAN-PRD, PRD, PRI, Other)",width*7/10, plot_y1-10);
      break;
    
 //   }
@@ -932,10 +933,11 @@ void resultsplot(int mun){
     rect(joeyWidth,0,width,height);
 
     //label button
- stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(10);
-  text("Year of Stratfor Cartel Sketch ",joeyWidth,20);
-    text("Press r to restart ",joeyWidth/2,58);
-  
+ stroke(250); fill(250);  textFont(legendfont);textAlign(CENTER);textSize(tsize);
+  text("Year of Stratfor Cartel Sketch ",joeyWidth*9/10,20);
+  textAlign(LEFT);
+  text("Press r to restart ",0,58);
+  textAlign(CENTER);
   /*
   | IMPORTANT:
   | the next two lines determine the dimensions of the plot area
@@ -1034,10 +1036,10 @@ void resultsplot(int mun){
     if (near(x,y, mouseX, mouseY, 5)) {
      stroke(bg_color);
      line(plot_x1,y,plot_x2+10,y);
-      stroke(250); fill(250); textAlign(CENTER);textSize(12); 
+      stroke(250); fill(250); textAlign(CENTER);textSize(tsize); 
        textFont(legendfont);
             text(results.getDataAt(i,0)+" Region", width-350,  barHeight/2);
-             textSize(12);
+             textSize(tsize);
              textAlign(LEFT);
              text("number of municipalities: " +results.getDataAt(i,2)+" ", width- 250,barHeight/2-20);
              text("estimated effect (se): " + truncate(effects[i],2)+" ("+ truncate(stdev[i],4)+")",width- 250,barHeight/2-5); 
