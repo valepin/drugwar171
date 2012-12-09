@@ -12,6 +12,8 @@ Pop<- read.delim("data/MunPopulationEst.tsv", header = TRUE, sep = "\t")
 Int<-read.delim("data/InterventionDataNexos2011.tsv", header = TRUE, sep = "\t")
 Med <-read.delim("data/MunMedical.tsv", header = TRUE, sep = "\t")
 LatLon<-read.delim("data/latlon.tsv", header = FALSE, sep = "\t")
+RCRD <- read.csv(file="data/RoadsCRD.csv",header=T)
+
 
 
 # read in the tsv's at the state level
@@ -76,6 +78,23 @@ X$PopMun06 <- Pop[,19]
 
 # Homicide Rate Information up to 2006
 X$Hom06<-Hom[,52]/X$PopMun06*100000
+# Get a categorical value for these
+quants<-quantile(X$Hom06[X$Hom06>0],seq(0,0.8,by=0.25))
+
+# X$Hom06Class<-rep(0, length(X$Hom06))
+# X$Hom06Class[X$Hom06>0 & X$Hom06<=quants[2]]<- 1
+# X$Hom06Class[X$Hom06>quants[2] & X$Hom06<=quants[3]]<- 2
+# X$Hom06Class[X$Hom06>quants[3] & X$Hom06<=quants[4]]<- 3
+# X$Hom06Class[X$Hom06>quants[4]]<- 4
+# 
+# X$Hom06Class<-rep(0, length(X$Hom06))
+# X$Hom06Class[X$Hom06>0 & X$Hom06<=quants[3]]<- 1
+# X$Hom06Class[X$Hom06>quants[3]]<- 2
+
+ X$Hom06Class<-rep(0, length(X$Hom06))
+# X$Hom06Class[X$HomX$Hom06<=quants[3]]<- 1
+ X$Hom06Class[X$Hom06>quants[3]]<- 1
+
 
 #last Party before Calderon period (?) is this the one we want?
 # I thought we mgiht want cartInt[,1]? That's the party before 2006.(NO, that's clave)
@@ -99,6 +118,18 @@ X$PartyMunBC <- cartInt[,3]
 #write.csv(X,"data/dataToPSMatch.csv")
 
 
+
+#Added Dec 4, 2012 - roads and criminal rivalry related deaths
+##  X$Reg.Cars <- RCRD[,grep("Registered.cars",names(RCRD))]
+#  X$CRdeathsDec06 <- RCRD[,grep("Diciembre.2006",names(RCRD))]
+# X$CRdeathsJan06 <- RCRD[,grep("Enero.2007",names(RCRD))]
+# X$CRdeathsFeb06 <- RCRD[,grep("Febrero.2007",names(RCRD))]
+# X$CRdeathsMar06 <- RCRD[,grep("Marzo.2007",names(RCRD))]
+#X$CRdeathsApr06 <- RCRD[,grep("Abril.2007",names(RCRD))]
+
+
+
+write.csv(X,"data/dataToPSMatch.csv")
 
 ############################
 #
@@ -226,13 +257,13 @@ clave <- clave[(missind[,4]!=TRUE & missind[,5]!=TRUE)]
 
 #m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","ConsultsPerDocmiss","ConsultsPerMedUnitmiss","DocsPerMedUnitmiss"),ratio=5)
 rownames(compfull)=1:dim(compfull)[1] #redifine the rownames to have easy access
-names(compfull)[16] = "missIndDocsPerUnit"
+names(compfull)[dim(compfull)[2]] = "missIndDocsPerUnit"
 
 #check the balance on the other covariates (histograms and love plots)
 factors<-"PartyMunBC"
 
 TreatCov<-compfull[treated==1,]
-ContMatchesCov<-compfull[matches,]
+#ContMatchesCov<-compfull[matches,]
 difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 
@@ -248,12 +279,11 @@ difmeanCovs<-setdiff(1:dim(compfull)[2],which(names(TreatCov) %in% factors))
 
 ####
 
-source("balanceFunctions.R")
+
 Init<-calcMeansAndVars(compfull[treated==1,],compfull[treated==0,],difmeanCovs,difmeanCovs,Ws[treated==1]
     ,rep(1,sum(treated==0)))
 Vs<-c()
 #
-
 # # matching based on the main effect
 # fmla <- as.formula(paste("treated ~ ", paste(names(compfull), collapse= "+")))
 # m1 <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
@@ -287,11 +317,13 @@ Vs<-c()
 
 #postMatchHom<-calcMeansAndVars(TreatCov,compfull[matches2,],difmeanCovs,difmeanCovs,Ws[treated==1],WsTilde[matches2])
 
-#Mtching based only on Homicide Rate and higher order terms that involve it
+#Matching based only on Homicide Rate and higher order terms that involve it
 
-fmla <- as.formula(paste("treated ~ Hom06+",paste("Hom06:",names(compfull), collapse= "+")))
-mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=5)
-
+fmla <- as.formula(paste("treated ~",paste(names(compfull)[-c(11,12,17)],collapse= "+"),"+",paste("Hom06:",names(compfull), collapse= "+")))
+#fmla <- as.formula(paste("treated ~ Hom06+",paste("Hom06:",names(compfull), collapse= "+")))
+# for the one below get rid of Hom06Class in X
+#mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","missIndDocsPerUnit"),ratio=4)
+mH <- matchit(fmla,data=cbind(compfull,treated), exact=c("PartyMunBC","Hom06Class","missIndDocsPerUnit"),ratio=3)
 WsTilde<-calcWeights(mH$match.matrix,dim(compfull)[1])
 # checking the distribution of propensity scores (balance on a fundamental covariate?)
 matchesH<-as.numeric(c(t(mH$match.matrix)))
@@ -309,22 +341,50 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 clavetreated <- clave[treated==1]
 regiontreated <- Regions[treated==1]
 clavematched <- clave[matchesH]
-matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=7))
-for(i in 1:length(clavetreated)){
-  matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
-}
-names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
-save(matchframe,file="data/matchframe.RData")
+
+## matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=7))
+## for(i in 1:length(clavetreated)){
+##   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
+## }
+## names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
+## save(matchframe,file="data/matchframe.RData")
 # lpMat<-list(Init,postMatchHR)
 # pdf("Images/FinalLoveplot.pdf")
 # loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 # dev.off()
-# 
-# source("balanceFunctions.R")
-# png("Images/MEloveplot.png",width=500,height=350)
-# loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
-# dev.off()
-# }
+
+matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=m+2))
+for(i in 1:length(clavetreated)){
+  matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*m + 1):(i*m)])
+}
+names(matchframe) <- c("clave","region",paste("match",1:m,sep=""))
+
+lpMat<-list(Init,postMatchHR)
+pdf("Images/FinalLoveplot.pdf")
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),bg_col="white",leg_col="black")
+dev.off()
+
+# compare Party
+par(mfcol=c(2,2), mai=c(0.8,0.5,0.7,0.1))
+
+#Before Matching
+
+barplot(table(compfull$PartyMunBC[treated==0]),col="lightblue",border="white",xlab="control",main="Before Matching")
+
+barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="intervened",main="Before Matching")
+
+
+
+barplot(table(compfull$PartyMunBC[matchesH]),col="lightblue",border="white",xlab="control",main="After Matching")
+
+barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="intervened",main="After Matching")
+#######
+
+source("balanceFunctions.R")
+png("Images/MEloveplot.png",width=500,height=350)
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
+dev.off()
+}
 # 
 # ##create loveplots
 # for(i in 1:length(matchframe$clave)){
@@ -350,7 +410,7 @@ save(matchframe,file="data/matchframe.RData")
 #   lpMat<-list(Init,postMatchHR,regionlove,munilove)
 #   png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
 # #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
-#   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Munipality"),xlim=c(-1,1))
+#   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Municipality"),xlim=c(-1,1))
 #   dev.off()
 # }
 # ### hist test
@@ -400,20 +460,20 @@ xlim=c(min(compfull[treated==1,j],compfull[matchesH,j],na.rm=TRUE),max(compfull[
 #Quality of matches
 regs<-sort(unique(Regions))[-1]
 
-regNames<-c("Tijuana","Nogales","Juárez","Pánuco","Reynosa","Guadalupe","Villa de Cos","Teúl","Rincón de Romos","Sinaloa",
+regNames<-c("Tijuana","Nogales","Juárez","Pánuco","Reynosa","Guadalupe","Villa de Cos","Teúl","R. de Romos","Sinaloa",
             "Celaya","Apatzingán","Acapulco")
 
-par(mfcol=c(2,13), mai=c(0.8,0.2,0.5,0.1))
+par(mfcol=c(2,13), mai=c(0.8,0.3,0.5,0.2))
 for(i in 1:length(regs))
 {
     r=regs[i] 
     rowsR<-which(Regions==r)
     matchesR<-as.numeric(mH$match.matrix[as.numeric(rownames(mH$match.matrix)) %in% rowsR,])
     hist(mH$distance[matchesR],col="lightblue",border="white",ylab="",xlab="control", main= regNames[i],
-        xlim=c(min(mH$distance[rowsR],mH$distance[matchesR]),max(mH$distance[rowsR],mH$distance[matchesR])))
-    hist(mH$distance[rowsR],col="gray",border="white",main="",ylab="",xlab="intervened", freq=T,
+        xlim=c(min(mH$distance[rowsR],mH$distance[matchesR]),max(mH$distance[rowsR],mH$distance[matchesR])),breaks=5)
+    hist(mH$distance[rowsR],col="coral",border="white",main="",ylab="",xlab="intervened", freq=T,
          xlim=c(min(mH$distance[rowsR],mH$distance[matchesR],na.rm=TRUE),max(mH$distance[rowsR],mH$distance[matchesR],
-             na.rm=TRUE)))        
+             na.rm=TRUE)),breaks=5)        
 }
 
 ########################
@@ -439,15 +499,23 @@ effects<-rep(NA,length(regs))
 effectsD<-rep(NA,length(regs))
 varsB<-matrix(NA,length(regs),2)
 varsN<-matrix(NA,length(regs),2)
-varsNv<-matrix(NA,length(regs),2)
-varsNG<-matrix(NA,length(regs),2)
 varsNGv<-matrix(NA,length(regs),2)
+
 PjsG<-matrix(NA,length(regs),2)
 Pjs<-matrix(NA,length(regs),2)
 Y<-rep(NA,dim(compfull)[1])
 G<-rep(NA,dim(compfull)[1])
+
+PjsG2<-matrix(NA,length(regs),2)
+G2<-rep(NA,dim(compfull)[1])
+varsNGv2<-matrix(NA,length(regs),2)
+
+PjsG3<-matrix(NA,length(regs),2)
+G3<-rep(NA,dim(compfull)[1])
+varsNGv3<-matrix(NA,length(regs),2)
+
 # number of matcheslengh
-m<-5
+m<-3
 
 for(i in 1:length(regs))
 {
@@ -476,30 +544,56 @@ for(i in 1:length(regs))
         pj0/sum(PopMod[rowsR,colP])*100000^2)
     varsN[i,]<-c(sum(Ws[rowsR]*Y[rowsR]^2)*100000^2/(1-sum(Ws[rowsR]^2)),
         sum(WsTilde[matchesR]*Y[matchesR]^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))
-    varsNv[i,2]<-var(c(Ws[rowsR]%*%matrix(Y[matchesR],ncol=m,byrow=T)))*100000^2/m
-    varsNG[i,]<-c(sum(Ws[rowsR]*(G[rowsR]-PjsG[i,1])^2)*100000^2/(1-sum(Ws[rowsR]^2)),
-                   sum(WsTilde[matchesR]*(G[matchesR]-PjsG[i,2])^2)*100000^2/(1-sum(WsTilde[matchesR]^2)))    
-    varsNGv[i,2]<-var(c(Ws[rowsR]%*%matrix(G[matchesR],ncol=m,byrow=T)))*100000^2/m
+    #varsNv[i,2]<-var(c(Ws[rowsR]%*%matrix(Y[matchesR],ncol=m,byrow=T)))*100000^2/m
+    varsNGv[i,2]<-var(c(Ws[rowsR]%*%matrix(G[matchesR],ncol=m,byrow=T)))*100000^2/m  
     # check if that region can be taken in to account for the "two year" effect, and for the "three year" effect respectively
-    if()             
+    if(Date[i]<2009)
+    {
+     G2[rowsMod]<-HomMod[rowsMod,colH+3]/PopMod[rowsMod,colP+1]-HomMod[rowsMod,colH-6]/PopMod[rowsMod,colP-2]    
+      PjsG2[i,]<-c(sum(Ws[rowsR]*G2[rowsR])*100000,sum(WsTilde[matchesR]*G2[matchesR])*100000)
+      varsNGv2[i,2]<-var(c(Ws[rowsR]%*%matrix(G2[matchesR],ncol=m,byrow=T)))*100000^2/m
+      if(Date[i]<2008)
+      {
+          G3[rowsMod]<-HomMod[rowsMod,colH+6]/PopMod[rowsMod,colP+2]-HomMod[rowsMod,colH-6]/PopMod[rowsMod,colP-2]    
+           PjsG3[i,]<-c(sum(Ws[rowsR]*G3[rowsR])*100000,sum(WsTilde[matchesR]*G3[matchesR])*100000)
+          varsNGv3[i,2]<-var(c(Ws[rowsR]%*%matrix(G3[matchesR],ncol=m,byrow=T)))*100000^2/m         
+      }      
+    }             
 }
 
 
 #varsN[,1]<-0#var(Y[treated==1]*100000)
-Results<-cbind(tab[-1,][-I2010,],Pjs[,1],effectsD,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),PjsG[,1],effectsD,sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
-colnames(Results)<-c("num Mun","Date","obs HR","effect","SD bin","SD ney","SD reg","obs HR change","effect G","SD ney G","SD reg G")
+# Results<-cbind(tab[-1,][-I2010,],Pjs[,1],effectsD,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),PjsG[,1],effectsD,sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
+# colnames(Results)<-c("num Mun","Date","obs HR","effect","SD bin","SD ney","SD reg","obs HR change","effect G","SD ney G","SD reg G")
 
-ordRegs<- order(Results[,7],decreasing=T)
+Results<-cbind(tab[-1,][-I2010,],PjsG[,1],effectsD,sqrt(varsNGv[,2]),PjsG2[,1],PjsG2[,1]-PjsG2[,2],sqrt(varsNGv2[,2])
+            ,PjsG3[,1],PjsG3[,1]-PjsG3[,2],sqrt(varsNGv3[,2]))
+colnames(Results)<-c("num Mun","Date","obs HR change 1","effect G 1","SD ney G 1","obs HR change 2","effect G 2","SD ney G 2"
+                    ,"obs HR change 3","effect G 3","SD ney G 3")
+
+
+ordRegs<- order(Results[,grep("effect G 1",colnames(Results))],decreasing=T)
 regNames<-c("Tijuana","Nogales","Juárez","Pánuco","Reynosa","Guadalupe","Villa de Cos","Teúl","Rincón de Romos","Sinaloa",
             "Celaya","Apatzingán","Acapulco")
-            
+          
 xtable(Results)
+
+ regNames<-regNames[ordRegs] 
+
 
 
 Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 
-### gain scores
+### gain scores - with Juárez
 ResponseG<-calcMeansAndVars(matrix(G[treated==1]), matrix(G[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+ResponseG2<-calcMeansAndVars(matrix(G2[treated==1]), matrix(G2[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+ResponseG3<-calcMeansAndVars(matrix(G3[treated==1]), matrix(G3[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+
+
+# ResponseGwoJ<-calcMeansAndVars(matrix(G[treated==1]), matrix(G[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+# ResponseG2woJ<-calcMeansAndVars(matrix(G2[treated==1]), matrix(G2[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+# ResponseG3woJ<-calcMeansAndVars(matrix(G3[treated==1]), matrix(G3[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
+
 
 # Variance calculation
 
@@ -512,23 +606,33 @@ VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2
 VB<-apply(varsB,2,sum)/13^2
 
 
-# potential outcome perspective    
-    ResAv<-c(250,0,Response[,1]*100000, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),ResponseG[,1]*100000,
-        (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])))    
 
-regNames<-regNames[order(Results[,7],decreasing=T)]
 
-Results<-Results[order(Results[,9],decreasing=T),c(1,2,8,9,11)]
-regionPointer<-rownames(Results)
+# with Y & G    
+#  Results<-Results[ordRegs,c(1,2,8,9,11)]
+#     ResAv<-c(250,0,Response[,1]*100000, (Response[,1]-Response[,2])*100000,sqrt(sum(VB)),sqrt(sum(VN)),ResponseG[,1]*100000,
+#         (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])))    
+# Results<-rbind(Results, ResAv[c(1,2,7:9)])
 
-Results<-rbind(Results, ResAv[c(1,2,7:9)])
-rownames(Results)<-c(regNames, "Average")
+# only G (with three year estimates)    
+ Results<-Results[ordRegs,]
+    ResAv<-c(250,0,ResponseG[,1]*100000,
+        (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])),ResponseG2[,1]*100000,
+            (ResponseG2[,1]-ResponseG2[,2])*100000,sqrt(sum(apply(PjsG2,2,var,na.rm=T))/sum(!is.na(PjsG2[,1]))+mean(varsNGv2[,2],na.rm=T)),ResponseG3[,1]*100000,
+                (ResponseG3[,1]-ResponseG3[,2])*100000,sqrt(sum(apply(PjsG3,2,var,na.rm=T))/sum(!is.na(PjsG3[,1]))+mean(varsNGv3[,2],na.rm=T))
+        )    
+ResultsF<-rbind(Results, ResAv)
 
-xtable(Results)
 
-output<-data.frame(cbind(rownames(Results),c(regionPointer,0),Results))
+
+rownames(ResultsF)<-c(regNames, "Average")
+
+xtable(ResultsF)
+
+output<-data.frame(cbind(rownames(ResultsF),c(rownames(Results),0),ResultsF[,c(1,2,4,5)]))
+# !!!!!
 # note that this does not respect the column names. To keep processing running it is necessary to write the header in Results.tsv
-write(t(output),file="data/Results.tsv",ncolumns=6,sep="\t")
+write(output,file="data/Results.tsv",ncolumns=6,sep="\t")
 
 
 #### get the plot of the effect
@@ -561,6 +665,29 @@ abline(h=0,lty=1,col="darkgray")
 # segments(c(1:n)-0.1,Res[-14,4]+1.96*Res[-14,6],c(1:n)+.1,Res[-14,4]+1.96*Res[-14,6],col='darkgray',lty=1)
 
 
-#### get the plot of the effect
+#### get some balance checks on other covariates
+RCRDmod<-RCRD[-gotT2010,][(missind[,4]!=TRUE & missind[,5]!=TRUE),]
+RCRDmod <- complete(mice(RCRDmod,method="mean",m=1,maxit=1))
+ExtraCov<-cbind(is.na(RCRDmod[,4]),!is.na(RCRDmod[,4])*RCRDmod[,4],RCRDmod[,c(9:13)],log(compfull$Hom06+1),log(compfull$StateHom06),
+    compfull$Hom06^2,compfull$StateHom06^2
+    )
+    
+names(ExtraCov)<-c("MissInd Road Nwk Long","Road Nwk Long if present",paste("Cr.Riv.D.",names(RCRDmod)[9:13]),
+"log(Hom06+1)","log(StateHom06+1)",expression(Hom06^2),expression(StateHom06^2))    
+#,as.numeric(compfull$Hom06)%*%as.matrix(compfull[,-11]))
+test_init<-calcMeansAndVars(ExtraCov[treated==1,],ExtraCov[treated==0,],1:dim(ExtraCov)[2],1:dim(ExtraCov)[2],Ws[treated==1],rep(1,sum(treated==0)))
+
+test_post<-calcMeansAndVars(ExtraCov[treated==1,],ExtraCov[matchesH,],1:dim(ExtraCov)[2],1:dim(ExtraCov)[2],Ws[treated==1],WsTilde[matchesH])
+loveplot(list(test_init,test_post),labels=c("Initial","Matched"),xlim=c(-1,1),bg_col="white",leg_col="black")
 
 
+####### Get the maximum distance in Hom rate 06 between the treated and all its matches
+findMaxDistHom06<-function(i)
+{
+    treat<-compfull$Hom06[as.numeric(row.names(mH$match.matrix)[i])]
+    conts<-compfull$Hom06[as.numeric(mH$match.matrix[i,])]
+    return(max(abs(conts-treat)))
+}
+
+
+maxDistHR06<-apply(as.matrix(1:dim(mH$match.matrix)[1]),1,findMaxDistHom06)
