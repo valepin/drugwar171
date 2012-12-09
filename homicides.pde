@@ -303,7 +303,7 @@ void drawPlotArea(int w, int h) {
 }
 
 void drawTitle (String t) {
-  textFont(font);
+  //textFont(font);
   fill(fill_color);
   textAlign(LEFT);
   textSize(tsize*2);
