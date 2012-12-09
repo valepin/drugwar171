@@ -115,10 +115,6 @@ X$StateGDP06 <- SGDP[X$Clave%/%1000,grep(2006,names(SGDP))]
 X$PartyMunBC <- cartInt[,3]
 
 
-#write.csv(X,"data/dataToPSMatch.csv")
-
-
-
 #Added Dec 4, 2012 - roads and criminal rivalry related deaths
 ##  X$Reg.Cars <- RCRD[,grep("Registered.cars",names(RCRD))]
 #  X$CRdeathsDec06 <- RCRD[,grep("Diciembre.2006",names(RCRD))]
@@ -130,7 +126,6 @@ X$PartyMunBC <- cartInt[,3]
 
 
 write.csv(X,"data/dataToPSMatch.csv")
-
 ############################
 #
 # Lets get prior balance checks
@@ -138,45 +133,45 @@ write.csv(X,"data/dataToPSMatch.csv")
 ###########################
 
 #par(mfrow=c(2,8), mai=c(0.6,0.3,0.2,0.1))
-## par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
+par(mfrow=c(2,7), mai=c(0.6,0.3,0.2,0.1))
 
-## #for(i in 6:13)
-## for(i in 14:20)
-## {
-##     if(names(X)[i]!="PartyMunBC")
-##     {
-##         hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
-##         xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
-##     }else
-##     {
-##         barplot(table(X[intervened,i]),col="grey",border="white",xlab="intervened")
-##     }    
-## }
+#for(i in 6:13)
+for(i in 14:20)
+{
+    if(names(X)[i]!="PartyMunBC")
+    {
+        hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+        xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+    }else
+    {
+        barplot(table(X[intervened,i]),col="grey",border="white",xlab="intervened")
+    }    
+}
 
-## #for(i in 6:13)
-## for(i in 14:20)
-## {
-##     if(names(X)[i]!="PartyMunBC")
-##     {
-##         hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,
-##            xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
-##     }else
-##     {
-##         barplot(table(X[-intervened,i]),col="lightblue",border="white",xlab="control")
-##     }    
-## }
+#for(i in 6:13)
+for(i in 14:20)
+{
+    if(names(X)[i]!="PartyMunBC")
+    {
+        hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,
+           xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+    }else
+    {
+        barplot(table(X[-intervened,i]),col="lightblue",border="white",xlab="control")
+    }    
+}
 
-## #just plot the homicides
-## par(mfrow=c(2,1), mai=c(0.8,0.5,0.2,0.1))
+#just plot the homicides
+par(mfrow=c(2,1), mai=c(0.8,0.5,0.2,0.1))
 
-## i=which(colnames(X) %in% "Hom06")
-## #homicides 
-## hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
-## xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+i=which(colnames(X) %in% "Hom06")
+#homicides 
+hist(X[intervened,i],col="grey",border="white",main=names(X)[i],breaks=20, xlab="intervened",
+xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
 
-## #homicides 
-## hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,100),
-##    xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
+#homicides 
+hist(X[-intervened,i],col="lightblue",border="white",main="",xlab="control",breaks=20,ylim=c(0,100),
+   xlim=c(min(X[intervened,i],X[-intervened,i],na.rm=TRUE),max(X[intervened,i],X[-intervened,i],na.rm=TRUE)))
    
 
 
@@ -187,7 +182,7 @@ write.csv(X,"data/dataToPSMatch.csv")
 # Now, what about the missingness?
 #
 ###########################
-#palette <- colorRampPalette(c('#0033BB','#ffffff'))(256)
+palette <- colorRampPalette(c('#0033BB','#ffffff'))(256)
 
 # the intervened units
 data<-matrix(as.numeric(!is.na(X[intervened,])),nrow=dim(X[intervened,])[1],ncol=dim(X[intervened,])[2])
@@ -195,7 +190,7 @@ rownames(data)= X$Clave[intervened]
 colnames(data)= colnames(X)
 
 
-#missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
 ####
 n<-300
 contPool<-setdiff(1:dim(X)[1], intervened)
@@ -205,7 +200,7 @@ rownames(data)= X$Clave[samp]
 colnames(data)= colnames(X)
 
 
-#missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
+missing_heatmap <- heatmap(data, scale="none", margins=c(6,1),col=palette,cexRow=0.1,cexCol=0.2)#, col = heat.colors(256))
 
 
 
@@ -341,18 +336,6 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 clavetreated <- clave[treated==1]
 regiontreated <- Regions[treated==1]
 clavematched <- clave[matchesH]
-
-## matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=7))
-## for(i in 1:length(clavetreated)){
-##   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*5 + 1):(i*5)])
-## }
-## names(matchframe) <- c("clave","region",paste("match",1:5,sep=""))
-## save(matchframe,file="data/matchframe.RData")
-# lpMat<-list(Init,postMatchHR)
-# pdf("Images/FinalLoveplot.pdf")
-# loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
-# dev.off()
-
 matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=m+2))
 for(i in 1:length(clavetreated)){
   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*m + 1):(i*m)])
@@ -373,7 +356,7 @@ barplot(table(compfull$PartyMunBC[treated==0]),col="lightblue",border="white",xl
 
 barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="intervened",main="Before Matching")
 
-
+# 
 
 barplot(table(compfull$PartyMunBC[matchesH]),col="lightblue",border="white",xlab="control",main="After Matching")
 
@@ -385,34 +368,34 @@ png("Images/MEloveplot.png",width=500,height=350)
 loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
 dev.off()
 }
-# 
-# ##create loveplots
-# for(i in 1:length(matchframe$clave)){
-#   ##calc muni statistics
-#   treatsub <- matchframe$clave[i]
-#   matchsub <- unlist(matchframe[i,c(paste("match",1:5,sep=""))])
-#   reg.treat.cov <-  compfull[clave%in%treatsub,]
-#   reg.control.cov <-  compfull[clave%in%matchsub,]
-#   ##TODO weights are not correct
-#   munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
-# 
-#   ##calc region statistics. 
-#   region.index <- matchframe$region[i] #Super inefficient but too tired to care
-#   regsub <- subset(compfull,Regions==region.index)
-#   treatsub <- matchframe[matchframe$region==region.index,]$clave
-#   matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:5,sep=""))])
-#   reg.treat.cov <-  compfull[clave%in%treatsub,]
-#   reg.control.cov <-  compfull[clave%in%matchsub,]
-# ##TODO weights are not correct
-#   regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
-# 
-#   ##loveplot
-#   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-#   png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
-# #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
-#   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Municipality"),xlim=c(-1,1))
-#   dev.off()
-# }
+
+##create loveplots
+for(i in 1:length(matchframe$clave)){
+  ##calc muni statistics
+  treatsub <- matchframe$clave[i]
+  matchsub <- unlist(matchframe[i,c(paste("match",1:m,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+  ##TODO weights are not correct
+  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
+
+  ##calc region statistics. 
+  region.index <- matchframe$region[i] #Super inefficient but too tired to care
+  regsub <- subset(compfull,Regions==region.index)
+  treatsub <- matchframe[matchframe$region==region.index,]$clave
+  matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:m,sep=""))])
+  reg.treat.cov <-  compfull[clave%in%treatsub,]
+  reg.control.cov <-  compfull[clave%in%matchsub,]
+##TODO weights are not correct
+  regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
+
+  ##loveplot
+  lpMat<-list(Init,postMatchHR,regionlove,munilove)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
+#png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+  loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomleft")
+  dev.off()
+}
 # ### hist test
 # 
 # source("balanceFunctions.R")

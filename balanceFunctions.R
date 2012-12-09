@@ -46,25 +46,25 @@ calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
 
 }
 
-loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3),bg_col="#32323299", leg_col="white", position="topright") # if not the
+loveplot<-function(MatPlot,cont=TRUE, labels=c(),xlims=c(-3,3),bg_col="#32323299", leg_col="white", position="topright",leg_size=1) # if not the
 {
     #Let MatPlot only have the covariates to plot
     # The first one should be the original sample 
     colors=c("black","gray","royalblue","coral2","darkorchid")
     types=25:21
     par(mai=c(0.5,1,0.5,0.1),mfrow=c(1,1),col=bg_col,bg=bg_col,col.axis=leg_col,col.lab=leg_col) 
-    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.5, 
+    plot((MatPlot[[1]][,1]-MatPlot[[1]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col=bg_col, bg=colors[1], xlab=NA, ylab=NA, yaxt="n",pch=25,cex=1.5, 
     main=ifelse(cont,""),xlim=xlims)
     for(i in 2:length(MatPlot))
     {
-        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col="white", bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.5)
+        points((MatPlot[[i]][,1]-MatPlot[[i]][,2])/sqrt(apply(MatPlot[[1]][,3:4],1,sum)), 1:dim(MatPlot[[1]])[1], col=bg_col, bg=colors[i], xlab=NA, ylab=NA, yaxt="n",pch=types[i],cex=1.5)
     }
  
     axis(2, labels=rownames(MatPlot[[1]]), at=1:dim(MatPlot[[1]])[1],font.lab=1,cex.axis=0.8,hadj=0.5,padj=1,las=1,col=leg_col,col.ticks=leg_col,col.lab=leg_col)
     abline(v=0,col=leg_col)
     abline(h=1:dim(MatPlot[[1]])[1], lty="dotted",col="lightgray")
     legend(position,legend=labels,box.col=bg_col,
-    pch=c(25:(26-length(lpMat))),col=bg_col,pt.bg=colors[1:length(lpMat)],bg=bg_col,text.col=leg_col,cex=1.5)   
+    pch=c(25:(26-length(lpMat))),col=bg_col,pt.bg=colors[1:length(lpMat)],bg=bg_col,text.col=leg_col,cex=leg_size)   
 }
 
 histCheck<-function(TreatMat, ContMat, Covs)
