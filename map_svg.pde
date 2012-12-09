@@ -91,6 +91,7 @@ void setupJ() {
   cartelTable = new Table("CartelIncomeExpensesByMunicipality.tsv");
   homicideTable = new Table("MunHomicides.tsv");
   popTableJ = new Table("MunPopulationEst.tsv");
+  matchtable = new Table("matchframe.tsv");
   municCount = homicideTable.getRowCount() - 1;
   municCartel = new char[municCount];
   municCartel2007J = new char[municCount];
@@ -302,6 +303,13 @@ void drawJ() {
 	    }else{
 		lovefn = "Images/MEloveplot.png";
 	    }
+	}
+
+	//highlight matches
+	if(dispint){
+	  for(int j = 0; j < matchtable.getRowCount() - 1; j++){
+	    println(matchtable.getInt(j,0));
+	  }
 	}
 
 	if(dispInt){
