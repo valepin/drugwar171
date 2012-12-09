@@ -9,10 +9,14 @@ import processing.opengl.*;
 import geomerative.*;
 
 RShape mapImage;
+RShape match1;
+RShape match2;
+RShape match3;
 RShape[] munis;
 Table homicideTable;
 Table cartelTable;
 Table popTableJ;
+Table matchtable;
 int mapHeight = height;
 int mapWidth = width;
 int municCount;
@@ -189,36 +193,38 @@ void drawfullJ() {
 
 
 
-
-  textSize(tsize);
-  textAlign(LEFT,TOP);
-  rectMode(CORNER);
-  fill(bg_color);
-  noStroke();
-  rect(0,height-barHeight*1.25,width,barHeight*1.25);
-  stroke(1);
-  for(int i = 0; i < cartelsJ.length-2; i++){
-    int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
-    fill(255);
-    rect(legendS*(i+1), height-barHeight*1.25,40,40);
-   
-    text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 60,70);
+  if(!dispInt){ 
+    textSize(tsize);
+    textAlign(LEFT,TOP);
+    rectMode(CORNER);
+    fill(bg_color);
+    noStroke();
+    rect(0,height-barHeight*1.25,width,barHeight*1.25);
+    stroke(1);
+    for(int i = 0; i < cartelsJ.length-2; i++){
+      int [] cartcol = cartelColor(cartelsJ[i][1].charAt(0));
+      fill(255);
+      rect(legendS*(i+1), height-barHeight*1.25,40,40);
+      
+      text(cartelsJ[i][0],legendS*(i+1), height-barHeight*1.25 + 45, 60,70);
     
-    for(int j = 0; j < heatJ.length; j++){
-      fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
-      rect(legendS*(i+1), height-barHeight*1.25 + 30 - 10*j ,40,10);
+      for(int j = 0; j < heatJ.length; j++){
+	fill(seriesColsJ[cartcol[0]][0],heatJ[j]);
+	rect(legendS*(i+1), height-barHeight*1.25 + 30 - 10*j ,40,10);
+      }
     }
+
+    textAlign(RIGHT,TOP);
+    textSize(10);
+    fill(255);
+    text("> " + (int) bJ[2], legendS-20, height-barHeight*1.25);
+    text((int) bJ[1] + " - " + (int) bJ[2], legendS-20, height-barHeight*1.25 + 10);
+    text((int) bJ[0] + " - " + (int) bJ[1], legendS-20, height-barHeight*1.25 + 20);
+    text("0 - " + (int) bJ[0], legendS-20, height-barHeight*1.25 + 30);
+    textAlign(LEFT,TOP);
+    text("Homicide Rate", 20, height-barHeight*1.25 + 45, 60,70);  
   }
 
-  textAlign(RIGHT,TOP);
-  textSize(10);
-  fill(255);
-  text("> " + (int) bJ[2], legendS-20, height-barHeight*1.25);
-  text((int) bJ[1] + " - " + (int) bJ[2], legendS-20, height-barHeight*1.25 + 10);
-  text((int) bJ[0] + " - " + (int) bJ[1], legendS-20, height-barHeight*1.25 + 20);
-  text("0 - " + (int) bJ[0], legendS-20, height-barHeight*1.25 + 30);
-  textAlign(LEFT,TOP);
-  text("Homicide Rate", 20, height-barHeight*1.25 + 45, 60,70);  
 }
 
 void drawJ() {
@@ -233,6 +239,8 @@ void drawJ() {
 
   RPoint p = new RPoint(mouseX-width/2 + xx, mouseY-height/2 + yy);
   translate(mapWidth/2-xx, mapHeight/2-yy);
+
+    
 
   RShape oldmunic = munis[oldMuni];
   if(oldmunic != null){
@@ -283,6 +291,13 @@ void drawJ() {
       }
       // stroke(colorScheme[2]);
       oldmunic.draw();
+
+      if(match1 != null){
+	fill(255);
+	match1.draw();
+	match2.draw();
+	match3.draw();
+      }
   }
 
   int selectedregion = 99;
@@ -306,11 +321,20 @@ void drawJ() {
 	}
 
 	//highlight matches
-	if(dispint){
+	if(dispInt){
 	  for(int j = 0; j < matchtable.getRowCount() - 1; j++){
-	    println(matchtable.getInt(j,0));
+	    if(homicideTable.getInt(i+1,0)==matchtable.getInt(j,0)){
+	      fill(highlightJ);
+	      match1 = mapImage.getChild("muni_" + matchtable.getString(j,2));
+	      match2 = mapImage.getChild("muni_" + matchtable.getString(j,3));
+	      match3 = mapImage.getChild("muni_" + matchtable.getString(j,4));
+	      match1.draw();
+	      match2.draw();
+	      match3.draw();
+	    }
 	  }
 	}
+	
 
 	if(dispInt){
 	    if(cartelTable.getInt(i+1,8)!=0){
