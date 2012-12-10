@@ -336,6 +336,7 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 clavetreated <- clave[treated==1]
 regiontreated <- Regions[treated==1]
 clavematched <- clave[matchesH]
+m <- 3
 matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=m+2))
 for(i in 1:length(clavetreated)){
   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*m + 1):(i*m)])
@@ -364,10 +365,12 @@ barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="
 #######
 
 source("balanceFunctions.R")
-png("Images/MEloveplot.png",width=500,height=350)
-loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1))
+gwidth <- 400
+gheight <- 280
+png("Images/MEloveplot.png",width=gwidth,height=gheight)
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),leg_size=1.2,position="bottomleft")
 dev.off()
-}
+
 
 ##create loveplots
 for(i in 1:length(matchframe$clave)){
@@ -391,7 +394,7 @@ for(i in 1:length(matchframe$clave)){
 
   ##loveplot
   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=gwidth,height=gheight)
 #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
   loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomleft")
   dev.off()
