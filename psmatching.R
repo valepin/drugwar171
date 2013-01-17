@@ -336,7 +336,6 @@ hist(psc,col="lightblue",border="white",main="propensity scores - control units"
 clavetreated <- clave[treated==1]
 regiontreated <- Regions[treated==1]
 clavematched <- clave[matchesH]
-m <- 3
 matchframe <- data.frame(matrix(nrow=length(clavetreated),ncol=m+2))
 for(i in 1:length(clavetreated)){
   matchframe[i,] <- c(clavetreated[i],regiontreated[i],clavematched[((i-1)*m + 1):(i*m)])
@@ -365,12 +364,10 @@ barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="
 #######
 
 source("balanceFunctions.R")
-gwidth <- 400
-gheight <- 280
-png("Images/MEloveplot.png",width=gwidth,height=gheight)
-loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),leg_size=1.2,position="bottomleft")
+png("Images/MEloveplot.png",width=500,height=350)
+loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),position="bottomleft",bg_col="grey22")
 dev.off()
-
+}
 
 ##create loveplots
 for(i in 1:length(matchframe$clave)){
@@ -394,9 +391,9 @@ for(i in 1:length(matchframe$clave)){
 
   ##loveplot
   lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=gwidth,height=gheight)
+  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
 #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
-  loveplot(lpMat,labels=c("Initial","Matched HomR","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomleft")
+  loveplot(lpMat,labels=c("Initial","Matched","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomright",bg_col=)
   dev.off()
 }
 # ### hist test
@@ -629,10 +626,10 @@ write(output,file="data/Results.tsv",ncolumns=6,sep="\t")
 colors=c("coral2","coral","royalblue","coral2","darkorchid")
 
 par(mar=c(9,5,2,2))
-Res<-read.delim("data/Results.tsv", header = F, sep = "\t")
+Res<-read.delim("data/Results.tsv", header = T, sep = "\t")
 n=dim(Res)[1]-1
 plot(c(1:n),Res[-14,5] ,type='p',col="white", bg=colors[1],ylab="homicide rate pero 100000 inhabitants",xlab=""
-    ,xaxt="n",pch=21,ylim=c(-65,170))
+    ,xaxt="n",pch=21,ylim=c(-30,110))
 
     
 axis(side=1, at=c(1:n),labels=Res[-14,1],las=2,family="serif",font.lab=1,cex.axis=0.7)
