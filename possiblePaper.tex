@@ -176,7 +176,7 @@ Due to the security issues intrinsic to the problem, certain covariates that wou
 The table on the right of Table \ref{Tab2} does not have only observed outcomes under ``control". That is the main difference between this problem and the ones which are usually set up in this framework. The outcomes of the controls are estimated using municipalities that were not intervened and that might not be neighboring to estimate what the homicide rate increase would have been for the treated municipalities. Doing this makes sense because in the absence of an intervention there are no spill over effects. However, we can't really think of that same region as receiving the same kind of intervention, because the municipalities in question are not neighboring. Therefore, the \emph{observed} outcome of the treated units is denoted by $Y_i(1)$, but the outcome of the control units is \emph{estimated}, and denoted by $\hat{Y}_i(0)$. 		
 
 \subsection{Matching method}
-We used a combination of exact and propensity score matching. Three matches were found for each treated municipality We \textbf{exactly matched} on Political Party in office at Municipality level in 2006, Homicide Rate 2006 Class (indicator for ``above the mean''), and Missing Indicator for Doctors per medical unit. The selection of Propensity score was based on balance achieved. We considered
+We used a combination of exact and propensity score matching. Three matches were found for each treated municipality. We \textbf{exactly matched} on Political Party in office at Municipality level in 2006, Homicide Rate 2006 Class (indicator for ``above the mean''), and Missing Indicator for Doctors per medical unit. The importance of 2006 is that it is the last year that is prior to all interventions listed. The selection of Propensity score was based on balance achieved. We considered
 \begin{itemize}
 	 \item all main effects
 	\item higher order terms involving Homicide Rate 2006 at Municipality level
@@ -184,6 +184,8 @@ We used a combination of exact and propensity score matching. Three matches were
 	\item log(State Homicide Rate 2006 +1)
 	\item State Homicide Rate 2006$^2$
 \end{itemize}
+
+ 
 
 \begin{figure}[htdp]
     \centering
@@ -199,18 +201,24 @@ We used a combination of exact and propensity score matching. Three matches were
 
 
 \subsection{Assessing Balance}
-As in any observational study, love plots are a very useful tool to assess the balance between the treated and control groups. For this problem we had to think what the baseline balance is. It makes sense to consider that initially we would impute $$ $$
+As in any observational study, balance in key covariates should be assessed before any analysis step. When a reasonable balance has been achieved, the design stage of the study is over and the analysis one begins. Readers should judge whether the balance achieved is enough for them to believe the results or not.  
+
+Love plots are a very useful tool to evaluate balance. For this problem we had to think what the baseline balance is. What we did for the initial balance was to impute the missing outcome for each treated municipality with the overall average of the control municipalities. This procedure results in an identical imputation of the missing outcome for each region with the  Like the outcome, the covariate value for each treated region corresponds to a weighted average (based on population) of the municipalities that conform it. The plots displayed in Figure \ref{lpme} show a clear improvement with the 3 to 1 matching used. This is seen by the fact that the lighter, pointing upward triangles are closer to the vertical line on zero, which denotes no difference in the average values of the covariate between treated and control units. However, subfigure \ref{lpaddcovs} shows that the monthly total number of criminal rivalry related deaths before all interventions was improved by a very small amount. However, given the nature of the 
 
 \begin{figure}[htdp]
+	\centering
+	\subfigure[Main effects]{
        \includegraphics[scale=0.4]{Images/PQloveplot.pdf}
-		\caption{Love plot - main effects}
+		}
+		\subfigure[Additional covariates]{
+	       \includegraphics[scale=0.4]{Images/PQloveplotExtraCov.pdf}
+			\label{lpaddcovs}
+			}
+		\caption{Love plots}
+		\label{lpme}
 \end{figure}
 
 
-\begin{figure}[htdp]
-       \includegraphics[scale=0.4]{Images/PQloveplotExtraCov.pdf}
-		\caption{Love plot - extra covariates}
-\end{figure}
 	
 \begin{figure}[htdp]		
 	        \includegraphics[scale=0.4]{Images/psByReg.pdf}
