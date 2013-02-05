@@ -24,7 +24,7 @@ calcWeights<-function(MatchMat,N)
 }
 
 calcMeansAndVars<-function(TreatMat, ContMat, Covs, cont, Ws,WsTilde)
-{
+{   
     means<- matrix(NA,length(Covs),4)
     # make the weights add up to 1
     Ws=Ws/sum(Ws)

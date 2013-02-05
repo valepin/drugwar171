@@ -363,39 +363,39 @@ barplot(table(compfull$PartyMunBC[matchesH]),col="lightblue",border="white",xlab
 barplot(table(compfull$PartyMunBC[treated==1]),col="coral",border="white",xlab="intervened",main="After Matching")
 #######
 
-source("balanceFunctions.R")
-png("Images/MEloveplot.png",width=500,height=350)
-loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),position="bottomleft",bg_col="grey22")
-dev.off()
-}
-
-##create loveplots
-for(i in 1:length(matchframe$clave)){
-  ##calc muni statistics
-  treatsub <- matchframe$clave[i]
-  matchsub <- unlist(matchframe[i,c(paste("match",1:m,sep=""))])
-  reg.treat.cov <-  compfull[clave%in%treatsub,]
-  reg.control.cov <-  compfull[clave%in%matchsub,]
-  ##TODO weights are not correct
-  munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
-
-  ##calc region statistics. 
-  region.index <- matchframe$region[i] #Super inefficient but too tired to care
-  regsub <- subset(compfull,Regions==region.index)
-  treatsub <- matchframe[matchframe$region==region.index,]$clave
-  matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:m,sep=""))])
-  reg.treat.cov <-  compfull[clave%in%treatsub,]
-  reg.control.cov <-  compfull[clave%in%matchsub,]
-##TODO weights are not correct
-  regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
-
-  ##loveplot
-  lpMat<-list(Init,postMatchHR,regionlove,munilove)
-  png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
-#png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
-  loveplot(lpMat,labels=c("Initial","Matched","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomright",bg_col=)
-  dev.off()
-}
+# source("balanceFunctions.R")
+# png("Images/MEloveplot.png",width=500,height=350)
+# loveplot(lpMat,labels=c("Initial","Matched"),xlim=c(-1,1),position="bottomleft",bg_col="grey22")
+# dev.off()
+# }
+# 
+# ##create loveplots
+# for(i in 1:length(matchframe$clave)){
+#   ##calc muni statistics
+#   treatsub <- matchframe$clave[i]
+#   matchsub <- unlist(matchframe[i,c(paste("match",1:m,sep=""))])
+#   reg.treat.cov <-  compfull[clave%in%treatsub,]
+#   reg.control.cov <-  compfull[clave%in%matchsub,]
+#   ##TODO weights are not correct
+#   munilove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,1,Vs[clave%in%matchsub])
+# 
+#   ##calc region statistics. 
+#   region.index <- matchframe$region[i] #Super inefficient but too tired to care
+#   regsub <- subset(compfull,Regions==region.index)
+#   treatsub <- matchframe[matchframe$region==region.index,]$clave
+#   matchsub <- unlist(matchframe[matchframe$region==region.index,c(paste("match",1:m,sep=""))])
+#   reg.treat.cov <-  compfull[clave%in%treatsub,]
+#   reg.control.cov <-  compfull[clave%in%matchsub,]
+# ##TODO weights are not correct
+#   regionlove <- calcMeansAndVars(reg.treat.cov,reg.control.cov,difmeanCovs,difmeanCovs,Ws[clave%in%treatsub],WsTilde[clave%in%matchsub])
+# 
+#   ##loveplot
+#   lpMat<-list(Init,postMatchHR,regionlove,munilove)
+#   png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""),width=500,height=350)
+# #png(paste("Images/loveplot",matchframe$clave[i],".png",sep=""))
+#   loveplot(lpMat,labels=c("Initial","Matched","Region","Municipality"),xlim=c(-1,1),leg_size=1.2,position="bottomright",bg_col=)
+#   dev.off()
+# }
 # ### hist test
 # 
 # source("balanceFunctions.R")
@@ -546,7 +546,8 @@ for(i in 1:length(regs))
 
 
 #varsN[,1]<-0#var(Y[treated==1]*100000)
-# Results<-cbind(tab[-1,][-I2010,],Pjs[,1],effectsD,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),PjsG[,1],effectsD,sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
+# Results<-cbind(tab[-1,][-I2010,],Pjs[,1],effectsD,sqrt(apply(varsB,1,sum)),sqrt(apply(varsN,1,sum)),sqrt(varsNv[,2]),PjsG[,1],effectsD,
+# sqrt(apply(varsNG,1,sum)),sqrt(varsNGv[,2]))
 # colnames(Results)<-c("num Mun","Date","obs HR","effect","SD bin","SD ney","SD reg","obs HR change","effect G","SD ney G","SD reg G")
 
 Results<-cbind(tab[-1,][-I2010,],PjsG[,1],effectsD,sqrt(varsNGv[,2]),PjsG2[,1],PjsG2[,1]-PjsG2[,2],sqrt(varsNGv2[,2])
@@ -567,26 +568,18 @@ xtable(Results)
 
 Response<-calcMeansAndVars(matrix(Y[treated==1]),matrix(Y[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 
-### gain scores - with Juárez
-ResponseG<-calcMeansAndVars(matrix(G[treated==1]), matrix(G[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
-ResponseG2<-calcMeansAndVars(matrix(G2[treated==1]), matrix(G2[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
-ResponseG3<-calcMeansAndVars(matrix(G3[treated==1]), matrix(G3[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 
-
-# ResponseGwoJ<-calcMeansAndVars(matrix(G[treated==1]), matrix(G[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
-# ResponseG2woJ<-calcMeansAndVars(matrix(G2[treated==1]), matrix(G2[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
-# ResponseG3woJ<-calcMeansAndVars(matrix(G3[treated==1]), matrix(G3[matchesH]),1,1,Ws[treated==1],WsTilde[matchesH])
 
 
 # Variance calculation
 
-VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
- var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsN[,2]))
- # VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
- #  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsNG[,2]))
-  VNG<-c(var(PjsG[,1])/length(effectsD)+mean(varsNG[,1]),
-   var(PjsG[,2])/length(effectsD)+mean(varsNG[,2]))
-VB<-apply(varsB,2,sum)/13^2
+# VN<-c(var(Ws[treated==1]/13*Y[treated==1])*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+#  var(WsTilde[matches]/13*Y[matches])*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsN[,2]))
+#  # VNG<-c(var(Ws[treated==1]/13*(Y[treated==1]-compfull$Hom06[treated==1]/100000))*100000^2/(1-sum((Ws[treated==1]/13)^2)),
+#  #  var(WsTilde[matches]/13*(Y[matches]-compfull$Hom06[matches]/100000))*100000^2/(1-sum((WsTilde[matches]/13)^2))+mean(varsNG[,2]))
+#   VNG<-c(var(PjsG[,1])/length(effectsD)+mean(varsNG[,1]),
+#    var(PjsG[,2])/length(effectsD)+mean(varsNG[,2]))
+# VB<-apply(varsB,2,sum)/13^2
 
 
 
@@ -600,15 +593,39 @@ VB<-apply(varsB,2,sum)/13^2
 # only G (with three year estimates)    
  Results<-Results[ordRegs,]
     ResAv<-c(250,0,ResponseG[,1]*100000,
-        (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])),ResponseG2[,1]*100000,
-            (ResponseG2[,1]-ResponseG2[,2])*100000,sqrt(sum(apply(PjsG2,2,var,na.rm=T))/sum(!is.na(PjsG2[,1]))+mean(varsNGv2[,2],na.rm=T)),ResponseG3[,1]*100000,
-                (ResponseG3[,1]-ResponseG3[,2])*100000,sqrt(sum(apply(PjsG3,2,var,na.rm=T))/sum(!is.na(PjsG3[,1]))+mean(varsNGv3[,2],na.rm=T))
-        )    
-ResultsF<-rbind(Results, ResAv)
+        (ResponseG[,1]-ResponseG[,2])*100000,sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])/13),ResponseG2[,1]*100000,
+            (ResponseG2[,1]-ResponseG2[,2])*100000,sqrt(sum(apply(PjsG2,2,var,na.rm=T))/sum(!is.na(PjsG2[,1]))+
+            mean(varsNGv2[,2],na.rm=T)/sum(!is.na(PjsG2[,1]))),ResponseG3[,1]*100000,
+                (ResponseG3[,1]-ResponseG3[,2])*100000,sqrt(sum(apply(PjsG3,2,var,na.rm=T))/sum(!is.na(PjsG3[,1]))+
+                mean(varsNGv3[,2],na.rm=T)/sum(!is.na(PjsG3[,1])))
+                        )   
+                        
+ResAv1<-c(250,0,mean(Results[,3]),
+    mean(Results[,4]),sqrt(sum(apply(PjsG,2,var))/13+mean(varsNGv[,2])/13),
+    mean(Results[,6],na.rm=T),mean(Results[,7],na.rm=T),
+         sqrt(sum(apply(PjsG2,2,var,na.rm=T))/sum(!is.na(PjsG2[,1]))+
+         mean(varsNGv2[,2],na.rm=T)/sum(!is.na(PjsG2[,1]))),mean(Results[,9],na.rm=T),mean(Results[,10],na.rm=T),
+ sqrt(sum(apply(PjsG3[-ordRegs[1],],2,var,na.rm=T))/sum(!is.na(PjsG3[-ordRegs[1],]))+mean(varsNGv3[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG3[-ordRegs[1],1])))
+    )    
+                         
+
+# without Juárez
+   ResAvWOJ<-c(250,0,mean(Results[-1,3]),
+       mean(Results[-1,4]),sqrt(sum(apply(PjsG[-1,],2,var))/12+mean(varsNGv[-1,2])/12),
+       mean(Results[-1,6],na.rm=T),mean(Results[-1,7],na.rm=T),
+            sqrt(sum(apply(PjsG2[-ordRegs[1],],2,var,na.rm=T))/sum(!is.na(PjsG2[-ordRegs[1],1]))+
+            mean(varsNGv2[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG2[-ordRegs[1],1]))),mean(Results[-1,9],na.rm=T),mean(Results[-1,10],na.rm=T),
+    sqrt(sum(apply(PjsG3[-ordRegs[1],],2,var,na.rm=T))/sum(!is.na(PjsG3[-ordRegs[1],]))+mean(varsNGv3[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG3[-ordRegs[1],1])))
+       )    
 
 
 
-rownames(ResultsF)<-c(regNames, "Average")
+        
+ResultsF<-rbind(Results, ResAv1,ResAvWOJ)
+
+
+
+rownames(ResultsF)<-c(regNames, "Average","Average wJ")
 
 xtable(ResultsF)
 
