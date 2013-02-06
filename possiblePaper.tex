@@ -23,12 +23,12 @@
 	\maketitle
 
 \section{Abstract}
-  We attempt to visualize and analyze publicly available data at the municipality level, to answer whether \textbf{homicide rates increase significantly after a military intervention} using the Rubin Causal Model (potential outcomes framework)
+  We attempt to visualize and analyze publicly available data at the municipality level, to answer whether \textbf{homicide rates increase significantly after a military intervention} using the Rubin Causal Model, \textbf{RCM}, also known as the potential outcomes framework. Because of the nature of the problem there is a need for redefinition of units to make SUTVA more feasible. We propose ways of dealing with this issue at the design and analysis steps.
 	
 \section{Introduction}	
 	The presidency of Felipe Calder\'{o}n (2006-2012) was characterized for the war against organized crime, raising many questions regarding security and violence in Mexico.
 	
-In 2011, Fernando Escalante wrote an article for NEXOS magazine, ``\emph{Homicidios 2008-2009 La muerte tiene permiso}'', in which he posed the hypothesis that military interventions increased the homicide rate. No formal statistical analysis was performed. His paper mainly showed visual comparisons, as those shown below in Figure \ref{figNexos}. These comparisons were mainly at the state level, but he did point out within state differences as in Figure \ref{figNexosWithinState}.
+In 2011, Fernando Escalante wrote an article for NEXOS magazine, ``\emph{Homicidios 2008-2009 La muerte tiene permiso}'', in which he posed the hypothesis that military interventions increased the homicide rate. No formal statistical analysis was performed. His paper mainly showed visual comparisons, as those shown below in Figure \ref{figNexos}. These comparisons were mostly at the state level, but he did point out within state differences as in Figure \ref{figNexosWithinState}.
 \begin{figure}[htdp]
     \centering
 \subfigure[National]{
@@ -41,7 +41,7 @@ In 2011, Fernando Escalante wrote an article for NEXOS magazine, ``\emph{Homicid
 		    \includegraphics[scale=0.22]{Images/NexosChihComp.png}
 		\label{figNexosWithinState}
 			}
-\caption{Figures in Escalante's paper, \ref{Nexos}, contrasting homicide rate (per 100000 inhabitants) time series: 1990 - 2009.}	
+\caption{Figures in Escalante's paper, \cite{Nexos}, contrasting homicide rate (per 100000 inhabitants) time series: 1990 - 2009.}	
 			\label{figNexos}
 \end{figure}
 	We approach this question with a formal causal inference framework. The nature of the problem carries several challenges for the analysis. The design stage was completed before the analysis was performed.
@@ -58,7 +58,7 @@ Our sources are
 			\item Escalante's 2011 NEXOS paper 
 			\item Presidency web page (before 2012 transition)
 		\end{itemize}
-		Note that INEGI is the source for most of the variables. In particular, their data base was used to get the response variable, homicide rate. Escalante's paper also used INEGI's data. As this work was motivated by Escalante's paper, the definition of treatment and identification of treated units was also based on the military interventions he listed, based on a search of press releases and ``comunicados'' of the \emph{SEDENA} (Office the Secretary of Defense)
+		Note that INEGI is the source for most of the variables. In particular, their data base was used to get the response variable: homicide rate. Escalante's paper also used INEGI's data. As this work was motivated by Escalante's paper, the definition of treatment and identification of treated units was also based on the military interventions he listed, based on a search of press releases and ``comunicados'' of the \emph{SEDENA} (Office the Secretary of Defense).
 		
 Due to the security issues intrinsic to the problem, certain covariates that would be of interest are not available. This unavailability is because it is classified information, and non-governmental attempts to get them are not in the time points we need, or are product of methodology we are not convinced of. Examples of such covariates are:
 	\begin{itemize}
@@ -71,28 +71,26 @@ Due to the security issues intrinsic to the problem, certain covariates that wou
 \section{Set Up In The Potential Outcomes Framework: The Design}
 \subsection{A Broken Experiment}We are working under the assumption that because there are limited resources, military interventions were not sent in to every drug-related problematic municipality. Hence, there is a possibility of overlap between the municipalities that received a military intervention and those that did not.
 
-
 \subsection{SUTVA}		
 		SUTVA, stable-unit treatment value assumption, is a common assumption made in this framework. It consists of two parts: the no hidden values of treatment and no interference between units.
 		\begin{itemize}
-			\item \emph{\textbf{No Interference:}} It is important to think carefully about the definition of treatment and the unit that receives it, in such a way that this assignment has no effect on the treatment of other units. It is reasonable to assume that the effect of a military intervention on a particular municipality will spill over to neighboring ones. Hence, we grouped close by regions that received an intervention, and their immediate neighboring municipalities to make this assumption more reasonable. Figure \ref{reatedunits} shows the 13 treated units as clusters of neighboring municipalities shaded in pink and red. The red municipalities were those that appear in the list of military interventions. Those in pink refer to the municipalities that were not directly intervened, but part of a treated region. The grey and black municipalities also encode treated regions. However, they were not included in the design or analysis because they interventions occurred in 2010 so we did not have post intervention information for them. 
+			\item \emph{\textbf{No Interference:}} It is important to think carefully about the definition of treatment and the unit that receives it, in such a way that this unit-level assignment has no effect on the treatment of other units. It is reasonable to assume that the effect of a military intervention on a particular municipality will spill over to neighboring ones. Hence, we grouped close by regions that received an intervention, and their immediate neighboring municipalities to make this assumption more reasonable. Figure \ref{treatedUnits} shows the 13 treated units as clusters of neighboring municipalities shaded in pink and red. The red municipalities were those that appear in the list of military interventions. Those in pink refer to the municipalities that were not directly intervened, but part of a treated region. The grey and black municipalities also encode treated regions. However, they were not included in the design or analysis because they interventions occurred in 2010 so we did not have post intervention information for them. 
 			\begin{figure}[htdp]
 				\centering
 			      \includegraphics[scale=0.3]{Images/intervened.png}
-			      \caption{\textbf{Red} (Black) = municipalities that received a military intervention. \newline
-			\textbf{Pink} (Grey) = municipalities not directly intervened, but part of a treated region (neighbor to a red).\newline
-			 \small{Black and Grey related to interventions in 2010 - we have no post intervention data}.}
-			\label{treatedUnits}
+
+			      \caption{Map of Mexico's Municipalities showing the definition of units. The \textbf{red} \ municipalities denote those that received a military intervention. The \textbf{pink} ones, which were not directly intervened, are the immediate neighbors to the red municipalities, and are part of a treated region. Thirteen clusters (regions) are defined as the treated units. The black and grey municipalities denote analogous information, but are related to interventions in 2010, for which we have no post intervention data.}
+						\label{treatedUnits}
 			\end{figure}
 			
-			\item \emph{\textbf{No Hidden Value:}} It is important to have an unambiguous definition to identify treated units, and be clear about what potential outcomes we are comparing. Based on the Escalante paper, we defined \textbf{ Military intervention} as a confrontation between army and organized crime that resulted in at least 3 civilian deaths (where civilian could be a member of a cartel). The list we used was obtained from the paper in question. This list could be improved by scrapping newspapers and SEDENA press releases. We define \textbf{treatment} for a region as receiving at least one military intervention between 2007 and 2010.
+			\item \emph{\textbf{No Hidden Value:}} It is important to have an unambiguous definition to identify treated units, and be clear about what potential outcomes we are comparing. Based on the Escalante paper, we defined \textbf{ Military intervention} as a confrontation between army and organized crime that resulted in at least 3 civilian deaths (where civilian could be a member of a cartel). The list we used was obtained from the motivating paper. This list could be improved by scrapping newspapers and SEDENA press releases. We define \textbf{treatment} for a region as receiving at least one military intervention between 2007 and 2010.
 			\begin{itemize}
 				\item We define \textbf{Timing of treatment} for a region to be the first point in time in which a municipality in the region received an intervention.
 			\end{itemize}  			
 		\end{itemize}
 		
 \subsection{Unconfoundedness}			
-	Unconfoundedness assumes we have all covariates, \textbf{X}, such that given \textbf{X},  treatment assignment is independent of \textbf{Y}. This is a critical untestable assumption. However, we have previously mentioned missing covariates that we believe are important but we do not have access to these in a reliable or time-relevant form. The covariates included in our study are displayed in Table \ref{Tab1}. Note that higher order effects involving Homicide Rate of 2006 at the municipality level were used in the propensity score.
+	Unconfoundedness assumes we have all covariates, \textbf{X}, such that given \textbf{X},  treatment assignment is independent of \textbf{Y}, the potential outcomes. However, we have previously mentioned missing covariates that we believe are important, but we do not have access to these in a reliable or time-relevant form. The covariates included in our study are displayed in Table \ref{Tab1}. Higher order effects involving Homicide Rate of 2006 at the municipality level were used in the selected propensity score.
 		
 	\begin{table}[htdp]
 	    \footnotesize
@@ -133,7 +131,7 @@ Due to the security issues intrinsic to the problem, certain covariates that wou
 	\end{table}
 	
 \subsection{Estimand}
-		        Let $Y_i(1)$ denote the homicide rate change in region $i$ from one year before to one year after receiving a military intervention, and $Y_i(0)$ what this difference would have been if it hadn't received it (Rubin Causal Model). Figure \ref{responseDef} displays a sketch of the potential outcomes, where $HR_i(0)$ and $HR_i(1)$ denote the homicide rate time series for region $i$ under control and treatment respectively, and $HR_i^{x}(1)$ denotes the homicide rate for region $i$ at the \emph{end} of year $x$.
+		        Let $Y_i(1)$ denote the homicide rate change in region $i$ from one year before to one year after receiving a military intervention, and $Y_i(0)$ what this difference would have been if it had not received it (\textbf{RCM}). Figure \ref{responseDef} displays a sketch of the potential outcomes, where $HR_i(0)$ and $HR_i(1)$ denote the homicide rate time series for region $i$ under control and treatment respectively, and $HR_i^{x}(1)$ denotes the homicide rate for region $i$ at the \emph{end} of year $x$.
 		
 		
 				\begin{figure}[htdp]
@@ -198,7 +196,7 @@ Due to the security issues intrinsic to the problem, certain covariates that wou
 									   \caption{Tables of all potential outcomes (left)  and of \emph{Observed-Estimated} potential outcomes (right).}
 				    \label{Tab3}
 				\end{table}
-The subtable on the left of Table \ref{Tab3} shows all the quantities that we would like to know to reveal the TRUE value of the estimand. This is often called the SCIENCE in the Rubin Causal Model framework. The second part of this table is explained in the \emph{Estimation} section.					
+The subtable on the left of Table \ref{Tab3} shows all the quantities that we would like to know to reveal the TRUE value of the estimand. This is often called the SCIENCE in the \textbf{RCM} framework. The second part of this table is explained in the \emph{Estimation} section.					
 
 \subsection{Matching method}
 We used a combination of exact and propensity score matching. Three matches were found for each treated municipality. We \textbf{exactly matched} on Political Party in office at Municipality level in 2006, Homicide Rate 2006 Class (indicator for ``above the mean''), and Missing Indicator for Doctors per medical unit. The importance of 2006 is that it is the last year that is prior to all interventions listed. The selection of Propensity score was based on balance achieved. We considered
@@ -209,6 +207,7 @@ We used a combination of exact and propensity score matching. Three matches were
 	\item log(State Homicide Rate 2006 +1)
 	\item State Homicide Rate 2006$^2$
 \end{itemize}
+Each treated municipality was matched to three controls.
 
  
 
@@ -229,7 +228,7 @@ We used a combination of exact and propensity score matching. Three matches were
 \subsection{Assessing Balance}
 As in any observational study, balance in key covariates should be assessed before any analytical step. When a reasonable balance has been achieved, the design stage of the study ends and the analysis one begins. Readers should judge whether the balance achieved is enough for them to trust the results.  
 
-Love plots are a very useful tool to evaluate balance. For this problem we had to come up with a reasonable understanding of what the baseline balance is. What we did for the initial balance was to impute the missing outcome for each treated municipality with the overall average of the control municipalities. Therefore the same value is used to impute the missing outcome for each treated region. Like the outcome, the covariate value for each treated region corresponds to a weighted average (based on population) of the municipalities that conform it. The plots displayed in Figure \ref{lpme} show a clear improvement with the 3 to 1 matching used. This is seen by the fact that the lighter, pointing upward triangles are closer to the vertical line on zero, which denotes no difference in the average values of the covariate between treated and control units. However, subfigure \ref{lpaddcovs} shows that the monthly total number of criminal rivalry related deaths before May 2007 (time of first intervention) was improved by a very small amount. However, we chose to focus on balancing the 2006 homicide rate reported by INEGI because those are the official data and it is unclear how reliable the criminal rivalry death count is. Also note these criminal rivalry covariates are not normalized by population. This information is not available at a monthly resolution.
+Love\footnote{Thomas E. Love} plots are a very useful tool to evaluate balance. For this problem we had to come up with a reasonable definition of the baseline (initial) balance is. What is the implicit imputation of the missing outcome for each treated municipality without using any covariate information of the controls? These missing outcomes are imputed with the overall average of the control municipalities. Although the regional outcome is a weighted average (based on population) of the municipalities that conform it, because all missing municipality outcomes are imputed with the same value, the overall average of the control municipalities is also used to impute the missing outcome for each treated region. The initial balance is calculated using the population based weights of the covariates of municipalities that conform each region. The plots displayed in Figure \ref{lpme} show a clear improvement with the 3 to 1 matching used. This is seen by the fact that the lighter, pointing upward triangles are closer to the vertical line on zero, which denotes no difference in the average values of the covariate between treated and control units. However, subfigure \ref{lpaddcovs} shows that the monthly total number of criminal rivalry related deaths before May 2007 (time of first intervention) was improved by a very small amount. Nevertheless, we chose to focus on balancing the 2006 homicide rate reported by INEGI because those are the official data and it is unclear how reliable the criminal rivalry death count is. Furthermore, the criminal rivalry covariates are not normalized because population information is not available at a monthly resolution.
 
 \begin{figure}[htdp]
 	\centering
@@ -244,10 +243,10 @@ Love plots are a very useful tool to evaluate balance. For this problem we had t
 		\label{lpme}
 \end{figure}
 
-Figure \ref{regionPS} shows the propensity scores by region. Keep in mind that the control regions (at the top) consist of three times as many municipalities as the intervened ones (at the bottom). And in some cases the number of municipalities is very low (e.g. Tijuana consists of 4). That said, the municipalities that look problematic are:
+Figure \ref{regionPS} shows the propensity score distribution by region. Keep in mind that the control regions (at the top) consist of three times as many municipalities as the intervened ones (at the bottom). And in some cases the number of municipalities within a treated region is very small (e.g. Tijuana consists of 4). That said, the municipalities that look problematic are:
 \begin{itemize}
 	\item \textbf{Tijuana} because of the overlap in propensity score distributions. In other words, the propensity score values for the treated municipalities are above most of the values for the control ones.
-	\item \textbf{Apatzing\'{a}n} and \textbf{Sinaloa} to a lesser extent because of the different shapes of the control and intervened histograms. 	
+	\item \textbf{Apatzing\'{a}n} and \textbf{Sinaloa}, to a lesser extent, because of the different shapes of the control and intervened histograms. 	
 \end{itemize}	
 \begin{figure}[htdp]
 	\centering		
@@ -258,9 +257,9 @@ Figure \ref{regionPS} shows the propensity scores by region. Keep in mind that t
 			
 \section{Estimation}
 
-The table on the right of Table \ref{Tab3} does not have only observed outcomes under ``control". That is the main difference between this problem and the ones which are usually set up in this framework. The outcomes of the controls are estimated using municipalities that were not intervened and that might not be neighboring to estimate what the homicide rate increase would have been for the treated municipalities conforming a region, which are in fact side by side. Doing this makes sense because in the absence of an intervention there is no reason to believe that there are spill over effects. However, we cannot conceive such a control region as receiving the same kind of intervention, because the municipalities in question are not neighboring. Therefore, the \emph{observed} outcome of the treated units is denoted by $Y_i(1)$, but the outcome of the control units is \emph{estimated}, and denoted by $\hat{Y}_i(0)$. 	
+The table on the right of Table \ref{Tab3} does not have any observed outcomes under ``control". That is the main difference between this problem and the ones which are usually set up in this framework. The outcomes of the controls are estimated using municipalities that were not intervened and that might not be neighboring to estimate what the homicide rate increase would have been for the treated municipalities conforming a region, which are in fact side by side. Doing this makes sense because in the absence of an intervention there is no reason to believe that there are spill over effects. However, we cannot conceive such a control region as receiving the same kind of intervention, because the municipalities in question are not neighboring. Therefore, the values obtained are used to \emph{estimate} what would happen in a comparable contiguous region had it received no military intervention. The \emph{observed} outcome of the treated units is denoted by $Y_i(1)$, and the outcome of the control units is \emph{estimated}, and denoted by $\hat{Y}_{i'}(0)$. 	
 
-Let I denote the number of treated regions (here 13, 205 municipalities). Let $M_{ij}$ be the number of municipalities matched to the $j$th municipality in region $i$, and estimate $Y_{i'j}(0)$ and $Y_{i'}(0)$. Here $M_{ij}=3$.
+Let I denote the number of treated regions. Let $M_{ij}$ be the number of municipalities matched to the $j$th municipality in region $i$, and estimate $Y_{i'j}(0)$ and $Y_{i'}(0)$. Here $M_{ij}=3$.
 
       Let $\textrm{PopM}_{ij}=\sum_{k=1}^{M_{ij}}\textrm{PopM}_{ijk}$ be the sum of the populations of these matched municipalities. % this notation makes sense because these are matches to the jth municipality if tge jth region
  Then,
@@ -270,24 +269,24 @@ Let I denote the number of treated regions (here 13, 205 municipalities). Let $M
       \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y^{obs}_{ijk}(0) \quad \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
       and
       $$\hat{\tau}=\frac{\sum_i^{I}[Y^{obs}_i(1) - \hat{Y}_{i'}(0)]}{I}=\overline{Y}^{obs}(1)-\overline{Y}^{est}(0).$$
-      We know that $var(\hat{\tau})\leq var(\overline{Y}(1))+var(\overline{Y}(0))$, % add reference
-and it achieves the bound under additivity of potential outcomes. We use estimates of the quantities on the right hand side of this equation to get a ``conservative'' estimate of the variance. Matching is often inexact, so that systematic differences in pre-treatment variables across the matched pairs may remain. For this reason the variance is usually estimated ignoring the pairs (in this case 3 controls are matched to each treated municipality). Again, this methodology diverges from the traditional one in the fact that the ``control'' regions can be formed from municipality matches \emph{that are not contiguous}. Therefore, \emph{artificial} matches are created (3 for each treated region), where the observed homicide rates of the control municipalities are weighted by the weights used for the treated region in question $w_{ij}$ in order to get an estimate for the homicide rate in the \emph{artificial} region. 
+      We know that $V(\hat{\tau})\leq V(\overline{Y}(1))+V(\overline{Y}(0))$, % add reference
+and it achieves the bound under additivity of potential outcomes, where $V(\cdot)$ denotes the variance. We use estimates of the quantities on the right hand side of this equation to get a ``conservative'' (larger) estimate of the variance. Matching is often inexact, so that systematic differences in pre-treatment variables across the matched pairs may remain. For this reason the variance is usually estimated ignoring the pairs (in this case 3 controls are matched to each treated municipality). Again, this methodology diverges from the traditional one in the fact that the ``control'' regions can be formed from municipality matches \emph{that are not contiguous}. Therefore, three \emph{artificial} matches are created, where the observed homicide rates of the control municipalities are weighted by the weights used for the treated region in question $w_{ij}$, and then averaged, in order to get an estimate for the homicide rate in the \emph{artificial} region. 
 
  % (Imbens Rubin on matched pairs) it attempts to find the control unit most comparable to the treated unit in all possible pre-treatment characteristics. Although in many cases making units comparable along observable dimensions need not be sufficient for obtaining credible causal comparisons, it is often a prerequisite for doing so. There are, however, two important differences between paired randomized experiments and matching in observational studies. The first is that in the latter case, unconfoundedness must be assumed—it is not guaranteed to be satisfied by design, as it is in a randomized experiment. Even when treated and control observations can be matched exactly on the observed covariates, there may exist unobservable factors that vary systematically between members of the same pair, affecting both their underlying probability of receiving the treatment, and their potential outcomes, and therefore creating biases. Thus inferences based on matched observational data are inherently less credible than those based on data from a paired randomized experiment. The second difference with paired randomized experiments is that . In
 
 
 Now, \begin{eqnarray*}
-  V(\overline{Y}^{est}(0))&=&E(V(\overline{Y}^{est}(0)|Y_i(0),Y_{i'}(0) \forall i'))+ 			V(E(\overline{Y}^{est}(0)|Y_i(0),Y_{i'}(0)\forall i'))\\
-  &=&E\left(V\left(\frac{\sum_i \hat{Y}_i(0)}{I})\right)\right)+\frac{V(\sum_iY_i(0))}{I}\\
-&=&\frac{\frac{\sum_{i=1}^I S^2_i(0)}{I}+S^2(0)}{I}
+  V(\overline{Y}^{est}(0))&=&E(V(\overline{Y}^{est}(0)|Y_i(0),Y_{i'}(0) \forall i))+ 			V(E(\overline{Y}^{est}(0)|Y_i(0),Y_{i'}(0)\forall i))\\
+  &=&E\left(V\left(\frac{\sum_i \hat{Y}_i(0)}{I}|Y_i(0),Y_{i'}(0) \forall i'\right)\right)+\frac{V(\sum_iY_i(0))}{I^2}\\
+&=&\frac{\frac{\sum_{i=1}^I S^2_i(0)}{I}+S^2(0)}{I},
 \end{eqnarray*}
-Now, $var(\hat{\overline{Y}}(1)) = S^2(1)/I$ because the all $Y_j(1)$ are observed.	
+where $ S^2_i(0)$ is the within region match variance. Now, $V(\overline{Y}^{obs}(1)) = S^2(1)/I$ because the $Y_i(1)$ are observed.	
 
 \subsection{Data Details}
 There are 2456 municipalities, out of which 248 are classified as intervened. Of these 205 are classified as receiving an intervention prior to 2010 (a mixture of actually intervened municipalities and the neighboring regions). These 205 municipalities are grouped into 13 regions. The control pool consists of 2213 municipalities. 
 			
 \section{Results and Conclusion}
-Table \ref{TabResults} and Figure \ref{figResults} show the results of our analysis. The regions are ordered in decreasing order of the of one year post intervention differences in the change of homicide rate. Understanding effectiveness as decreasing the violence (measured by homicide rate) the military interventions seem to have had a negative effect (increased homicide rate), although it is not significant. The Ju\'{a}rez region is a clear outlier, and it is the only region with an increase outside of the confidence band of the average effect. Apatzing\'{a}n is the only region with a decrease beyond the confidence band.  
+Table \ref{TabResults} and Figure \ref{figResults} show the results of our analysis. The regions are shown in decreasing order of the one year post intervention differences in the change of homicide rate. Understanding effectiveness as decreasing the violence (measured by homicide rate) the military interventions seem to have had a negative effect (increased homicide rate), although it is not significant. Apatzing\'{a}n region is the only region with a decrease beyond the confidence band.  The Ju\'{a}rez region is a clear outlier, and it is the only region with an increase outside of the confidence band of the average effect. Excluding  Ju\'{a}rez from the analysis gives results that are more reasonable. That is, the overall average tendency is to increase the homicide rates further the more time passes by. Also with the exclusion of this outlier, the standard errors of our estimates increase with number of post intervention years because of the reduction in amount of observed units, which is expected. 
 
 \begin{table}[ht]
 \begin{center}
@@ -321,11 +320,11 @@ Ju\'{a}rez & 16 & 2008 & 120.64 & 103.63 ( 4.52) & 203.69 & 173.51 ( 5.80) &  & 
 \label{TabResults}
 \end{center}
 \end{table}
-Furthermore, if one looks at the regional estimates of the effects for those regions with interventions before 2009 in Table \ref{TabResults}, it is clear that the tendency is to increase the homicide rates further the more time passes by. The point estimate for the average causal effect decreases significantly for the third year. This happens because the Tijuana region is dropped, and is also relevant for it's standard error. As expected, for the two year post intervention estimate of the average causal effect the standard error increases when the number of post intervention years increases because the number of regions decreases. However, this is not seen for the three year post intervention estimate because of the exclusion of Tijuana.
+
 
 % run the analysis without Tijuana so that we can have better information about that!!!
 
-For your assessment of these results keep in mind that the main weaknesses of our analysis are that the Cartel information was not used, we did not achieve balance for criminal rivalry deaths, and we do not have a comprehensive list of interventions. Nevertheless, the lack of a comprehensive list would tend to decrease the difference in homicide rate. %(other intervened and dangerous regions would be incorrectly identified as controls)
+For your assessment of these results keep in mind that the main weaknesses of our analysis are that the cartel information was not used, and we did not achieve balance for criminal rivalry deaths. Furthermore, we do not have a comprehensive list of interventions, but the lack of it would tend to decrease the difference in homicide rates. Therefore, it is very unlikely that the direction of our results would change. %(other intervened and dangerous regions would be incorrectly identified as controls)
  
 \begin{figure}[htdp]
 	\centering
@@ -334,22 +333,23 @@ For your assessment of these results keep in mind that the main weaknesses of ou
 \label{figResults}
 \end{figure}
 
-At the very least, this is a principled way of doing a conditional association study taking in to account very relevant covariates such as those listed in Table \label{Tab1}.
+At the very least, this is a principled way of doing a conditional association study taking in to account relevant covariates such as those listed in Table \ref{Tab1}.
 
 \section{Visualization}
-An interactive visualization was created to be able to assess balance at the municipality, region and overall levels via loveplots. Figures \label{treatedUnits} and \label{FigMatches} are snapshots of this visualization. A different love plot is displayed when hovering over a treated municipality, as well as highlighting which municipalities it was matched too. We strongly believe that a tool like this one can help the expert/statistician interactions in the design stage of an observational study to find an acceptable balance in the key covariates included. 
+An interactive visualization was created to be able to assess balance at the municipality, region and overall levels via loveplots. Figures \ref{treatedUnits} and \ref{FigMatches} are snapshots of this visualization. A different love plot is displayed when hovering over a treated municipality, as well as highlighting which municipalities it was matched too. We strongly believe that a tool like this one can help the expert/statistician interactions in the design stage of an observational study to find a good design. 
 
-The visualization was created in \emph{Processing} Language (\cite{Processing}) and is now being updated to D3, and is available upon request.
+The visualization was created in \emph{Processing} Language (\cite{Processing}), and is available upon request. It is now being updated to D3.
 
 \section{Future Steps}
-Use of cartel information before and after intervention as principal strata to try to get to the answer as to whether the decrease in 
+Use of cartel information before and after intervention as principal strata to try to get to the separate the effect
 Synthetic matching
-
+Try the Zubizarreta matching algorithm
 
         %\bibliographystyle{plain}
         \begin{thebibliography}{99}
           \bibitem{Abadie} Abadie, Diamond, Hainmueller  \emph{Synthetic Control Methods for Comparative Case Studies} (2009)
-          \bibitem{NEXOS} Escalante F, \emph{Homicidios 2008-2009 La muerte tiene permiso} (2011)
+		\bibitem{matchit} Ho D., Imai K., King G., Stuart E. \emph{MatchIt: Nonparametric Preprocessing for Parametric Causal Inference}, R package manual (2011)
+          \bibitem{Nexos} Escalante F, \emph{Homicidios 2008-2009 La muerte tiene permiso} (2011)
           \bibitem{ImbensRubin} Imbens G. \& Rubin D.R., (2013)
           \bibitem{Rubin} Rubin D.R. ,\emph{Matched Sampling for Causal Effects},
 \bibitem{Processing} Fry, B. and Reas, C., Processing Library for Visual Arts and Design, \url{http://www.processing.org}.   
