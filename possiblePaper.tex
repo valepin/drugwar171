@@ -58,7 +58,7 @@ Our sources are
 			\item Escalante's 2011 NEXOS paper 
 			\item Presidency web page (before 2012 transition)
 		\end{itemize}
-		Note that INEGI is the source for most of the variables. In particular, their data base was used to get the response variable: homicide rate. Escalante's paper also used INEGI's data. As this work was motivated by Escalante's paper, the definition of treatment and identification of treated units was also based on the military interventions he listed, based on a search of press releases and ``comunicados'' of the \emph{SEDENA} (Office the Secretary of Defense).
+		INEGI is the source for most of the variables. In particular, their data base was used to get the response variable: homicide rate. Escalante's paper also used INEGI's data. As this work was motivated by Escalante's paper, the definition of treatment and identification of treated units was also based on the military interventions he listed, based on a search of press releases and ``comunicados'' of the \emph{SEDENA} (Office the Secretary of Defense).
 		
 Due to the security issues intrinsic to the problem, certain covariates that would be of interest are not available. This unavailability is because it is classified information, and non-governmental attempts to get them are not in the time points we need, or are product of methodology we are not convinced of. Examples of such covariates are:
 	\begin{itemize}
@@ -265,8 +265,8 @@ Let I denote the number of treated regions. Let $M_{ij}$ be the number of munici
  Then,
       $$\hat{Y}_{i'j}(0) =\sum_{k=1}^{M_{ij}}v_{ijk}Y^{obs}_{ijk}(0),\quad \quad \textrm{ where } v_{ijk}=\frac{\textrm{PopM}_{ijk}}{\textrm{PopM}_{ij}}.$$
       Therefore,
-      $$\hat{Y}_{i'}(0) \quad =\quad \sum_{j=1}^{N_i}w_{ij}\hat{Y}_{i'j}(0)\quad =\quad\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y^{obs}_{ijk}(0)\quad =\quad
-      \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y^{obs}_{ijk}(0) \quad \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
+      $$\hat{Y}_{i'}(0) =\sum_{j=1}^{N_i}w_{ij}\hat{Y}_{i'j}(0) =\sum_{j=1}^{N_i}w_{ij}\sum_{k=1}^{M_{ij}}v_{ijk}Y^{obs}_{ijk}(0) =
+      \sum_{j=1}^{N_i}\sum_{k=1}^{M_{ij}}\tilde{w}_{ijk}Y^{obs}_{ijk}(0) \quad \textrm{ with } \tilde{w}_{ijk} = w_{ij}v_{ijk}, $$
       and
       $$\hat{\tau}=\frac{\sum_i^{I}[Y^{obs}_i(1) - \hat{Y}_{i'}(0)]}{I}=\overline{Y}^{obs}(1)-\overline{Y}^{est}(0).$$
       We know that $V(\hat{\tau})\leq V(\overline{Y}(1))+V(\overline{Y}(0))$, % add reference

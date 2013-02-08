@@ -615,7 +615,7 @@ ResAv1<-c(250,0,mean(Results[,3]),
        mean(Results[-1,6],na.rm=T),mean(Results[-1,7],na.rm=T),
             sqrt(sum(apply(PjsG2[-ordRegs[1],],2,var,na.rm=T))/sum(!is.na(PjsG2[-ordRegs[1],1]))+
             mean(varsNGv2[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG2[-ordRegs[1],1]))),mean(Results[-1,9],na.rm=T),mean(Results[-1,10],na.rm=T),
-    sqrt(sum(apply(PjsG3[-ordRegs[1],],2,var,na.rm=T))/sum(!is.na(PjsG3[-ordRegs[1],]))+mean(varsNGv3[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG3[-ordRegs[1],1])))
+    sqrt(sum(apply(PjsG3[-ordRegfs[1],],2,var,na.rm=T))/sum(!is.na(PjsG3[-ordRegs[1],]))+mean(varsNGv3[-ordRegs[1],2],na.rm=T)/sum(!is.na(PjsG3[-ordRegs[1],1])))
        )    
 
 
